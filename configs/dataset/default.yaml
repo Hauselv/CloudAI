@@ -1,0 +1,23 @@
+seed: 42
+image_root: data/raw/images
+manifest_path: data/processed/image_manifest.parquet
+ratings_dir: data/raw/metadata/ratings
+pairwise_dir: data/raw/metadata/pairwise
+ratings_path: data/processed/ratings.parquet
+pairwise_path: data/processed/pairwise_preferences.parquet
+aggregated_labels_path: data/processed/aggregated_labels.parquet
+splits_path: data/processed/splits/default_splits.parquet
+allowed_extensions:
+  - .jpg
+  - .jpeg
+  - .png
+  - .bmp
+  - .tif
+  - .tiff
+  - .webp
+capture_session_strategy: parent_dir
+split:
+  n_splits: 5
+  score_bins: 5
+  test_fraction: 0.2
+  random_state: 42

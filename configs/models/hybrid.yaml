@@ -1,0 +1,11 @@
+run_name: hybrid_v1
+kind: hybrid
+seed: 42
+manifest_path: data/processed/image_manifest.parquet
+labels_path: data/processed/aggregated_labels.parquet
+features_path: data/processed/features/features_v1.parquet
+output_dir: data/artifacts
+target_column: mean_score
+fold_holdout: 0
+embedding_backbone: resnet18
+use_precomputed_embeddings: false

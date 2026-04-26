@@ -1,0 +1,17 @@
+run_name: baseline_v1
+kind: baseline
+seed: 42
+manifest_path: data/processed/image_manifest.parquet
+labels_path: data/processed/aggregated_labels.parquet
+features_path: data/processed/features/features_v1.parquet
+output_dir: data/artifacts
+target_column: mean_score
+split_column: fold
+fold_holdout: 0
+regressors:
+  - elasticnet
+  - random_forest
+  - hist_gb
+pairwise:
+  enabled: true
+  min_score_gap: 2.0

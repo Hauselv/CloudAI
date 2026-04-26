@@ -1,0 +1,45 @@
+source: openverse
+output_dir: data/raw/images/web_sample
+metadata_path: data/raw/metadata/web_sample_metadata.parquet
+target_count: 150
+min_width: 1024
+min_height: 600
+target_width: 1024
+target_height: 768
+download_width: 1600
+request_delay_seconds: 0.2
+search_limit_per_query: 20
+max_pages_per_query: 16
+reset_output: true
+categories:
+  - Category:Clouds
+  - Category:Cloudscapes
+  - Category:Cumulus clouds
+  - Category:Cumulonimbus clouds
+  - Category:Cirrus clouds
+  - Category:Altocumulus clouds
+  - Category:Stratocumulus clouds
+  - Category:Lenticular clouds
+  - Category:Mammatus clouds
+  - Category:Crepuscular rays
+  - Category:Sunsets with clouds
+queries:
+  - cloud formation
+  - cumulus cloud
+  - cumulonimbus cloud
+  - cirrus cloud
+  - lenticular cloud
+  - mammatus cloud
+  - storm cloud
+  - sunset clouds
+  - sunbeams clouds
+  - dramatic sky clouds
+allowed_licenses:
+  - cc-by
+  - cc-by-sa
+  - cc by
+  - cc by-sa
+  - cc0
+  - public domain
+  - by
+  - by-sa

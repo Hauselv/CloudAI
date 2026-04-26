@@ -1,0 +1,7 @@
+output_path: data/processed/features/features_v1.parquet
+image_size: 512
+extractors:
+  color: true
+  texture: true
+  composition: true
+  concepts: true

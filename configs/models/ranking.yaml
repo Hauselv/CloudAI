@@ -1,0 +1,11 @@
+run_name: ranking_v1
+kind: ranking
+seed: 42
+manifest_path: data/processed/image_manifest.parquet
+labels_path: data/processed/aggregated_labels.parquet
+features_path: data/processed/features/features_v1.parquet
+output_dir: data/artifacts
+target_column: mean_score
+fold_holdout: 0
+min_score_gap: 2.0
+model: logistic_regression

@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cloud-aesthetics"
+version = "0.1.0"
+description = "Local-first cloud photograph aesthetics research workbench"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "OpenAI Codex" }
+]
+dependencies = [
+  "albumentations>=1.4.0",
+  "matplotlib>=3.8.0",
+  "numpy>=1.26.0",
+  "opencv-python>=4.8.0",
+  "pandas>=2.1.0",
+  "plotly>=5.18.0",
+  "pyarrow>=14.0.0",
+  "pydantic>=2.6.0",
+  "PyYAML>=6.0.1",
+  "requests>=2.31.0",
+  "scikit-image>=0.22.0",
+  "scikit-learn>=1.4.0",
+  "scipy>=1.11.0",
+  "seaborn>=0.13.0",
+  "statsmodels>=0.14.0",
+  "streamlit>=1.34.0",
+  "typer>=0.12.0",
+  "umap-learn>=0.5.5",
+]
+
+[project.optional-dependencies]
+deep = [
+  "torch>=2.2.0",
+  "torchvision>=0.17.0",
+  "timm>=0.9.16",
+  "captum>=0.7.0",
+  "grad-cam>=1.5.0",
+]
+explain = [
+  "shap>=0.45.0",
+]
+dev = [
+  "pytest>=8.0.0",
+  "pytest-cov>=4.1.0",
+]
+
+[project.scripts]
+cloud-aesthetics = "cloud_aesthetics.cli:app"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
