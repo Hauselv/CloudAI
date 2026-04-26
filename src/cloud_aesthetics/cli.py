@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import pickle
+from datetime import UTC, datetime
 from pathlib import Path
 
 import cv2
@@ -34,7 +35,7 @@ from cloud_aesthetics.explain.heatmaps import (
 )
 from cloud_aesthetics.explain.regions import build_region_table
 from cloud_aesthetics.explain.text_report import build_text_explanation
-from cloud_aesthetics.features.base import extract_and_save_features
+from cloud_aesthetics.features.base import extract_and_save_features, extract_feature_row
 from cloud_aesthetics.features.store import load_features
 from cloud_aesthetics.models.baseline import train_baseline_suite
 from cloud_aesthetics.models.deep import CloudRatingNet, train_deep_model
@@ -96,6 +97,7 @@ def import_images_impl(
     max_crops_per_image: int = 8,
     min_sky_fraction: float = 0.72,
     min_cloud_fraction: float = 0.08,
+    batch_id: str | None = None,
 ) -> dict[str, object]:
     config = _load_dataset_config(dataset_config_path)
     imported = import_private_images(
@@ -106,9 +108,14 @@ def import_images_impl(
         max_crops_per_image=max_crops_per_image,
         min_sky_fraction=min_sky_fraction,
         min_cloud_fraction=min_cloud_fraction,
+        batch_id=batch_id,
     )
     manifest = ingest_images_impl(dataset_config_path)
+    import_batch_id = ""
+    if not imported.empty and "import_batch_id" in imported.columns:
+        import_batch_id = str(imported["import_batch_id"].dropna().iloc[0])
     return {
+        "batch_id": import_batch_id,
         "imported_count": int(len(imported)),
         "original_count": int((imported["derivative_kind"] == "original").sum()) if not imported.empty else 0,
         "crop_count": int((imported["derivative_kind"] == "sky_crop").sum()) if not imported.empty else 0,
@@ -233,23 +240,157 @@ def _select_best_baseline_model(summary: dict[str, object]) -> tuple[str, dict[s
     return best_name, best_info
 
 
-def explain_impl(run_id: str | Path, image_id: str, dataset_config_path: str | Path = "configs/dataset/default.yaml") -> dict[str, object]:
+def _feature_output_path(feature_config_path: str | Path) -> str | Path:
+    return load_yaml(feature_config_path)["output_path"]
+
+
+def ensure_features_for_images(
+    manifest: pd.DataFrame,
+    image_ids: list[str],
+    feature_config_path: str | Path = "configs/features/v1.yaml",
+) -> pd.DataFrame:
+    feature_config = load_yaml(feature_config_path)
+    feature_path = feature_config["output_path"]
+    image_size = int(feature_config.get("image_size", 512))
+    existing = read_table(feature_path)
+    existing_ids = set(existing["image_id"].astype(str)) if not existing.empty and "image_id" in existing.columns else set()
+    target_ids = {str(image_id) for image_id in image_ids}
+    missing = target_ids - existing_ids
+    new_rows = []
+    if missing:
+        target_manifest = manifest[manifest["image_id"].astype(str).isin(missing)]
+        for _, row in target_manifest.iterrows():
+            new_rows.append(extract_feature_row(str(row["image_id"]), str(row["relative_path"]), image_size=image_size))
+    if new_rows:
+        new_frame = pd.DataFrame(new_rows)
+        combined = pd.concat([existing, new_frame], ignore_index=True) if not existing.empty else new_frame
+        combined = combined.drop_duplicates(subset=["image_id"], keep="last").reset_index(drop=True)
+        write_table(combined, feature_path)
+        return combined
+    return existing
+
+
+def list_import_batches(dataset_config_path: str | Path = "configs/dataset/default.yaml") -> list[str]:
+    config = _load_dataset_config(dataset_config_path)
+    manifest = read_table(config["manifest_path"])
+    if manifest.empty or "import_batch_id" not in manifest.columns:
+        return []
+    batches = manifest["import_batch_id"].dropna().astype(str)
+    return sorted([batch for batch in batches.unique().tolist() if batch], reverse=True)
+
+
+def _batch_report_dir(run_id: str | Path, batch_id: str) -> Path:
+    run_dir = _resolve_run_dir(run_id)
+    safe_batch = "".join(character if character.isalnum() or character in ("-", "_") else "_" for character in batch_id)
+    return run_dir / "batch_reports" / safe_batch
+
+
+def batch_predictions_path(run_id: str | Path, batch_id: str) -> Path:
+    return _batch_report_dir(run_id, batch_id) / "predictions.parquet"
+
+
+def analyze_batch_impl(
+    run_id: str | Path,
+    batch_id: str,
+    dataset_config_path: str | Path = "configs/dataset/default.yaml",
+    feature_config_path: str | Path = "configs/features/v1.yaml",
+    overwrite: bool = False,
+) -> dict[str, object]:
+    dataset_config = _load_dataset_config(dataset_config_path)
+    manifest = read_table(dataset_config["manifest_path"])
+    if manifest.empty:
+        raise ValueError("Manifest is empty. Import images before analyzing a batch.")
+    if "import_batch_id" not in manifest.columns:
+        raise ValueError("Manifest does not contain import_batch_id. Re-run image import/ingestion first.")
+    batch_manifest = manifest[manifest["import_batch_id"].fillna("").astype(str) == str(batch_id)].copy()
+    if batch_manifest.empty:
+        raise ValueError(f"No images found for import batch: {batch_id}")
+
+    image_ids = batch_manifest["image_id"].astype(str).tolist()
+    ensure_features_for_images(manifest, image_ids, feature_config_path)
+    report_dir = _batch_report_dir(run_id, batch_id)
+    predictions_path = report_dir / "predictions.parquet"
+    existing = read_table(predictions_path)
+    existing_ids = set(existing["image_id"].astype(str)) if not overwrite and not existing.empty else set()
+    rows: list[dict[str, object]] = []
+    created_at = datetime.now(UTC).isoformat()
+
+    for _, image_row in batch_manifest.iterrows():
+        image_id = str(image_row["image_id"])
+        if image_id in existing_ids:
+            continue
+        explanation = explain_impl(run_id, image_id, dataset_config_path, feature_config_path)
+        explanation_path = _resolve_run_dir(run_id) / "explanations" / f"{image_id}.json"
+        rows.append(
+            {
+                "batch_id": str(batch_id),
+                "run_id": str(run_id),
+                "image_id": image_id,
+                "relative_path": str(image_row["relative_path"]),
+                "kind": "crop" if "/crops/" in str(image_row["relative_path"]).replace("\\", "/") else "original",
+                "predicted_score": float(explanation.get("predicted_score", float("nan"))),
+                "uncertainty": float(explanation.get("uncertainty", 0.0)),
+                "top_features": json.dumps(explanation.get("top_features", [])),
+                "top_concepts": json.dumps(explanation.get("top_concepts", [])),
+                "explanation_path": str(explanation_path),
+                "overlay_path": str(explanation.get("overlay_path", "")),
+                "created_at": created_at,
+            }
+        )
+
+    new_predictions = pd.DataFrame(rows)
+    if overwrite:
+        combined = new_predictions
+    elif not existing.empty:
+        combined = pd.concat([existing, new_predictions], ignore_index=True)
+        combined = combined.drop_duplicates(subset=["batch_id", "run_id", "image_id"], keep="last").reset_index(drop=True)
+    else:
+        combined = new_predictions
+    write_table(combined, predictions_path)
+    return {
+        "batch_id": str(batch_id),
+        "run_id": str(run_id),
+        "image_count": int(len(batch_manifest)),
+        "analyzed_count": int(len(new_predictions)),
+        "skipped_count": int(len(batch_manifest) - len(new_predictions)),
+        "predictions_path": str(predictions_path),
+        "report_dir": str(report_dir),
+    }
+
+
+def explain_impl(
+    run_id: str | Path,
+    image_id: str,
+    dataset_config_path: str | Path = "configs/dataset/default.yaml",
+    feature_config_path: str | Path = "configs/features/v1.yaml",
+) -> dict[str, object]:
     run_dir = _resolve_run_dir(run_id)
     summary = json.loads((run_dir / "summary.json").read_text(encoding="utf-8"))
     dataset_config = _load_dataset_config(dataset_config_path)
     manifest = read_table(dataset_config["manifest_path"])
     labels = read_table(dataset_config["aggregated_labels_path"])
-    features = read_table("data/processed/features/features_v1.parquet") if resolve_path("data/processed/features/features_v1.parquet").exists() else pd.DataFrame()
-    image_row = manifest.loc[manifest["image_id"] == image_id].iloc[0]
+    image_matches = manifest.loc[manifest["image_id"].astype(str) == str(image_id)]
+    if image_matches.empty:
+        raise ValueError(f"Image not found in manifest: {image_id}")
+    image_row = image_matches.iloc[0]
+    feature_path = _feature_output_path(feature_config_path)
+    features = read_table(feature_path) if resolve_path(feature_path).exists() else pd.DataFrame()
+    feature_ids = set(features["image_id"].astype(str)) if not features.empty and "image_id" in features.columns else set()
+    if str(image_id) not in feature_ids:
+        features = ensure_features_for_images(manifest, [str(image_id)], feature_config_path)
     image = read_rgb_image(image_row["relative_path"])
     predicted_score = float("nan")
     uncertainty = 0.0
+    feature_row = pd.Series(dtype=float)
     feature_contributions = pd.DataFrame(columns=["feature", "delta_prediction", "value"])
     heatmap_variants: dict[str, str] = {}
     if summary["kind"] == "baseline":
         model_name, model_info = _select_best_baseline_model(summary)
         model = load_pickled_model(model_info["model_path"])
-        feature_row = features.loc[features["image_id"] == image_id].iloc[0]
+        feature_matches = features.loc[features["image_id"].astype(str) == str(image_id)]
+        if feature_matches.empty:
+            raise ValueError(f"Features not found for image: {image_id}")
+        feature_row = feature_matches.iloc[0]
         numeric_row = feature_row.drop(labels=["image_id"])
         predicted_score = float(model.predict(pd.DataFrame([numeric_row]))[0])
         uncertainty = float(model_info.get("conformal_half_width", 0.0))
@@ -287,8 +428,8 @@ def explain_impl(run_id: str | Path, image_id: str, dataset_config_path: str | P
             variant_path.parent.mkdir(parents=True, exist_ok=True)
             np.save(variant_path, layer_heatmap_resized.astype(np.float32))
             heatmap_variants[f"gradcam:{layer_name}"] = str(variant_path)
-        if not features.empty:
-            feature_row = features.loc[features["image_id"] == image_id].iloc[0]
+        if not features.empty and str(image_id) in set(features["image_id"].astype(str)):
+            feature_row = features.loc[features["image_id"].astype(str) == str(image_id)].iloc[0]
             reference = features.drop(columns=["image_id"]).median()
             deltas = []
             for column, value in feature_row.drop(labels=["image_id"]).items():
@@ -297,8 +438,8 @@ def explain_impl(run_id: str | Path, image_id: str, dataset_config_path: str | P
     else:
         heatmap = fallback_heatmap_from_edges(image_row["relative_path"])
         heatmap_source = "edge_fallback"
-        if not features.empty:
-            feature_row = features.loc[features["image_id"] == image_id].iloc[0]
+        if not features.empty and str(image_id) in set(features["image_id"].astype(str)):
+            feature_row = features.loc[features["image_id"].astype(str) == str(image_id)].iloc[0]
         else:
             feature_row = pd.Series(dtype=float)
     heatmap_resized = heatmap if heatmap.shape[:2] == image.shape[:2] else cv2.resize(heatmap, (image.shape[1], image.shape[0]))
@@ -309,7 +450,10 @@ def explain_impl(run_id: str | Path, image_id: str, dataset_config_path: str | P
     np.save(heatmap_path, heatmap_resized.astype(np.float32))
     heatmap_variants[heatmap_source] = str(heatmap_path)
     region_table = build_region_table(image_row["relative_path"], heatmap_resized)
-    concept_scores = top_concepts(feature_row) if not features.empty else pd.DataFrame(columns=["concept", "score"])
+    concept_scores = top_concepts(feature_row) if not feature_row.empty else pd.DataFrame(columns=["concept", "score"])
+    ground_truth = []
+    if not labels.empty and "image_id" in labels.columns:
+        ground_truth = labels.loc[labels["image_id"].astype(str) == str(image_id)].to_dict("records")
     explanation = {
         "run_id": summary["run_id"],
         "image_id": image_id,
@@ -323,7 +467,7 @@ def explain_impl(run_id: str | Path, image_id: str, dataset_config_path: str | P
         "top_concepts": concept_scores.to_dict("records"),
         "top_regions": region_table.head(8).to_dict("records"),
         "nearest_neighbors": nearest_neighbors(features, image_id).to_dict("records") if not features.empty else [],
-        "ground_truth": labels.loc[labels["image_id"] == image_id].to_dict("records"),
+        "ground_truth": ground_truth,
         "scientific_caveat": (
             "Heatmaps and feature attributions reflect model-associated evidence, not literal causal proof of aesthetic preference."
         ),
@@ -344,6 +488,7 @@ def import_images(
     source: str = typer.Option(..., help="Directory containing private images to import"),
     dataset_name: str = typer.Option(..., help="Name for the imported dataset folder under data/raw/images"),
     dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+    batch_id: str | None = typer.Option(None, help="Optional import batch id. Defaults to a timestamped id."),
     make_crops: bool = typer.Option(True, help="Generate sky/cloud crops from imported images"),
     max_crops_per_image: int = typer.Option(8, min=0, help="Maximum crops to create per source image"),
     min_sky_fraction: float = typer.Option(0.72, min=0.0, max=1.0, help="Minimum sky-like fraction required for each crop"),
@@ -357,12 +502,26 @@ def import_images(
         max_crops_per_image=max_crops_per_image,
         min_sky_fraction=min_sky_fraction,
         min_cloud_fraction=min_cloud_fraction,
+        batch_id=batch_id,
     )
     typer.echo(
         "Imported "
         f"{summary['original_count']} originals and {summary['crop_count']} crops. "
-        f"Manifest now contains {summary['manifest_count']} images."
+        f"Manifest now contains {summary['manifest_count']} images. "
+        f"Batch: {summary['batch_id']}"
     )
+
+
+@app.command("analyze-batch")
+def analyze_batch(
+    run: str = typer.Option(..., help="Run id or run directory used for local model predictions"),
+    batch_id: str = typer.Option(..., help="Import batch id to analyze"),
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+    feature_config: str = typer.Option("configs/features/v1.yaml"),
+    overwrite: bool = typer.Option(False, help="Recompute existing predictions for this batch"),
+) -> None:
+    summary = analyze_batch_impl(run, batch_id, dataset_config, feature_config, overwrite=overwrite)
+    typer.echo(json.dumps(summary, indent=2))
 
 
 @app.command("download-web-dataset")
@@ -449,8 +608,9 @@ def explain(
     run: str = typer.Option(..., help="Run id or run directory"),
     image_id: str = typer.Option(..., help="Target image id"),
     dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+    feature_config: str = typer.Option("configs/features/v1.yaml"),
 ) -> None:
-    explanation = explain_impl(run, image_id, dataset_config)
+    explanation = explain_impl(run, image_id, dataset_config, feature_config)
     typer.echo(json.dumps(explanation, indent=2))
 
 

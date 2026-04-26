@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import shutil
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 
 import cv2
@@ -16,6 +17,7 @@ from cloud_aesthetics.utils.io import read_table, write_table
 
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".webp"}
 DERIVATIVE_COLUMNS = [
+    "import_batch_id",
     "relative_path",
     "dataset_name",
     "source_relative_path",
@@ -52,6 +54,11 @@ def _safe_dataset_name(dataset_name: str) -> str:
     if not safe:
         raise ValueError("Dataset name must contain at least one letter or number.")
     return safe
+
+
+def make_import_batch_id(dataset_name: str) -> str:
+    timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    return f"{_safe_dataset_name(dataset_name)}_{timestamp}"
 
 
 def estimate_sky_cloud_masks(image_rgb: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -131,6 +138,7 @@ def import_private_images(
     min_crop_size: int = 384,
     min_sky_fraction: float = 0.72,
     min_cloud_fraction: float = 0.08,
+    batch_id: str | None = None,
 ) -> pd.DataFrame:
     source_root = resolve_path(source_dir)
     if not source_root.exists() or not source_root.is_dir():
@@ -139,6 +147,7 @@ def import_private_images(
     output = resolve_path(output_root) / _safe_dataset_name(dataset_name)
     originals_dir = output / "originals"
     crops_dir = output / "crops"
+    import_batch_id = batch_id or make_import_batch_id(dataset_name)
     rows: list[dict[str, object]] = []
     seen_crop_sources: set[str] = set()
 
@@ -159,6 +168,7 @@ def import_private_images(
             imported_relative_path = project_relative_or_absolute(target_path)
             rows.append(
                 {
+                    "import_batch_id": import_batch_id,
                     "relative_path": imported_relative_path,
                     "dataset_name": dataset_name,
                     "source_relative_path": original_relative_path,
@@ -192,6 +202,7 @@ def import_private_images(
             _write_image(crop_path, crop_image)
             rows.append(
                 {
+                    "import_batch_id": import_batch_id,
                     "relative_path": project_relative_or_absolute(crop_path),
                     "dataset_name": dataset_name,
                     "source_relative_path": imported_relative_path,

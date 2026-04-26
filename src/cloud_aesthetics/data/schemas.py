@@ -13,6 +13,7 @@ class ImageRecord(BaseModel):
     sha256: str
     width: int
     height: int
+    import_batch_id: str | None = None
     capture_date: str | None = None
     capture_session_id: str
     phash: str

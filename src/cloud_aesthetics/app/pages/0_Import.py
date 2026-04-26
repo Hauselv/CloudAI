@@ -9,7 +9,8 @@ SRC_ROOT = Path(__file__).resolve().parents[4] / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cloud_aesthetics.app.common import dataset_config, import_images_impl, safe_read_table
+from cloud_aesthetics.app.common import analyze_batch_impl, dataset_config, import_images_impl, list_runs, safe_read_table
+from cloud_aesthetics.settings import resolve_path
 
 st.set_page_config(page_title="Import Images", layout="wide")
 st.title("Import Cloud Images")
@@ -28,6 +29,15 @@ with col2:
     min_sky = st.slider("Minimum sky fraction", min_value=0.0, max_value=1.0, value=0.72, step=0.01)
     min_cloud = st.slider("Minimum cloud fraction", min_value=0.0, max_value=1.0, value=0.08, step=0.01)
 
+st.subheader("Optional Batch Analysis")
+runs = [run for run in list_runs() if (resolve_path("data/artifacts") / run / "summary.json").exists()]
+analyze_after_import = st.checkbox("Analyse nach Import starten", value=False, disabled=not runs)
+analysis_run = None
+if analyze_after_import and runs:
+    analysis_run = st.selectbox("Local model run", runs)
+elif analyze_after_import:
+    st.info("Train a local model before starting analysis after import.")
+
 if st.button("Import images", type="primary"):
     if not source.strip():
         st.error("Please enter a source folder.")
@@ -45,12 +55,23 @@ if st.button("Import images", type="primary"):
                 min_sky_fraction=min_sky,
                 min_cloud_fraction=min_cloud,
             )
+            analysis_summary = None
+            if analyze_after_import and analysis_run and summary.get("batch_id"):
+                analysis_summary = analyze_batch_impl(analysis_run, str(summary["batch_id"]))
         st.success(
             f"Imported {summary['original_count']} originals and {summary['crop_count']} crops. "
-            f"Manifest now contains {summary['manifest_count']} images."
+            f"Manifest now contains {summary['manifest_count']} images. Batch: {summary['batch_id']}"
         )
+        if analysis_summary:
+            st.success(
+                f"Analyzed {analysis_summary['analyzed_count']} images "
+                f"({analysis_summary['skipped_count']} skipped)."
+            )
 
 st.subheader("Current Manifest")
 st.metric("Images ready for labeling", len(manifest))
 if not manifest.empty:
-    st.dataframe(manifest[["image_id", "relative_path", "width", "height", "split_group_id"]], use_container_width=True)
+    columns = ["image_id", "relative_path", "width", "height", "split_group_id"]
+    if "import_batch_id" in manifest.columns:
+        columns.insert(2, "import_batch_id")
+    st.dataframe(manifest[columns], use_container_width=True)

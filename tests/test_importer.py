@@ -35,10 +35,12 @@ def test_import_private_images_creates_crops_and_groups_derivatives(tmp_path):
 
     assert (imported["derivative_kind"] == "original").sum() == 1
     assert (imported["derivative_kind"] == "sky_crop").sum() >= 1
+    assert imported["import_batch_id"].nunique() == 1
 
     manifest = build_manifest(image_root, allowed_extensions=[".jpg"], derivative_metadata_path=metadata_path)
     assert len(manifest) == len(imported)
     assert manifest["split_group_id"].nunique() == 1
+    assert manifest["import_batch_id"].nunique() == 1
 
 
 def test_import_private_images_skips_duplicate_source_crops(tmp_path):
@@ -63,3 +65,22 @@ def test_import_private_images_skips_duplicate_source_crops(tmp_path):
     assert (imported["derivative_kind"] == "original").sum() == 2
     assert (imported["derivative_kind"] == "sky_crop").sum() == 3
     assert imported["relative_path"].duplicated().sum() == 0
+
+
+def test_import_private_images_accepts_explicit_batch_id(tmp_path):
+    source = tmp_path / "source"
+    source.mkdir()
+    image = np.zeros((256, 256, 3), dtype=np.uint8)
+    image[:, :] = [90, 170, 235]
+    _write_rgb(source / "clouds.jpg", image)
+
+    imported = import_private_images(
+        source,
+        dataset_name="private_test",
+        output_root=tmp_path / "images",
+        derivative_metadata_path=tmp_path / "image_derivatives.parquet",
+        batch_id="batch_test_001",
+        make_crops=False,
+    )
+
+    assert imported["import_batch_id"].tolist() == ["batch_test_001"]

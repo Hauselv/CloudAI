@@ -60,10 +60,16 @@ def build_manifest(
     extensions = {extension.lower() for extension in (allowed_extensions or [".jpg", ".jpeg", ".png"])}
     derivative_metadata = read_table(derivative_metadata_path)
     derivative_groups: dict[str, str] = {}
+    derivative_batches: dict[str, str] = {}
     if not derivative_metadata.empty and {"relative_path", "source_image_id"}.issubset(derivative_metadata.columns):
         derivative_groups = {
             str(row["relative_path"]): str(row["source_image_id"])
             for _, row in derivative_metadata.dropna(subset=["relative_path", "source_image_id"]).iterrows()
+        }
+    if not derivative_metadata.empty and {"relative_path", "import_batch_id"}.issubset(derivative_metadata.columns):
+        derivative_batches = {
+            str(row["relative_path"]): str(row["import_batch_id"])
+            for _, row in derivative_metadata.dropna(subset=["relative_path", "import_batch_id"]).iterrows()
         }
     rows: list[dict[str, object]] = []
     for path in sorted(root.rglob("*")):
@@ -86,6 +92,7 @@ def build_manifest(
                 "sha256": sha256,
                 "width": width,
                 "height": height,
+                "import_batch_id": derivative_batches.get(relative_path),
                 "capture_date": None,
                 "capture_session_id": capture_session_id,
                 "phash": phash,
