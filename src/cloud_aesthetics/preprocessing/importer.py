@@ -140,6 +140,7 @@ def import_private_images(
     originals_dir = output / "originals"
     crops_dir = output / "crops"
     rows: list[dict[str, object]] = []
+    seen_crop_sources: set[str] = set()
 
     for source_path in sorted(source_root.rglob("*")):
         if not source_path.is_file() or source_path.suffix.lower() not in IMAGE_EXTENSIONS:
@@ -172,8 +173,9 @@ def import_private_images(
                     "cloud_fraction": None,
                 }
             )
-        if not make_crops:
+        if not make_crops or source_sha256 in seen_crop_sources:
             continue
+        seen_crop_sources.add(source_sha256)
         candidates = _crop_candidates(
             image_rgb,
             min_size=min_crop_size,

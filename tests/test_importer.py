@@ -39,3 +39,27 @@ def test_import_private_images_creates_crops_and_groups_derivatives(tmp_path):
     manifest = build_manifest(image_root, allowed_extensions=[".jpg"], derivative_metadata_path=metadata_path)
     assert len(manifest) == len(imported)
     assert manifest["split_group_id"].nunique() == 1
+
+
+def test_import_private_images_skips_duplicate_source_crops(tmp_path):
+    source = tmp_path / "source"
+    source.mkdir()
+    image = np.zeros((640, 800, 3), dtype=np.uint8)
+    image[:, :] = [90, 170, 235]
+    image[120:360, 160:560] = [245, 245, 245]
+    _write_rgb(source / "clouds.jpg", image)
+    _write_rgb(source / "clouds_copy.jpg", image)
+
+    imported = import_private_images(
+        source,
+        dataset_name="private_test",
+        output_root=tmp_path / "images",
+        derivative_metadata_path=tmp_path / "image_derivatives.parquet",
+        max_crops_per_image=3,
+        min_sky_fraction=0.6,
+        min_cloud_fraction=0.02,
+    )
+
+    assert (imported["derivative_kind"] == "original").sum() == 2
+    assert (imported["derivative_kind"] == "sky_crop").sum() == 3
+    assert imported["relative_path"].duplicated().sum() == 0

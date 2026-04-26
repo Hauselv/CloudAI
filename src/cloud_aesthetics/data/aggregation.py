@@ -22,7 +22,7 @@ def add_rater_normalized_scores(ratings: pd.DataFrame) -> pd.DataFrame:
     z_mean = frame["rater_z_score"].mean()
     z_std = float(frame["rater_z_score"].std(ddof=0)) or 1.0
     scaled = (frame["rater_z_score"] - z_mean) / z_std
-    frame["normalized_score_1_to_10"] = np.clip(5.5 + 1.5 * scaled, 1.0, 10.0)
+    frame["normalized_score_1_to_10"] = np.clip(5.0 + 1.5 * scaled, 0.0, 10.0)
     return frame
 
 
@@ -60,7 +60,7 @@ def aggregate_ratings(ratings: pd.DataFrame, pairwise: pd.DataFrame | None = Non
         n_raters = len(scores)
         std_score = float(np.std(scores, ddof=0))
         sem_score = float(std_score / math.sqrt(n_raters)) if n_raters else 0.0
-        agreement_index = float(np.clip(1.0 - (std_score / 4.5), 0.0, 1.0))
+        agreement_index = float(np.clip(1.0 - (std_score / 5.0), 0.0, 1.0))
         rows.append(
             {
                 "image_id": image_id,

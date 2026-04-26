@@ -50,11 +50,31 @@ Images are saved under `data/raw/images/web_sample`, while attribution and licen
 
 - `python -m cloud_aesthetics.cli import-images --source <folder> --dataset-name private_clouds`
 - `python -m cloud_aesthetics.cli ingest-images`
+- `python -m cloud_aesthetics.cli export-friend-package --output data/artifacts/cloud_labeling_friend_package.zip`
+- `python -m cloud_aesthetics.cli import-friend-labels --bundle <friend_labels.json>`
 - `python -m cloud_aesthetics.cli aggregate-labels`
 - `python -m cloud_aesthetics.cli extract-features --config configs/features/v1.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/baseline.yaml`
 - `python -m cloud_aesthetics.cli evaluate --run <run_id>`
 - `python -m cloud_aesthetics.cli explain --run <run_id> --image-id <image_id>`
+
+## Friend Standalone Labeling Package
+
+You can export a no-install browser package for friends. It includes the current manifest images, scalar ratings, pairwise preferences, JSON export, and browser-side import/crop support for their own images.
+
+```powershell
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli export-friend-package --output D:\CloudAI\cloud-aesthetics\data\artifacts\cloud_labeling_friend_package.zip --package-name cloud_labeling_friend_package
+```
+
+Send the zip file to a friend. They unzip it, open `index.html`, rate images, and send back the exported `*_labels.json` file.
+
+```powershell
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli import-friend-labels --bundle D:\Path\To\friend_labels.json
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli ingest-images
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli aggregate-labels
+```
+
+If friends import their own images in the standalone app, the returned JSON contains those images and generated crops as embedded data. The import command restores them under `data/raw/images/friend_imports`; run `ingest-images` afterward so they enter the manifest.
 
 ## Private Image Import and Cropping
 

@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 
 from cloud_aesthetics.data.schemas import SCHEMA_COLUMNS
+from cloud_aesthetics.data.exclusions import active_excluded_ids
 from cloud_aesthetics.settings import PROJECT_ROOT, ensure_parent, resolve_path
 from cloud_aesthetics.utils.io import read_table, write_table
 
@@ -53,6 +54,7 @@ def build_manifest(
     allowed_extensions: Iterable[str] | None = None,
     capture_session_strategy: str = "parent_dir",
     derivative_metadata_path: str | Path = "data/raw/metadata/image_derivatives.parquet",
+    exclusions_path: str | Path = "data/raw/metadata/exclusions.csv",
 ) -> pd.DataFrame:
     root = resolve_path(image_root)
     extensions = {extension.lower() for extension in (allowed_extensions or [".jpg", ".jpeg", ".png"])}
@@ -94,6 +96,9 @@ def build_manifest(
     if not frame.empty:
         dedupe_subset = ["relative_path"] if derivative_groups else ["sha256"]
         frame = frame.drop_duplicates(subset=dedupe_subset).reset_index(drop=True)
+        excluded_ids = active_excluded_ids(exclusions_path)
+        if excluded_ids:
+            frame = frame[~frame["image_id"].astype(str).isin(excluded_ids)].reset_index(drop=True)
     return frame
 
 

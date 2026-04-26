@@ -24,7 +24,14 @@ from cloud_aesthetics.explain.feature_importance import (
     load_pickled_model,
     permutation_feature_importance,
 )
-from cloud_aesthetics.explain.heatmaps import fallback_heatmap_from_edges, overlay_heatmap_on_image, save_overlay, simple_gradient_heatmap
+from cloud_aesthetics.explain.heatmaps import (
+    available_gradcam_layers,
+    fallback_heatmap_from_edges,
+    grad_cam_heatmap,
+    overlay_heatmap_on_image,
+    save_overlay,
+    simple_gradient_heatmap,
+)
 from cloud_aesthetics.explain.regions import build_region_table
 from cloud_aesthetics.explain.text_report import build_text_explanation
 from cloud_aesthetics.features.base import extract_and_save_features
@@ -37,6 +44,7 @@ from cloud_aesthetics.preprocessing.importer import import_private_images
 from cloud_aesthetics.preprocessing.image_ops import read_rgb_image
 from cloud_aesthetics.preprocessing.transforms import apply_transform, build_eval_transform
 from cloud_aesthetics.settings import PATHS, load_yaml, resolve_path
+from cloud_aesthetics.standalone import build_friend_package, import_friend_label_bundle
 from cloud_aesthetics.utils.io import read_table, write_json, write_table
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)
@@ -237,6 +245,7 @@ def explain_impl(run_id: str | Path, image_id: str, dataset_config_path: str | P
     predicted_score = float("nan")
     uncertainty = 0.0
     feature_contributions = pd.DataFrame(columns=["feature", "delta_prediction", "value"])
+    heatmap_variants: dict[str, str] = {}
     if summary["kind"] == "baseline":
         model_name, model_info = _select_best_baseline_model(summary)
         model = load_pickled_model(model_info["model_path"])
@@ -246,12 +255,15 @@ def explain_impl(run_id: str | Path, image_id: str, dataset_config_path: str | P
         uncertainty = float(model_info.get("conformal_half_width", 0.0))
         feature_contributions = approximate_local_contributions(model, feature_row, features)
         heatmap = fallback_heatmap_from_edges(image_row["relative_path"])
+        heatmap_source = "edge_fallback"
     elif summary["kind"] == "deep":
         try:
             import torch
         except ImportError as exc:  # pragma: no cover
             raise ImportError("torch is required to explain deep runs") from exc
-        config = summary.get("config", {})
+        run_config_path = run_dir / "run.json"
+        run_config = json.loads(run_config_path.read_text(encoding="utf-8")).get("config", {}) if run_config_path.exists() else {}
+        config = summary.get("config", {}) or run_config
         model = CloudRatingNet(backbone_name=str(config.get("backbone", "resnet18")), freeze_backbone=False)
         model.load_state_dict(torch.load(summary["model_path"], map_location="cpu"))
         model.eval()
@@ -259,7 +271,22 @@ def explain_impl(run_id: str | Path, image_id: str, dataset_config_path: str | P
         tensor = torch.tensor(np.transpose(transformed["image"], (2, 0, 1)), dtype=torch.float32)
         predicted_score = float(model(tensor.unsqueeze(0)).detach().cpu().numpy()[0])
         uncertainty = float(summary.get("conformal_half_width", 0.0))
-        heatmap = simple_gradient_heatmap(model, tensor, device=torch.device("cpu"))
+        device = torch.device("cpu")
+        gradient_heatmap = simple_gradient_heatmap(model, tensor, device=device)
+        heatmap = gradient_heatmap
+        heatmap_source = "input_gradient"
+        for layer_name in available_gradcam_layers(model):
+            try:
+                layer_heatmap = grad_cam_heatmap(model, tensor, device=device, target_layer=layer_name)
+            except Exception:
+                continue
+            layer_heatmap_resized = layer_heatmap if layer_heatmap.shape[:2] == image.shape[:2] else cv2.resize(
+                layer_heatmap, (image.shape[1], image.shape[0])
+            )
+            variant_path = run_dir / "explanations" / f"{image_id}_{layer_name.replace('.', '_')}_gradcam.npy"
+            variant_path.parent.mkdir(parents=True, exist_ok=True)
+            np.save(variant_path, layer_heatmap_resized.astype(np.float32))
+            heatmap_variants[f"gradcam:{layer_name}"] = str(variant_path)
         if not features.empty:
             feature_row = features.loc[features["image_id"] == image_id].iloc[0]
             reference = features.drop(columns=["image_id"]).median()
@@ -269,6 +296,7 @@ def explain_impl(run_id: str | Path, image_id: str, dataset_config_path: str | P
             feature_contributions = pd.DataFrame(deltas).sort_values("delta_prediction", ascending=False)
     else:
         heatmap = fallback_heatmap_from_edges(image_row["relative_path"])
+        heatmap_source = "edge_fallback"
         if not features.empty:
             feature_row = features.loc[features["image_id"] == image_id].iloc[0]
         else:
@@ -276,6 +304,10 @@ def explain_impl(run_id: str | Path, image_id: str, dataset_config_path: str | P
     heatmap_resized = heatmap if heatmap.shape[:2] == image.shape[:2] else cv2.resize(heatmap, (image.shape[1], image.shape[0]))
     overlay = overlay_heatmap_on_image(image, heatmap_resized)
     overlay_path = save_overlay(overlay, run_dir / "explanations" / f"{image_id}_overlay.png")
+    heatmap_path = run_dir / "explanations" / f"{image_id}_heatmap.npy"
+    heatmap_path.parent.mkdir(parents=True, exist_ok=True)
+    np.save(heatmap_path, heatmap_resized.astype(np.float32))
+    heatmap_variants[heatmap_source] = str(heatmap_path)
     region_table = build_region_table(image_row["relative_path"], heatmap_resized)
     concept_scores = top_concepts(feature_row) if not features.empty else pd.DataFrame(columns=["concept", "score"])
     explanation = {
@@ -284,6 +316,9 @@ def explain_impl(run_id: str | Path, image_id: str, dataset_config_path: str | P
         "predicted_score": predicted_score,
         "uncertainty": uncertainty,
         "overlay_path": str(overlay_path),
+        "heatmap_path": str(heatmap_path),
+        "heatmap_source": heatmap_source,
+        "heatmap_variants": heatmap_variants,
         "top_features": feature_contributions.head(8).to_dict("records"),
         "top_concepts": concept_scores.to_dict("records"),
         "top_regions": region_table.head(8).to_dict("records"),
@@ -334,6 +369,44 @@ def import_images(
 def download_web_dataset(config: str = typer.Option("configs/dataset/web_sample.yaml", help="Web dataset config YAML")) -> None:
     metadata = download_wikimedia_cloud_dataset(config)
     typer.echo(f"Downloaded {len(metadata)} images. Metadata written for {len(metadata)} records.")
+
+
+@app.command("export-friend-package")
+def export_friend_package(
+    output: str = typer.Option("data/artifacts/cloud_labeling_friend_package.zip", help="Output .zip path or package directory"),
+    manifest_path: str = typer.Option("data/processed/image_manifest.parquet", help="Manifest to package"),
+    package_name: str = typer.Option("cloud_labeling_friend_package", help="Stable package name used for browser storage"),
+    rater_hint: str = typer.Option("friend", help="Default rater id shown in the standalone app"),
+    zip_package: bool = typer.Option(True, help="Write a zip file in addition to the package folder"),
+) -> None:
+    package_path = build_friend_package(
+        output,
+        manifest_path=manifest_path,
+        package_name=package_name,
+        rater_hint=rater_hint,
+        zip_package=zip_package,
+    )
+    typer.echo(f"Friend labeling package written to {package_path}.")
+
+
+@app.command("import-friend-labels")
+def import_friend_labels(
+    bundle: str = typer.Option(..., help="JSON label bundle exported by the standalone friend app"),
+    ratings_dir: str = typer.Option("data/raw/metadata/ratings"),
+    pairwise_dir: str = typer.Option("data/raw/metadata/pairwise"),
+    imported_images_root: str = typer.Option("data/raw/images/friend_imports"),
+) -> None:
+    summary = import_friend_label_bundle(
+        bundle,
+        ratings_dir=ratings_dir,
+        pairwise_dir=pairwise_dir,
+        imported_images_root=imported_images_root,
+    )
+    typer.echo(
+        "Imported "
+        f"{summary['ratings']} ratings, {summary['pairwise']} pairwise preferences, "
+        f"and {summary['imported_images']} friend images."
+    )
 
 
 @app.command("aggregate-labels")

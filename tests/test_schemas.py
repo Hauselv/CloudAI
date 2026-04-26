@@ -33,6 +33,18 @@ def test_rating_record_enforces_score_bounds():
     assert record.raw_score_1_to_10 == 9.0
 
 
+def test_rating_record_accepts_zero_score():
+    record = RatingRecord(
+        rating_id="rate_zero",
+        image_id="img1",
+        rater_id="rater1",
+        rating_session_id="session",
+        raw_score_1_to_10=0.0,
+        rating_timestamp=datetime.now(timezone.utc),
+    )
+    assert record.raw_score_1_to_10 == 0.0
+
+
 def test_require_columns_raises_for_missing_fields():
     frame = pd.DataFrame({"image_id": ["x"]})
     try:

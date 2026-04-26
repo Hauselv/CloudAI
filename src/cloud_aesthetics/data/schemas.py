@@ -24,7 +24,7 @@ class RatingRecord(BaseModel):
     image_id: str
     rater_id: str
     rating_session_id: str
-    raw_score_1_to_10: float = Field(ge=1.0, le=10.0)
+    raw_score_1_to_10: float = Field(ge=0.0, le=10.0)
     rating_timestamp: datetime
     note: str | None = None
 
