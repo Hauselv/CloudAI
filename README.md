@@ -15,6 +15,8 @@ Local-first Python tooling for collecting cloud photo ratings, training models t
 - Baseline regressors and pairwise ranking models
 - Deep transfer model scaffolding for regression
 - Grad-CAM preparation for Deep-CNN runs with selectable ResNet layers
+- Deterministic interpretation cards that translate scores, uncertainty, features, concepts, and cloud-type estimates into review actions
+- Optional local Ollama paraphrasing for explanation text; the structured deterministic result remains the source of truth
 - Streamlit UI for importing, rating, training, inspection, batch reporting, and comparison
 - Optional standalone no-install friend labeling package
 
@@ -37,6 +39,7 @@ This avoids PowerShell execution-policy issues because it does not require `Acti
 - `python -m cloud_aesthetics.cli extract-features --config configs/features/v1.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/baseline.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/deep_cnn_gradcam.yaml`
+- `powershell -ExecutionPolicy Bypass -File D:\CloudAI\cloud-aesthetics\scripts\train_wsl_rocm.ps1`
 - `python -m cloud_aesthetics.cli analyze-batch --run <run_id> --batch-id <import_batch_id>`
 - `python -m cloud_aesthetics.cli explain --run <run_id> --image-id <image_id>`
 - `python -m cloud_aesthetics.cli export-friend-package --output data/artifacts/cloud_labeling_friend_package.zip`
@@ -58,7 +61,7 @@ Pages:
 - `Exclusions`: restore skipped images to the active pool.
 - `Train`: aggregate labels, refresh features, train models, and inspect split/test metrics.
 - `Inspect`: select model runs, pick images from thumbnails, view predictions, feature diagnostics, and heatmaps.
-- `Batch Report`: analyze import batches with a local model and review top/low/uncertain predictions.
+- `Batch Report`: analyze import batches or legacy capture sessions with a local model and review top/low/uncertain/review-first predictions.
 
 ## Private Image Import And Cropping
 
@@ -111,6 +114,10 @@ The current Grad-CAM config is conservative:
 - `batch_size: 4`
 - `epochs: 5`
 - `freeze_backbone: true`
+- bounded 0-10 output
+- automatic device selection
+- AMP on CUDA
+- early stopping and best/last checkpoints
 
 After training, open `Inspect`, choose the deep run, pick an image from the thumbnail grid, and click `Generate explanation`. The analysis stays cached while you switch heatmap sources.
 
@@ -129,6 +136,34 @@ Layer guidance:
 - `layer1`/`layer2`: low-level edges/textures and often noisier.
 
 Baseline runs do not produce model-native Grad-CAM. They show feature diagnostics such as cloud mask, edge/contrast, brightness, saturation, saliency, or fallback edge maps.
+
+## Interpretation Layer
+
+Every explanation now includes a structured `interpretation` object:
+
+- `score_band`: weak, mixed, strong, or excellent
+- `confidence_band`: tight, usable, wide, or very wide
+- clipped likely score range on the 0-10 scale
+- readable main signals and concepts
+- scientific cloud-type context when available
+- cautions and a recommended action such as `shortlist`, `keep`, `review`, or `deprioritize`
+
+Baseline feature rows are interpreted as approximate prediction deltas. Deep-CNN feature rows are interpreted as distance-from-typical signals, not causal model contributions.
+
+Optional local LLM wording can be enabled through `configs/app/default.yaml` with the `interpretation` settings. The current adapter targets Ollama at `http://localhost:11434/api/generate` and sends only structured local explanation evidence.
+
+## Local GPU Notes
+
+Deep training records the selected device, Torch version, CUDA/HIP availability, AMP state, split sizes, best epoch, and checkpoint paths in `summary.json`.
+
+`device: auto` uses CUDA when PyTorch can see it, then tries DirectML if `torch-directml` is installed, and otherwise falls back to CPU. On Windows with an AMD Radeon GPU, the default PyTorch wheel is commonly CPU-only; practical GPU paths are WSL2/ROCm or an explicit DirectML setup.
+
+For this machine, WSL2 Ubuntu is present and exposes `/dev/dxg`, but ROCm/PyTorch are not installed in Ubuntu yet. The prepared path is documented in `docs/ROCM_WSL.md` and supported by:
+
+- `scripts/probe_wsl_rocm.sh`
+- `scripts/setup_wsl_rocm_env.sh`
+- `scripts/train_wsl_rocm.ps1`
+- `configs/models/deep_cnn_rocm.yaml`
 
 ## Batch Reports
 
@@ -181,10 +216,8 @@ Images are saved under `data/raw/images/web_sample`; attribution and license met
 ## Current Open Work
 
 - Add stronger real sky/cloud segmentation, possibly SAM or a dedicated semantic segmentation model.
-- Improve AMD GPU path. A Radeon 6700 XT is powerful, but PyTorch on Windows usually will not use AMD GPUs directly; WSL2/ROCm or CPU training should be evaluated.
+- Validate the preferred AMD GPU route on the actual machine: WSL2/ROCm or `torch-directml`.
 - Add more Deep-CNN configs once labels are stronger, for example EfficientNet-B0 or ConvNeXt-Tiny if local dependencies support them.
-- Add early stopping and richer checkpoint metadata for deep training.
-- Improve Grad-CAM UX with side-by-side layer comparison and saved report images.
 - Add CI/PR automation after GitHub CLI is installed.
 - Decide whether generated processed data should stay local-only or move to a data artifact system.
 - Collect more labels. Baseline runs are useful around 150-300 labels; Grad-CAM becomes more meaningful once deep models have enough signal, roughly 300-500+ labels.

@@ -25,12 +25,21 @@ if manifest.empty or aggregated.empty:
     st.warning("Need a manifest and aggregated labels before comparison mode is useful.")
     st.stop()
 
-image_ids = manifest["image_id"].tolist()
+manifest = manifest.copy()
+manifest["image_id"] = manifest["image_id"].astype(str)
+aggregated = aggregated.copy()
+aggregated["image_id"] = aggregated["image_id"].astype(str)
+labeled_manifest = manifest[manifest["image_id"].isin(set(aggregated["image_id"]))].reset_index(drop=True)
+if len(labeled_manifest) < 2:
+    st.warning("Need at least two labeled images before comparison mode is useful.")
+    st.stop()
+
+image_ids = labeled_manifest["image_id"].tolist()
 left_id = st.selectbox("Left image", image_ids, key="compare_left")
 right_id = st.selectbox("Right image", [item for item in image_ids if item != left_id], key="compare_right")
 
-left_manifest = manifest.loc[manifest["image_id"] == left_id].iloc[0]
-right_manifest = manifest.loc[manifest["image_id"] == right_id].iloc[0]
+left_manifest = labeled_manifest.loc[labeled_manifest["image_id"] == left_id].iloc[0]
+right_manifest = labeled_manifest.loc[labeled_manifest["image_id"] == right_id].iloc[0]
 left_label = aggregated.loc[aggregated["image_id"] == left_id].iloc[0]
 right_label = aggregated.loc[aggregated["image_id"] == right_id].iloc[0]
 
@@ -41,13 +50,20 @@ with col2:
     st.image(str(resolve_path(right_manifest["relative_path"])), caption=f"{right_id} | mean {right_label['mean_score']:.2f}", use_container_width=True)
 
 if not features.empty:
-    left_features = features.loc[features["image_id"] == left_id].drop(columns=["image_id"]).T.rename(columns={features.loc[features["image_id"] == left_id].index[0]: "left"})
-    right_features = features.loc[features["image_id"] == right_id].drop(columns=["image_id"]).T.rename(columns={features.loc[features["image_id"] == right_id].index[0]: "right"})
-    comparison = left_features.join(right_features)
-    comparison["delta"] = comparison["left"] - comparison["right"]
-    comparison = comparison.sort_values("delta", key=lambda series: series.abs(), ascending=False).head(20)
-    st.subheader("Top Feature Differences")
-    st.dataframe(comparison, use_container_width=True)
+    numeric_features = features.select_dtypes(include=["number"]).copy()
+    numeric_features["image_id"] = features["image_id"].values
+    left_match = numeric_features.loc[numeric_features["image_id"].astype(str) == left_id]
+    right_match = numeric_features.loc[numeric_features["image_id"].astype(str) == right_id]
+    if not left_match.empty and not right_match.empty:
+        left_features = left_match.drop(columns=["image_id"]).T.rename(columns={left_match.index[0]: "left"})
+        right_features = right_match.drop(columns=["image_id"]).T.rename(columns={right_match.index[0]: "right"})
+        comparison = left_features.join(right_features)
+        comparison["delta"] = comparison["left"] - comparison["right"]
+        comparison = comparison.sort_values("delta", key=lambda series: series.abs(), ascending=False).head(20)
+        st.subheader("Top Feature Differences")
+        st.dataframe(comparison, use_container_width=True)
+    else:
+        st.info("Feature rows are not available for one of the selected images.")
 
 high_agreement = aggregated.sort_values("agreement_index", ascending=False).head(10)
 st.subheader("High Agreement Examples")

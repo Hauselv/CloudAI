@@ -3,7 +3,7 @@ from __future__ import annotations
 import cv2
 import numpy as np
 
-from cloud_aesthetics.data.exclusions import active_excluded_ids, set_exclusion
+from cloud_aesthetics.data.exclusions import active_excluded_ids, set_exclusion, set_exclusions
 from cloud_aesthetics.data.manifest import build_manifest
 
 
@@ -28,3 +28,17 @@ def test_exclusion_can_be_reversed(tmp_path):
     set_exclusion("img1", excluded=False, reason="restore", path_like=tmp_path / "exclusions.csv")
 
     assert "img1" not in active_excluded_ids(tmp_path / "exclusions.csv")
+
+
+def test_multiple_exclusions_can_be_written_at_once(tmp_path):
+    set_exclusions(
+        [
+            {"image_id": "img1", "relative_path": "a.jpg"},
+            {"image_id": "img2", "relative_path": "b.jpg"},
+        ],
+        excluded=True,
+        reason="bad_group",
+        path_like=tmp_path / "exclusions.csv",
+    )
+
+    assert active_excluded_ids(tmp_path / "exclusions.csv") == {"img1", "img2"}

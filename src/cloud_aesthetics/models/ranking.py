@@ -22,7 +22,11 @@ def build_pairwise_feature_dataset(
     image_ids: set[str] | None = None,
 ) -> PairwiseDataset:
     feature_indexed = features.set_index("image_id")
-    numeric_columns = [column for column in features.columns if column != "image_id"]
+    numeric_columns = [
+        column
+        for column in features.columns
+        if column != "image_id" and pd.api.types.is_numeric_dtype(features[column])
+    ]
     rows_x: list[np.ndarray] = []
     rows_y: list[int] = []
     rows_meta: list[dict[str, object]] = []

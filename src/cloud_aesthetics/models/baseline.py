@@ -47,7 +47,11 @@ def _split_frame(features: pd.DataFrame, labels: pd.DataFrame, splits: pd.DataFr
         .merge(splits[["image_id", "partition", "fold"]], on="image_id", how="inner")
         .sort_values("image_id")
     )
-    numeric_columns = [column for column in features.columns if column != "image_id"]
+    numeric_columns = [
+        column
+        for column in features.columns
+        if column != "image_id" and pd.api.types.is_numeric_dtype(features[column])
+    ]
     train_mask = (merged["partition"] == "dev") & (merged["fold"] != fold_holdout)
     val_mask = (merged["partition"] == "dev") & (merged["fold"] == fold_holdout)
     test_mask = merged["partition"] == "test"

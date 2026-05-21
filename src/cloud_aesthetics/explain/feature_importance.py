@@ -28,7 +28,19 @@ def permutation_feature_importance(model, X: pd.DataFrame, y: np.ndarray, n_repe
 
 
 def approximate_local_contributions(model, feature_row: pd.Series, reference_frame: pd.DataFrame) -> pd.DataFrame:
-    numeric_columns = [column for column in reference_frame.columns if column != "image_id"]
+    numeric_columns = [
+        column
+        for column in reference_frame.columns
+        if column != "image_id" and pd.api.types.is_numeric_dtype(reference_frame[column])
+    ]
+    expected = getattr(model, "feature_names_in_", None)
+    if expected is None and hasattr(model, "named_steps"):
+        for step in model.named_steps.values():
+            expected = getattr(step, "feature_names_in_", None)
+            if expected is not None:
+                break
+    if expected is not None:
+        numeric_columns = [column for column in expected if column in numeric_columns]
     baseline = reference_frame[numeric_columns].median()
     deltas = []
     base_pred = float(model.predict(pd.DataFrame([baseline]))[0])

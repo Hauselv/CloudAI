@@ -26,7 +26,11 @@ def compare_groups(
     merged = features.merge(labels, on="image_id", how="inner")
     high = merged.loc[high_selector(merged)]
     mid = merged.loc[mid_selector(merged)]
-    numeric_columns = [column for column in features.columns if column != "image_id"]
+    numeric_columns = [
+        column
+        for column in features.columns
+        if column != "image_id" and pd.api.types.is_numeric_dtype(features[column])
+    ]
     rows: list[dict[str, float | str]] = []
     for column in numeric_columns:
         high_values = high[column].to_numpy(dtype=np.float32)

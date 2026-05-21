@@ -2,3 +2,8 @@ title: Cloud Aesthetics Research Workbench
 default_rater_id: friend_a
 show_scientific_caveat: true
 max_gallery_images: 24
+interpretation:
+  llm_provider: ollama
+  ollama_model: llama3.2:3b-instruct
+  ollama_url: http://localhost:11434/api/generate
+  timeout_seconds: 12

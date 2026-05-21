@@ -19,7 +19,7 @@ from cloud_aesthetics.data.splits import create_grouped_splits
 from cloud_aesthetics.data.web_dataset import download_wikimedia_cloud_dataset
 from cloud_aesthetics.eval.analysis import compare_groups, compute_feature_correlation, compute_pca_projection
 from cloud_aesthetics.eval.neighbors import nearest_neighbors
-from cloud_aesthetics.explain.concepts import top_concepts
+from cloud_aesthetics.explain.concepts import cloud_type_scores, top_concepts
 from cloud_aesthetics.explain.feature_importance import (
     approximate_local_contributions,
     load_pickled_model,
@@ -33,9 +33,10 @@ from cloud_aesthetics.explain.heatmaps import (
     save_overlay,
     simple_gradient_heatmap,
 )
+from cloud_aesthetics.explain.interpretation import build_interpretation
 from cloud_aesthetics.explain.regions import build_region_table
 from cloud_aesthetics.explain.text_report import build_text_explanation
-from cloud_aesthetics.features.base import extract_and_save_features, extract_feature_row
+from cloud_aesthetics.features.base import extract_and_save_features, extract_features_from_manifest
 from cloud_aesthetics.features.store import load_features
 from cloud_aesthetics.models.baseline import train_baseline_suite
 from cloud_aesthetics.models.deep import CloudRatingNet, train_deep_model
@@ -155,7 +156,12 @@ def extract_features_impl(
 
 
 def _derive_embedding_table(features: pd.DataFrame, n_components: int = 16) -> pd.DataFrame:
-    numeric = features.drop(columns=["image_id"]).fillna(0.0)
+    numeric_columns = [
+        column
+        for column in features.columns
+        if column != "image_id" and pd.api.types.is_numeric_dtype(features[column])
+    ]
+    numeric = features[numeric_columns].fillna(0.0)
     n_components = min(n_components, numeric.shape[0], numeric.shape[1]) if not numeric.empty else 0
     if n_components <= 0:
         return pd.DataFrame({"image_id": features["image_id"]})
@@ -251,18 +257,13 @@ def ensure_features_for_images(
 ) -> pd.DataFrame:
     feature_config = load_yaml(feature_config_path)
     feature_path = feature_config["output_path"]
-    image_size = int(feature_config.get("image_size", 512))
     existing = read_table(feature_path)
     existing_ids = set(existing["image_id"].astype(str)) if not existing.empty and "image_id" in existing.columns else set()
     target_ids = {str(image_id) for image_id in image_ids}
     missing = target_ids - existing_ids
-    new_rows = []
     if missing:
         target_manifest = manifest[manifest["image_id"].astype(str).isin(missing)]
-        for _, row in target_manifest.iterrows():
-            new_rows.append(extract_feature_row(str(row["image_id"]), str(row["relative_path"]), image_size=image_size))
-    if new_rows:
-        new_frame = pd.DataFrame(new_rows)
+        new_frame = extract_features_from_manifest(target_manifest, feature_config_path)
         combined = pd.concat([existing, new_frame], ignore_index=True) if not existing.empty else new_frame
         combined = combined.drop_duplicates(subset=["image_id"], keep="last").reset_index(drop=True)
         write_table(combined, feature_path)
@@ -273,10 +274,50 @@ def ensure_features_for_images(
 def list_import_batches(dataset_config_path: str | Path = "configs/dataset/default.yaml") -> list[str]:
     config = _load_dataset_config(dataset_config_path)
     manifest = read_table(config["manifest_path"])
-    if manifest.empty or "import_batch_id" not in manifest.columns:
+    if manifest.empty:
         return []
-    batches = manifest["import_batch_id"].dropna().astype(str)
-    return sorted([batch for batch in batches.unique().tolist() if batch], reverse=True)
+    if "import_batch_id" in manifest.columns:
+        batches = manifest["import_batch_id"].dropna().astype(str)
+        batch_ids = sorted([batch for batch in batches.unique().tolist() if batch], reverse=True)
+        if batch_ids:
+            return batch_ids
+    if "capture_session_id" in manifest.columns:
+        sessions = sorted(
+            [session for session in manifest["capture_session_id"].dropna().astype(str).unique().tolist() if session],
+            reverse=True,
+        )
+        if sessions:
+            return [f"session:{session}" for session in sessions]
+    if "split_group_id" in manifest.columns:
+        groups = sorted(
+            [group for group in manifest["split_group_id"].dropna().astype(str).unique().tolist() if group],
+            reverse=True,
+        )
+        return [f"group:{group}" for group in groups]
+    return []
+
+
+def _select_batch_manifest(manifest: pd.DataFrame, batch_id: str) -> pd.DataFrame:
+    batch_id = str(batch_id)
+    if "import_batch_id" in manifest.columns:
+        matched = manifest[manifest["import_batch_id"].fillna("").astype(str) == batch_id].copy()
+        if not matched.empty:
+            return matched
+    if batch_id.startswith("session:") and "capture_session_id" in manifest.columns:
+        session_id = batch_id.removeprefix("session:")
+        return manifest[manifest["capture_session_id"].fillna("").astype(str) == session_id].copy()
+    if batch_id.startswith("group:") and "split_group_id" in manifest.columns:
+        group_id = batch_id.removeprefix("group:")
+        return manifest[manifest["split_group_id"].fillna("").astype(str) == group_id].copy()
+    if "capture_session_id" in manifest.columns:
+        matched = manifest[manifest["capture_session_id"].fillna("").astype(str) == batch_id].copy()
+        if not matched.empty:
+            return matched
+    if "split_group_id" in manifest.columns:
+        matched = manifest[manifest["split_group_id"].fillna("").astype(str) == batch_id].copy()
+        if not matched.empty:
+            return matched
+    return pd.DataFrame()
 
 
 def _batch_report_dir(run_id: str | Path, batch_id: str) -> Path:
@@ -300,9 +341,7 @@ def analyze_batch_impl(
     manifest = read_table(dataset_config["manifest_path"])
     if manifest.empty:
         raise ValueError("Manifest is empty. Import images before analyzing a batch.")
-    if "import_batch_id" not in manifest.columns:
-        raise ValueError("Manifest does not contain import_batch_id. Re-run image import/ingestion first.")
-    batch_manifest = manifest[manifest["import_batch_id"].fillna("").astype(str) == str(batch_id)].copy()
+    batch_manifest = _select_batch_manifest(manifest, str(batch_id))
     if batch_manifest.empty:
         raise ValueError(f"No images found for import batch: {batch_id}")
 
@@ -332,6 +371,12 @@ def analyze_batch_impl(
                 "uncertainty": float(explanation.get("uncertainty", 0.0)),
                 "top_features": json.dumps(explanation.get("top_features", [])),
                 "top_concepts": json.dumps(explanation.get("top_concepts", [])),
+                "interpretation": json.dumps(explanation.get("interpretation", {})),
+                "recommendation": str(explanation.get("interpretation", {}).get("recommendation", "")),
+                "score_band": str(explanation.get("interpretation", {}).get("score_band", {}).get("label", "")),
+                "confidence_band": str(explanation.get("interpretation", {}).get("confidence_band", {}).get("label", "")),
+                "score_interval_low": float(explanation.get("interpretation", {}).get("score_interval", {}).get("low", float("nan"))),
+                "score_interval_high": float(explanation.get("interpretation", {}).get("score_interval", {}).get("high", float("nan"))),
                 "explanation_path": str(explanation_path),
                 "overlay_path": str(explanation.get("overlay_path", "")),
                 "created_at": created_at,
@@ -392,9 +437,20 @@ def explain_impl(
             raise ValueError(f"Features not found for image: {image_id}")
         feature_row = feature_matches.iloc[0]
         numeric_row = feature_row.drop(labels=["image_id"])
+        numeric_row = numeric_row[pd.to_numeric(numeric_row, errors="coerce").notna()].astype(float)
+        expected = getattr(model, "feature_names_in_", None)
+        if expected is None and hasattr(model, "named_steps"):
+            for step in model.named_steps.values():
+                expected = getattr(step, "feature_names_in_", None)
+                if expected is not None:
+                    break
+        if expected is not None:
+            numeric_row = numeric_row.reindex(list(expected), fill_value=0.0)
         predicted_score = float(model.predict(pd.DataFrame([numeric_row]))[0])
         uncertainty = float(model_info.get("conformal_half_width", 0.0))
         feature_contributions = approximate_local_contributions(model, feature_row, features)
+        if not feature_contributions.empty:
+            feature_contributions = feature_contributions.assign(attribution_kind="prediction_delta")
         heatmap = fallback_heatmap_from_edges(image_row["relative_path"])
         heatmap_source = "edge_fallback"
     elif summary["kind"] == "deep":
@@ -405,7 +461,13 @@ def explain_impl(
         run_config_path = run_dir / "run.json"
         run_config = json.loads(run_config_path.read_text(encoding="utf-8")).get("config", {}) if run_config_path.exists() else {}
         config = summary.get("config", {}) or run_config
-        model = CloudRatingNet(backbone_name=str(config.get("backbone", "resnet18")), freeze_backbone=False)
+        model = CloudRatingNet(
+            backbone_name=str(config.get("backbone", "resnet18")),
+            freeze_backbone=False,
+            bounded_output=bool(config.get("bounded_output", False)),
+            score_min=float(config.get("score_min", 0.0)),
+            score_max=float(config.get("score_max", 10.0)),
+        )
         model.load_state_dict(torch.load(summary["model_path"], map_location="cpu"))
         model.eval()
         transformed = apply_transform(build_eval_transform(int(config.get("image_size", 224))), image)
@@ -430,11 +492,26 @@ def explain_impl(
             heatmap_variants[f"gradcam:{layer_name}"] = str(variant_path)
         if not features.empty and str(image_id) in set(features["image_id"].astype(str)):
             feature_row = features.loc[features["image_id"].astype(str) == str(image_id)].iloc[0]
-            reference = features.drop(columns=["image_id"]).median()
+            numeric_features = features.select_dtypes(include=["number"])
+            reference = numeric_features.median()
+            scale = numeric_features.std(ddof=0).replace(0.0, np.nan)
             deltas = []
-            for column, value in feature_row.drop(labels=["image_id"]).items():
-                deltas.append({"feature": column, "delta_prediction": abs(float(value - reference[column])), "value": float(value)})
-            feature_contributions = pd.DataFrame(deltas).sort_values("delta_prediction", ascending=False)
+            for column, value in feature_row[numeric_features.columns].items():
+                value_float = float(value)
+                typical = float(reference[column])
+                std = float(scale[column]) if pd.notna(scale[column]) else 0.0
+                z_score = (value_float - typical) / std if std > 0 else 0.0
+                deltas.append(
+                    {
+                        "feature": column,
+                        "distance_from_typical": abs(float(z_score)),
+                        "z_score": float(z_score),
+                        "value": value_float,
+                        "typical_value": typical,
+                        "attribution_kind": "feature_distance",
+                    }
+                )
+            feature_contributions = pd.DataFrame(deltas).sort_values("distance_from_typical", ascending=False)
     else:
         heatmap = fallback_heatmap_from_edges(image_row["relative_path"])
         heatmap_source = "edge_fallback"
@@ -451,6 +528,22 @@ def explain_impl(
     heatmap_variants[heatmap_source] = str(heatmap_path)
     region_table = build_region_table(image_row["relative_path"], heatmap_resized)
     concept_scores = top_concepts(feature_row) if not feature_row.empty else pd.DataFrame(columns=["concept", "score"])
+    scientific_cloud_scores = cloud_type_scores(feature_row) if not feature_row.empty else pd.DataFrame(columns=["cloud_type", "score"])
+    scientific_context: dict[str, object] = {}
+    if not feature_row.empty:
+        try:
+            evidence = json.loads(str(feature_row.get("rule_based_evidence", "{}")))
+        except json.JSONDecodeError:
+            evidence = {}
+        scientific_context = {
+            "primary_cloud_type": str(feature_row.get("primary_cloud_type", "unknown")),
+            "cloud_type_confidence": float(feature_row.get("cloud_type_confidence", 0.0)),
+            "cloud_type_scores": scientific_cloud_scores.to_dict("records"),
+            "rule_based_evidence": evidence,
+            "dominant_evidence": evidence.get("dominant_evidence", evidence.get("reason", "visual cloud cues")),
+            "vision_model_vote": str(feature_row.get("vision_model_vote", "not_configured")),
+            "scientific_caveat": str(feature_row.get("scientific_caveat", "")),
+        }
     ground_truth = []
     if not labels.empty and "image_id" in labels.columns:
         ground_truth = labels.loc[labels["image_id"].astype(str) == str(image_id)].to_dict("records")
@@ -465,14 +558,22 @@ def explain_impl(
         "heatmap_variants": heatmap_variants,
         "top_features": feature_contributions.head(8).to_dict("records"),
         "top_concepts": concept_scores.to_dict("records"),
+        "scientific_cloud_type": scientific_context,
         "top_regions": region_table.head(8).to_dict("records"),
         "nearest_neighbors": nearest_neighbors(features, image_id).to_dict("records") if not features.empty else [],
         "ground_truth": ground_truth,
         "scientific_caveat": (
             "Heatmaps and feature attributions reflect model-associated evidence, not literal causal proof of aesthetic preference."
         ),
-        "text_explanation": build_text_explanation(predicted_score, uncertainty, feature_contributions, concept_scores),
+        "text_explanation": build_text_explanation(
+            predicted_score,
+            uncertainty,
+            feature_contributions,
+            concept_scores,
+            scientific_context,
+        ),
     }
+    explanation["interpretation"] = build_interpretation(explanation)
     write_json(explanation, run_dir / "explanations" / f"{image_id}.json")
     return explanation
 

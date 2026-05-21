@@ -87,3 +87,27 @@ def set_exclusion(
     frame = pd.DataFrame([row], columns=EXCLUSION_COLUMNS)
     pd.concat([existing, frame], ignore_index=True).to_csv(path, index=False)
     return row
+
+
+def set_exclusions(
+    rows: list[dict[str, object]],
+    *,
+    excluded: bool = True,
+    reason: str = "",
+    path_like: str | Path = "data/raw/metadata/exclusions.csv",
+) -> pd.DataFrame:
+    records = [
+        {
+            "image_id": str(row["image_id"]),
+            "relative_path": str(row.get("relative_path", "")),
+            "excluded": bool(excluded),
+            "reason": reason,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+        for row in rows
+    ]
+    path = ensure_parent(path_like)
+    existing = load_exclusions(path) if path.exists() else pd.DataFrame(columns=EXCLUSION_COLUMNS)
+    frame = pd.DataFrame(records, columns=EXCLUSION_COLUMNS)
+    pd.concat([existing, frame], ignore_index=True).to_csv(path, index=False)
+    return frame

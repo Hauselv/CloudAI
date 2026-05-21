@@ -17,3 +17,18 @@ def test_grouped_splits_keep_groups_together():
     assignment = splits.groupby("split_group_id")[["partition", "fold"]].nunique()
     assert assignment["partition"].max() == 1
     assert assignment["fold"].max() == 1
+
+
+def test_grouped_splits_fall_back_for_tiny_data():
+    manifest = pd.DataFrame([{"image_id": "img0", "split_group_id": "group0", "capture_session_id": "session0"}])
+    labels = pd.DataFrame([{"image_id": "img0", "mean_score": 7.0}])
+    splits = create_grouped_splits(manifest, labels, n_splits=5, score_bins=5, test_fraction=0.2, random_state=7)
+    assert splits.to_dict("records") == [
+        {
+            "image_id": "img0",
+            "split_group_id": "group0",
+            "score_bin": 0,
+            "partition": "dev",
+            "fold": 0,
+        }
+    ]

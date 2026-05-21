@@ -14,6 +14,28 @@ if str(SRC_ROOT) not in sys.path:
 from cloud_aesthetics.app.common import aggregate_labels_impl, dataset_config, extract_features_impl, list_runs, safe_read_table, train_impl
 from cloud_aesthetics.settings import resolve_path
 
+
+def _torch_runtime_info() -> dict[str, object]:
+    try:
+        import torch
+    except ImportError:
+        return {"available": False, "torch": "not installed", "device": "cpu"}
+    if torch.cuda.is_available():
+        return {
+            "available": True,
+            "torch": torch.__version__,
+            "device": torch.cuda.get_device_name(torch.cuda.current_device()),
+            "cuda": getattr(torch.version, "cuda", None),
+        }
+    return {
+        "available": True,
+        "torch": torch.__version__,
+        "device": "CPU",
+        "cuda": getattr(torch.version, "cuda", None),
+        "hip": getattr(torch.version, "hip", None),
+    }
+
+
 st.set_page_config(page_title="Train Models", layout="wide")
 st.title("Train Models")
 st.caption("Run ingestion products in sequence, then launch a baseline or deep experiment.")
@@ -38,6 +60,12 @@ elif labels.empty:
 else:
     st.info("No split table yet. Use 'Aggregate labels' to create validation and test splits.")
 
+runtime = _torch_runtime_info()
+runtime_col1, runtime_col2, runtime_col3 = st.columns(3)
+runtime_col1.metric("Torch", str(runtime.get("torch", "unknown")))
+runtime_col2.metric("Training device", str(runtime.get("device", "CPU")))
+runtime_col3.metric("CUDA", str(runtime.get("cuda", None) or "not active"))
+
 col1, col2, col3 = st.columns(3)
 if col1.button("Aggregate labels"):
     tables = aggregate_labels_impl()
@@ -52,6 +80,7 @@ model_config = st.selectbox(
         "configs/models/baseline.yaml",
         "configs/models/deep_cnn.yaml",
         "configs/models/deep_cnn_gradcam.yaml",
+        "configs/models/deep_cnn_rocm.yaml",
         "configs/models/hybrid.yaml",
         "configs/models/ranking.yaml",
     ],
@@ -71,6 +100,12 @@ if runs:
         with summary_path.open("r", encoding="utf-8") as handle:
             summary = json.load(handle)
         if summary.get("kind") == "deep":
+            device = summary.get("device", {})
+            run_col1, run_col2, run_col3, run_col4 = st.columns(4)
+            run_col1.metric("Device", str(device.get("name", device.get("type", "unknown"))))
+            run_col2.metric("Epochs ran", int(summary.get("epochs_ran", 0)))
+            run_col3.metric("Best epoch", int(summary.get("best_epoch", -1)))
+            run_col4.metric("AMP", "on" if summary.get("amp") else "off")
             history = summary.get("metrics", {}).get("history", [])
             rows = []
             for item in history:

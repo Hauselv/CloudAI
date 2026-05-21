@@ -112,7 +112,20 @@ def test_batch_analysis_writes_predictions_and_skips_existing(tmp_path: Path):
     assert first["image_count"] == len(image_ids)
     assert first["analyzed_count"] == len(image_ids)
     predictions = pd.read_parquet(first["predictions_path"])
-    assert set(["batch_id", "run_id", "image_id", "predicted_score", "top_features", "top_concepts"]).issubset(predictions.columns)
+    assert set(
+        [
+            "batch_id",
+            "run_id",
+            "image_id",
+            "predicted_score",
+            "top_features",
+            "top_concepts",
+            "interpretation",
+            "recommendation",
+            "score_interval_low",
+            "score_interval_high",
+        ]
+    ).issubset(predictions.columns)
 
     second = analyze_batch_impl(run_dir, "batch_test_001", dataset_config, feature_config)
     assert second["analyzed_count"] == 0
