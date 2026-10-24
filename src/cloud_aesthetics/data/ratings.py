@@ -61,6 +61,24 @@ def record_pairwise_preference(
     return row
 
 
+VOID_FILENAME = "ratings_void.csv"
+
+
+def void_rating(ratings_dir: str | Path, rating_id: str, reason: str = "undo") -> dict[str, object]:
+    """Mark a rating as withdrawn without rewriting the append-only rater files."""
+    row = {"rating_id": str(rating_id), "voided_at": datetime.now(timezone.utc).isoformat(), "reason": reason}
+    append_csv_row(row, resolve_path(ratings_dir) / VOID_FILENAME)
+    return row
+
+
+def voided_rating_ids(ratings_dir: str | Path) -> set[str]:
+    path = resolve_path(ratings_dir) / VOID_FILENAME
+    if not path.exists():
+        return set()
+    frame = pd.read_csv(path)
+    return set(frame["rating_id"].astype(str)) if "rating_id" in frame.columns else set()
+
+
 def _load_annotation_dir(path_like: str | Path, table_name: str) -> pd.DataFrame:
     root = resolve_path(path_like)
     if not root.exists():
@@ -68,6 +86,8 @@ def _load_annotation_dir(path_like: str | Path, table_name: str) -> pd.DataFrame
         return empty_table(table_name)
     frames: list[pd.DataFrame] = []
     for path in sorted(root.glob("*.csv")):
+        if path.name == VOID_FILENAME:
+            continue
         frames.append(pd.read_csv(path))
     for path in sorted(root.glob("*.parquet")):
         frames.append(pd.read_parquet(path))
@@ -77,8 +97,14 @@ def _load_annotation_dir(path_like: str | Path, table_name: str) -> pd.DataFrame
     return frame.reindex(columns=SCHEMA_COLUMNS[table_name])
 
 
-def load_raw_scalar_ratings(ratings_dir: str | Path) -> pd.DataFrame:
-    return _load_annotation_dir(ratings_dir, "ratings")
+def load_raw_scalar_ratings(ratings_dir: str | Path, include_voided: bool = False) -> pd.DataFrame:
+    frame = _load_annotation_dir(ratings_dir, "ratings")
+    if include_voided or frame.empty:
+        return frame
+    voided = voided_rating_ids(ratings_dir)
+    if not voided:
+        return frame
+    return frame[~frame["rating_id"].astype(str).isin(voided)].reset_index(drop=True)
 
 
 def load_raw_pairwise_preferences(pairwise_dir: str | Path) -> pd.DataFrame:

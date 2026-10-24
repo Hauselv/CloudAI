@@ -67,7 +67,7 @@ Pages:
 
 - `Home`: pipeline status panel (raw images, manifest, ratings, labels, splits, features, latest run) with stale markers and one-click refresh, plus rating distribution by image kind.
 - `Import`: import private folders, generate crops, and optionally start batch analysis after import.
-- `Rate`: label images, randomize or diversify order, use hotkeys, and skip unsuitable images.
+- `Rate`: label images with score buttons and number keys (0–9, `+` for 10, `.` for ±½, Enter saves, Backspace undoes), optional quick mode (digit saves immediately), previous ratings shown per image, judge scores hidden by default, image-kind filter, label orders including the judge queue, source photo shown for crops. The second tab runs duels among your top-rated images (hotkeys A/L/T/N) and shows a Bradley-Terry ranking next to the absolute scores.
 - `Gallery`: browse active originals/crops as tiles with labeled/open filters.
 - `Exclusions`: restore skipped images to the active pool.
 - `Source Groups`: review originals and their derived crops together, then exclude a single image or whole group.
@@ -94,7 +94,9 @@ The importer writes derivative metadata to `data/raw/metadata/image_derivatives.
 
 ## Labeling And Exclusions
 
-Scalar labels are stored locally under `data/raw/metadata/ratings/` as per-rater CSV files. The current scale is 0.0-10.0 in 0.5 steps. Older 1-10 labels remain valid.
+Scalar labels are stored locally under `data/raw/metadata/ratings/` as per-rater CSV files. The current scale is 0.0-10.0 in 0.5 steps. Older 1-10 labels remain valid. Undo never rewrites those files: withdrawn ratings are listed in `ratings/ratings_void.csv` and filtered out when ratings are loaded.
+
+Pairwise duels (`data/raw/metadata/pairwise/<rater>.csv`) feed a Bradley-Terry fit during `aggregate-labels`; `aggregated_labels.parquet` carries `bt_score` (0-10 scaled) and `duels` per image.
 
 When an image does not belong in training, use `Skip / exclude` in the `Rate` page or exclude it from `Source Groups`. Exclusions are stored in `data/raw/metadata/exclusions.csv`; image files are not deleted. The Streamlit pages and training commands filter active exclusions at read time, and `Exclusions` can restore them.
 

@@ -353,6 +353,17 @@ ohne EXIF sind. Damit ist jede Aussage zu Sonnenstand oder Wetter und Rating der
 ρ 0,49 bei n=14). Der Layer wird in dem Moment aussagekräftig, in dem die 78 ungelabelten privaten Originale –
 fast alle mit EXIF und GPS – gelabelt sind. Das ist dieselbe Warteschlange wie für die 10-vs-8-Frage.
 
+### Labeling-UX (24.10.2026, S1)
+
+Rate-Seite: Score-Buttons 0–10 und Zifferntasten, Schnellmodus, Undo über eine Tombstone-Datei
+(`data/raw/metadata/ratings/ratings_void.csv`; die Rater-CSVs bleiben append-only, der Lader filtert), Anzeige
+bisheriger Bewertungen pro Bild, Judge-Scores standardmäßig ausgeblendet. Zweiter Tab „Duelle & Paarvergleich“:
+Pool aus eigenen Bildern ab Schwelle (Standard 8,0, nur Originale), optional ungelabelte Triage-Kandidaten mit
+Judge ≥ 7; Paarauswahl bevorzugt Bilder mit wenigen Duellen und ähnlichem Score, kein Paar wird wiederholt.
+Bradley-Terry-Fit (`data/pairwise.py`, MM-Algorithmus mit kleinem Prior) liefert `bt_score`/`duels`, auch in
+`aggregated_labels.parquet`. Die Rangfolge aus Duellen ist das geeignete Zielmaß für die Feinunterscheidung am
+oberen Ende; sobald genug Duelle vorliegen, sollten die Embedding-Modelle auch darauf trainiert werden.
+
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
 Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.

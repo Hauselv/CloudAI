@@ -76,6 +76,8 @@ def aggregate_ratings(ratings: pd.DataFrame, pairwise: pd.DataFrame | None = Non
             }
         )
     aggregated = pd.DataFrame(rows)
+    aggregated["bt_score"] = np.nan
+    aggregated["duels"] = 0
     if pairwise is not None and not pairwise.empty:
         win_rates = compute_pairwise_win_rate(pairwise)
         aggregated = aggregated.merge(win_rates, on="image_id", how="left", suffixes=("", "_pair"))
@@ -83,4 +85,12 @@ def aggregate_ratings(ratings: pd.DataFrame, pairwise: pd.DataFrame | None = Non
             aggregated["pairwise_win_rate"]
         )
         aggregated = aggregated.drop(columns=["pairwise_win_rate_pair"])
+        from cloud_aesthetics.data.pairwise import bradley_terry_scores
+
+        strengths = bradley_terry_scores(pairwise)
+        if not strengths.empty:
+            aggregated = aggregated.drop(columns=["bt_score", "duels"]).merge(
+                strengths[["image_id", "bt_score", "duels"]], on="image_id", how="left"
+            )
+            aggregated["duels"] = aggregated["duels"].fillna(0).astype(int)
     return aggregated.sort_values("image_id").reset_index(drop=True)

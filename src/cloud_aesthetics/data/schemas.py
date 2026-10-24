@@ -56,6 +56,8 @@ class AggregatedLabelRecord(BaseModel):
     agreement_index: float
     normalized_mean_score: float
     pairwise_win_rate: float
+    bt_score: float | None = None
+    duels: int = 0
     kind: str | None = None
     dataset_name: str | None = None
     crop_class: str | None = None
