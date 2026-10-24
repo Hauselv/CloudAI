@@ -62,8 +62,9 @@ Vergleichsreport), Backends Uni-Gateway (DeepSeek V4.1 Flash, Qwen3.6 35B) und A
 `judge-report`, Seite „Rater Comparison“. Validiert gegen alle 312 Labels: ρ ≈ 0,70 gesamt, aber nur ≈ 0,35–0,40
 innerhalb der Originale und 0,28 am oberen Ende; die Judges sind untereinander mit ρ 0,90 einig, der Unterschied
 zu Michel ist also Geschmack. Brauchbar als Vorfilter und Attribut-Layer, nicht als Ersatz für die feinen Labels.
-Details und Geschmacks-Hypothesen in `PROJEKTSTATUS.md`. Offen: Schritt 2/3 (Judge über die ungelabelten Bilder
-als Vorsortierung, Exclusion-Vorschläge aus den Qualitätsflags).
+Details und Geschmacks-Hypothesen in `PROJEKTSTATUS.md`. Schritt 2/3 ebenfalls umgesetzt: `judge-triage` und die
+Seite „Triage“ (Label-Warteschlange, unsichere Bilder, Exclusion-Vorschläge mit Bestätigung), Label-Reihenfolge
+„Judge-Vorschlag“ in der Rate-Seite.
 Michels Idee, mit einem Vision-Modell schnell einen großen Mock-Datensatz zu labeln, passt sauber
 ins bestehende Schema: **jedes Modell ist ein eigener `rater_id`** (z. B. `llm_claude_sonnet_5_5`),
 mit zusätzlicher Spalte `rater_kind = human | llm` in den Rohlabels, damit Mensch und Modell nie

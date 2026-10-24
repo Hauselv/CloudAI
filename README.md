@@ -42,7 +42,8 @@ This avoids PowerShell execution-policy issues because it does not require `Acti
 - `python -m cloud_aesthetics.cli extract-embeddings [--model clip_vit_b32]`
 - `python -m cloud_aesthetics.cli zero-shot`
 - `python -m cloud_aesthetics.cli judge-images [--model claude-opus-5-5] [--limit N] [--no-only-labeled]`
-- `python -m cloud_aesthetics.cli judge-report --rater llm_claude_opus_5_5`
+- `python -m cloud_aesthetics.cli judge-report --rater llm_deepseek_v4_1_flash`
+- `python -m cloud_aesthetics.cli judge-triage`
 - `python -m cloud_aesthetics.cli train --config configs/models/embedding_clip.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/baseline.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/deep_cnn_gradcam.yaml`
@@ -71,6 +72,8 @@ Pages:
 - `Train`: aggregate labels, refresh features, train models, and inspect split/test metrics.
 - `Inspect`: select model runs, pick images from thumbnails, view predictions, feature diagnostics, and heatmaps.
 - `Batch Report`: analyze import batches or legacy capture sessions with a local model and review top/low/uncertain/review-first predictions.
+- `Rater Comparison`: human raters versus model raters (LLM judges), agreement per group and largest disagreements.
+- `Triage`: judge-based labeling queue, uncertain images and exclusion proposals to accept or ignore.
 
 ## Private Image Import And Cropping
 
@@ -152,6 +155,10 @@ D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli judge-report --rater
 - Each judgement is a structured JSON object (score, confidence, cloud types, light, colors, strengths, weaknesses, quality flags, one-sentence verdict), cached under `data/processed/judge/<rater_id>/` so re-runs are free; attributes are flattened into `<rater_id>_attributes.parquet`.
 - `--only-labeled` (default) restricts the run to images with human labels: validation first, scaling later (`--no-only-labeled`).
 - The report (`data/artifacts/judge_reports/`) and the `Rater Comparison` page show Spearman, MAE, bias, agreement within ±1 point, per crop class, agreement at the top of the scale, and the largest disagreements with the judge's verdict next to the photo.
+
+### Triage: labeling queue and exclusion proposals
+
+Once the judges have seen the unlabeled images (`judge-images --no-only-labeled`), `judge-triage` combines all model raters into `data/processed/judge/triage.parquet`: mean judge score, spread between judges, majority cloud type and light, raised quality flags, a labeling priority (unlabeled originals first, high judge scores first, disagreement as tie-breaker) and a proposed exclusion reason derived from the flags (`landscape_dominant` and `airplane_window` need all judges to agree; `satellite_or_map` and `not_a_cloud_photo` propose on one vote; unanimous `blurry_or_noisy` with a mean score of 1 or less proposes `bad_crop`). Nothing is excluded automatically: the `Triage` page shows the queue, the uncertain images and the proposals with checkboxes, and the Rate page offers the queue as label order `Judge-Vorschlag`.
 
 ## Grad-CAM Analysis
 

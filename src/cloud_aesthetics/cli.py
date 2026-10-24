@@ -947,6 +947,41 @@ def judge_report_impl(rater_id: str, dataset_config_path: str | Path = "configs/
     return result
 
 
+def judge_triage_impl(dataset_config_path: str | Path = "configs/dataset/default.yaml", raters: list[str] | None = None) -> tuple[pd.DataFrame, dict[str, object]]:
+    from cloud_aesthetics.judge.store import attributes_table, load_raters
+    from cloud_aesthetics.judge.triage import build_triage, save_triage, triage_summary
+
+    dataset_cfg = _load_dataset_config(dataset_config_path)
+    manifest = _filter_active_manifest(read_table(dataset_cfg["manifest_path"]))
+    _require_non_empty(manifest, "image manifest", "Run `ingest-images` first.")
+    labels = read_table(dataset_cfg["aggregated_labels_path"])
+    registry = load_raters(dataset_cfg.get("raters_path", "data/raw/metadata/raters.csv"))
+    model_raters = raters or registry.loc[registry["rater_kind"].astype(str) == "llm", "rater_id"].astype(str).tolist()
+    tables = {rater: attributes_table(rater) for rater in model_raters}
+    tables = {rater: table for rater, table in tables.items() if not table.empty}
+    if not tables:
+        raise typer.BadParameter("No judge attributes found. Run `judge-images` first.")
+    frame = build_triage(tables, manifest, labels)
+    save_triage(frame)
+    return frame, triage_summary(frame)
+
+
+@app.command("judge-triage")
+def judge_triage(
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+    rater: list[str] = typer.Option(None, "--rater", help="Model rater ids to combine (default: all registered)"),
+) -> None:
+    """Combine judge attributes into a labeling queue and exclusion proposals (nothing is excluded automatically)."""
+    frame, summary = judge_triage_impl(dataset_config, rater or None)
+    typer.echo(json.dumps(summary, indent=2, default=float))
+    proposals = frame[frame["proposed_exclusion"] != ""]
+    if not proposals.empty:
+        typer.echo("Proposed exclusions by reason: " + json.dumps(proposals["proposed_exclusion"].value_counts().to_dict()))
+    typer.echo("Next to label (unlabeled, highest priority):")
+    columns = [column for column in ("label_rank", "image_id", "crop_class", "judge_mean", "judge_spread", "judge_cloud_type", "judge_light") if column in frame.columns]
+    typer.echo(frame[~frame["labeled"]][columns].head(10).to_string(index=False))
+
+
 @app.command("judge-report")
 def judge_report(
     rater: str = typer.Option(..., help="Model rater id, e.g. llm_claude_opus_5_5"),

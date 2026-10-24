@@ -16,6 +16,7 @@ from cloud_aesthetics.app.common import active_manifest, app_config, dataset_con
 from cloud_aesthetics.data.derivatives import crop_context, load_derivatives, render_crop_context
 from cloud_aesthetics.data.exclusions import active_excluded_ids, set_exclusion
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings, record_pairwise_preference, record_rating
+from cloud_aesthetics.judge.triage import load_triage
 from cloud_aesthetics.settings import resolve_path
 
 cfg = app_config()
@@ -134,11 +135,23 @@ def _diverse_group_order(frame, seed: int) -> list[str]:
     return ordered
 
 
+def _judge_order(frame) -> list[str]:
+    """Triage order from the model raters: unlabeled originals first, high judge scores first."""
+    triage = load_triage()
+    if triage.empty or "label_rank" not in triage.columns:
+        return _dataset_order(frame)
+    ranks = triage.set_index("image_id")["label_rank"]
+    ids = frame["image_id"].astype(str)
+    return ids.iloc[ids.map(ranks).fillna(float("inf")).argsort(kind="stable").to_numpy()].tolist()
+
+
 def _build_ordered_manifest(frame, mode: str, seed: int):
     if mode == "Random":
         ordered_ids = _random_order(frame, seed)
     elif mode == "Diverse groups":
         ordered_ids = _diverse_group_order(frame, seed)
+    elif mode == "Judge-Vorschlag":
+        ordered_ids = _judge_order(frame)
     else:
         ordered_ids = _dataset_order(frame)
     order = {image_id: index for index, image_id in enumerate(ordered_ids)}
@@ -157,7 +170,11 @@ tab_scalar, tab_pairwise = st.tabs(["Scalar Rating", "Pairwise Preference"])
 
 with tab_scalar:
     order_col1, order_col2, order_col3 = st.columns([1.4, 1, 1])
-    order_mode = order_col1.selectbox("Label order", ["Diverse groups", "Random", "Dataset order"])
+    order_mode = order_col1.selectbox(
+        "Label order",
+        ["Diverse groups", "Random", "Judge-Vorschlag", "Dataset order"],
+        help="Judge-Vorschlag: Reihenfolge aus der Triage-Seite (ungelabelte Originale zuerst, hohe Judge-Scores zuerst).",
+    )
     order_seed = int(order_col2.number_input("Seed", min_value=0, max_value=999999, value=int(st.session_state.get("label_order_seed", 42))))
     st.session_state.label_order_seed = order_seed
     if order_col3.button("New random seed", use_container_width=True):
