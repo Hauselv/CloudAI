@@ -264,6 +264,41 @@ def pipeline_status(
         )
     )
 
+    embeddings_dir = resolve_path(dataset_cfg.get("embeddings_dir", "data/processed/embeddings"))
+    embedding_files = sorted(embeddings_dir.glob("*.parquet")) if embeddings_dir.exists() else []
+    embedding_models = [path.stem for path in embedding_files if path.name != "clip_zero_shot.parquet"]
+    embedding_notes = []
+    embedding_rows = 0
+    embedding_missing_total = 0
+    for path in embedding_files:
+        if path.name == "clip_zero_shot.parquet":
+            continue
+        table = read_table(path)
+        ids = set(table["image_id"].astype(str)) if not table.empty else set()
+        missing = len(manifest_ids - ids) if manifest_ids else 0
+        embedding_missing_total += missing
+        embedding_rows = max(embedding_rows, len(ids))
+        embedding_notes.append(f"{path.stem}: {len(ids)}" + (f" ({missing} fehlen)" if missing else ""))
+    zero_shot_file = embeddings_dir / "clip_zero_shot.parquet"
+    zero_shot_mtime = _mtime(zero_shot_file)
+    if zero_shot_file.exists():
+        embedding_notes.append("zero-shot: ja")
+    embedding_stale = embedding_missing_total > 0 or (bool(embedding_models) and not zero_shot_file.exists())
+    if embedding_stale:
+        embedding_notes.append("-> extract-embeddings / zero-shot")
+    stages.append(
+        StageStatus(
+            key="embeddings",
+            label="Embeddings",
+            exists=bool(embedding_models),
+            rows=embedding_rows,
+            updated_at=_newest_mtime(embedding_files),
+            stale=embedding_stale,
+            note="; ".join(embedding_notes),
+            details={"models": embedding_models, "zero_shot": zero_shot_file.exists()},
+        )
+    )
+
     run_dir, summary = _latest_run(resolve_path(dataset_cfg.get("artifacts_root", PATHS.artifacts_root)))
     run_mtime = _mtime(run_dir / "summary.json") if run_dir else None
     run_stale = run_dir is not None and (
@@ -287,6 +322,77 @@ def pipeline_status(
         )
     )
     return stages
+
+
+def run_leaderboard(artifacts_root: str | Path = "data/artifacts") -> pd.DataFrame:
+    """One row per (run, model) with validation, test and per-kind metrics for tabular runs."""
+    import json
+
+    root = resolve_path(artifacts_root)
+    rows: list[dict[str, object]] = []
+    if not root.exists():
+        return pd.DataFrame()
+    for run_dir in sorted(root.iterdir()):
+        summary_path = run_dir / "summary.json"
+        if not run_dir.is_dir() or not summary_path.exists():
+            continue
+        try:
+            summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        kind = str(summary.get("kind", ""))
+        models = summary.get("models")
+        if isinstance(models, dict):
+            for model_name, info in models.items():
+                val = info.get("metrics", {}).get("val", {})
+                test = info.get("metrics", {}).get("test", {})
+                cv_std = info.get("cv", {}).get("std", {})
+                by_kind_val = info.get("by_group", {}).get("val", {}).get("kind", {})
+                by_kind_test = info.get("by_group", {}).get("test", {}).get("kind", {})
+                rows.append(
+                    {
+                        "run_id": run_dir.name,
+                        "kind": kind,
+                        "model": model_name,
+                        "inputs": " + ".join(summary.get("embedding_models", [])) if kind == "embedding" else ("features" if kind == "baseline" else kind),
+                        "val_mae": val.get("mae"),
+                        "val_spearman": val.get("spearman"),
+                        "val_spearman_std": cv_std.get("spearman"),
+                        "test_mae": test.get("mae"),
+                        "test_spearman": test.get("spearman"),
+                        "val_spearman_originals": by_kind_val.get("original", {}).get("spearman"),
+                        "val_spearman_crops": by_kind_val.get("crop", {}).get("spearman"),
+                        "test_spearman_originals": by_kind_test.get("original", {}).get("spearman"),
+                        "conformal_half_width": info.get("conformal_half_width"),
+                        "updated_at": datetime.fromtimestamp(summary_path.stat().st_mtime, tz=timezone.utc).strftime("%Y-%m-%d %H:%M"),
+                    }
+                )
+        elif kind == "deep":
+            test = summary.get("metrics", {}).get("test", {})
+            history = summary.get("metrics", {}).get("history", [])
+            best = history[int(summary.get("best_epoch", -1))]["val"] if history and summary.get("best_epoch", -1) >= 0 else {}
+            rows.append(
+                {
+                    "run_id": run_dir.name,
+                    "kind": kind,
+                    "model": str(summary.get("backbone", "deep")),
+                    "inputs": "pixels",
+                    "val_mae": best.get("mae"),
+                    "val_spearman": best.get("spearman"),
+                    "val_spearman_std": None,
+                    "test_mae": test.get("mae"),
+                    "test_spearman": test.get("spearman"),
+                    "val_spearman_originals": None,
+                    "val_spearman_crops": None,
+                    "test_spearman_originals": None,
+                    "conformal_half_width": summary.get("conformal_half_width"),
+                    "updated_at": datetime.fromtimestamp(summary_path.stat().st_mtime, tz=timezone.utc).strftime("%Y-%m-%d %H:%M"),
+                }
+            )
+    frame = pd.DataFrame(rows)
+    if frame.empty:
+        return frame
+    return frame.sort_values("val_spearman", ascending=False, na_position="last").reset_index(drop=True)
 
 
 def status_frame(stages: list[StageStatus]) -> pd.DataFrame:

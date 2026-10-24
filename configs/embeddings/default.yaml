@@ -1,0 +1,11 @@
+output_dir: data/processed/embeddings
+batch_size: 16
+models:
+  clip_vit_b32:
+    backend: open_clip
+    architecture: ViT-B-32
+    pretrained: openai
+  dinov2_small:
+    backend: timm
+    architecture: vit_small_patch14_dinov2.lvd142m
+    image_size: 224

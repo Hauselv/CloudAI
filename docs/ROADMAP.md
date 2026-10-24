@@ -32,7 +32,12 @@ ausschließen:
 4. In der Rate-Seite bei Crops das **Original mit markiertem Ausschnitt** daneben zeigen, damit das
    Rating bewusst „Ausschnitt-Ästhetik“ bewertet.
 
-### P3 · Bild-Embeddings als Rückgrat (Aufwand M)
+### P3 · Bild-Embeddings als Rückgrat (Aufwand M) — erledigt 24.10.2026
+Umgesetzt: `cloud_aesthetics/embeddings/` (CLIP ViT-B/32 + DINOv2-S, Cache, Zero-Shot), `models/embedding.py`
+(Ridge/kNN/SVR, gleiche CV), Leaderboard auf der Train-Seite, Embedding-Nachbarn und CLIP-Attribute im Inspect.
+Ergebnis: CLIP-Ridge hebt die OOF-Rangkorrelation von 0,64 auf 0,72 und innerhalb der Originale von 0,37 auf 0,47
+(Test-Originale 0,41 → 0,68). Details in `PROJEKTSTATUS.md`. Noch offen aus P3: GP-Unsicherheit, UMAP-Karte (T3).
+
 Statt ResNet18 auf CPU zu trainieren: einmalig **CLIP (ViT-B/32 oder ViT-L/14)** und/oder
 **DINOv2-small** Embeddings für alle Bilder berechnen und cachen (`data/processed/embeddings/`).
 Auf CPU dauert das für ~1.000 Bilder Minuten, nicht Stunden. Darauf:

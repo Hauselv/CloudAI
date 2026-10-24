@@ -1,0 +1,19 @@
+run_name: embed_hybrid_v1
+kind: embedding
+seed: 42
+manifest_path: data/processed/image_manifest.parquet
+labels_path: data/processed/aggregated_labels.parquet
+features_path: data/processed/features/features_v1.parquet
+output_dir: data/artifacts
+target_column: mean_score
+cross_validate: true
+# CLIP + DINOv2 embeddings plus hand-crafted features and CLIP zero-shot attributes.
+embedding_models:
+  - clip_vit_b32
+  - dinov2_small
+include_features: true
+include_zero_shot: true
+knn_neighbors: 10
+regressors:
+  - ridge
+  - svr

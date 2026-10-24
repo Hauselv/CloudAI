@@ -67,6 +67,9 @@ def _clean_label(name: object) -> str:
         return FEATURE_LABELS[raw]
     if raw in CONCEPT_LABELS:
         return CONCEPT_LABELS[raw]
+    for prefix in ("clip_concept_z_", "clip_concept_", "clip_type_", "clip_light_", "clip_"):
+        if raw.startswith(prefix):
+            return raw[len(prefix):].replace("_", " ") + " (CLIP)"
     return raw.replace("concept_", "").replace("_", " ")
 
 
@@ -161,7 +164,10 @@ def build_interpretation(explanation: dict[str, object]) -> dict[str, object]:
     strongest_driver = drivers[0]["label"] if drivers else "mixed visual evidence"
     strongest_concept = concepts[0]["label"] if concepts else "no dominant concept"
     attribution_kind = drivers[0]["attribution_kind"] if drivers else "unknown"
-    signal_phrase = "model contribution" if attribution_kind == "prediction_delta" else "unusual feature signal"
+    signal_phrase = {
+        "prediction_delta": "model contribution",
+        "zero_shot_concept": "CLIP concept signal",
+    }.get(attribution_kind, "unusual feature signal")
     summary = (
         f"{score_band['title']} with {confidence_band['title'].lower()} uncertainty. "
         f"The strongest {signal_phrase} is {strongest_driver}; the leading concept is {strongest_concept}."

@@ -212,6 +212,16 @@ def train_impl(model_config_path: str | Path, dataset_config_path: str | Path = 
         return train_baseline_suite(features, labels, splits, config, pairwise_table=pairwise)
     if kind == "deep":
         return train_deep_model(manifest, labels, splits, config)
+    if kind == "embedding":
+        from cloud_aesthetics.embeddings.zero_shot_store import load_zero_shot
+        from cloud_aesthetics.models.embedding import build_embedding_input_table, train_embedding_suite
+
+        features = load_features(config.get("features_path", "data/processed/features/features_v1.parquet"))
+        zero_shot = load_zero_shot(config.get("embeddings_dir", "data/processed/embeddings"))
+        table = build_embedding_input_table(config, features=features, zero_shot=zero_shot)
+        table = table[table["image_id"].isin(set(manifest["image_id"].astype(str)))]
+        _require_non_empty(table, "embedding table", "Run `extract-embeddings` first.")
+        return train_embedding_suite(table, labels, splits, config)
     if kind == "hybrid":
         features = load_features(config["features_path"])
         _require_non_empty(features, "feature table", "Run `extract-features --config configs/features/v1.yaml` first.")
@@ -428,6 +438,36 @@ def analyze_batch_impl(
     }
 
 
+def _zero_shot_context(image_id: str, output_dir: str | Path = "data/processed/embeddings", top_k: int = 6) -> dict[str, object]:
+    """Compact CLIP zero-shot summary for one image, or an empty dict when not computed yet."""
+    from cloud_aesthetics.embeddings.zero_shot_store import zero_shot_row
+
+    row = zero_shot_row(image_id, output_dir)
+    if row.empty:
+        return {}
+    types = {name[len("clip_type_"):]: float(value) for name, value in row.items() if str(name).startswith("clip_type_")}
+    lights = {name[len("clip_light_"):]: float(value) for name, value in row.items() if str(name).startswith("clip_light_")}
+    concepts = []
+    for name, value in row.items():
+        name = str(name)
+        if name.startswith("clip_concept_") and not name.startswith("clip_concept_z_"):
+            concept = name[len("clip_concept_"):]
+            concepts.append({"concept": concept, "score": float(value), "z_score": float(row.get(f"clip_concept_z_{concept}", 0.0))})
+    concepts.sort(key=lambda item: item["z_score"], reverse=True)
+    return {
+        "model": "clip_vit_b32",
+        "cloud_type": str(row.get("clip_cloud_type", "unknown")),
+        "cloud_type_confidence": float(row.get("clip_cloud_type_confidence", 0.0)),
+        "cloud_type_probability": float(row.get("clip_cloud_type_probability", max(types.values()) if types else 0.0)),
+        "cloud_type_scores": [{"cloud_type": name, "score": score} for name, score in sorted(types.items(), key=lambda item: item[1], reverse=True)],
+        "light": str(row.get("clip_light", "unknown")),
+        "light_scores": [{"light": name, "score": score} for name, score in sorted(lights.items(), key=lambda item: item[1], reverse=True)],
+        "concepts": concepts[:top_k] + concepts[-2:],
+        "all_concepts": concepts,
+        "caveat": "CLIP zero-shot attributes are text-prompt similarities, not meteorological observations.",
+    }
+
+
 def explain_impl(
     run_id: str | Path,
     image_id: str,
@@ -454,6 +494,7 @@ def explain_impl(
     feature_row = pd.Series(dtype=float)
     feature_contributions = pd.DataFrame(columns=["feature", "delta_prediction", "value"])
     heatmap_variants: dict[str, str] = {}
+    embedding_neighbors = pd.DataFrame()
     if summary["kind"] == "baseline":
         model_name, model_info = _select_best_baseline_model(summary)
         model = load_pickled_model(model_info["model_path"])
@@ -537,6 +578,24 @@ def explain_impl(
                     }
                 )
             feature_contributions = pd.DataFrame(deltas).sort_values("distance_from_typical", ascending=False)
+    elif summary["kind"] == "embedding":
+        from cloud_aesthetics.embeddings.zero_shot_store import load_zero_shot
+        from cloud_aesthetics.models.embedding import embedding_input_row, labeled_embedding_neighbors
+
+        model_name, model_info = _select_best_baseline_model(summary)
+        model = load_pickled_model(model_info["model_path"])
+        zero_shot_table_full = load_zero_shot(str(summary.get("embeddings_dir", "data/processed/embeddings")))
+        input_row = embedding_input_row(str(image_id), summary, manifest=manifest, features=features, zero_shot=zero_shot_table_full)
+        predicted_score = float(model.predict(input_row)[0])
+        uncertainty = float(model_info.get("conformal_half_width", 0.0))
+        embedding_neighbors = labeled_embedding_neighbors(str(image_id), summary, labels)
+        if not embedding_neighbors.empty and embedding_neighbors["mean_score"].notna().any():
+            neighbor_std = float(embedding_neighbors["mean_score"].std(ddof=0))
+            uncertainty = float(max(uncertainty * 0.5, neighbor_std)) if uncertainty else neighbor_std
+        if not features.empty and str(image_id) in set(features["image_id"].astype(str)):
+            feature_row = features.loc[features["image_id"].astype(str) == str(image_id)].iloc[0]
+        heatmap = fallback_heatmap_from_edges(image_row["relative_path"])
+        heatmap_source = "edge_fallback"
     else:
         heatmap = fallback_heatmap_from_edges(image_row["relative_path"])
         heatmap_source = "edge_fallback"
@@ -569,6 +628,32 @@ def explain_impl(
             "vision_model_vote": str(feature_row.get("vision_model_vote", "not_configured")),
             "scientific_caveat": str(feature_row.get("scientific_caveat", "")),
         }
+    zero_shot_context = _zero_shot_context(str(image_id))
+    if zero_shot_context:
+        scientific_context = {
+            **scientific_context,
+            "rule_based_cloud_type": scientific_context.get("primary_cloud_type", "unknown"),
+            "rule_based_confidence": scientific_context.get("cloud_type_confidence", 0.0),
+            "primary_cloud_type": zero_shot_context["cloud_type"],
+            "cloud_type_confidence": zero_shot_context["cloud_type_confidence"],
+            "vision_model_vote": f"{zero_shot_context['cloud_type']} ({zero_shot_context['cloud_type_confidence']:.2f}, CLIP zero-shot)",
+            "dominant_evidence": f"CLIP zero-shot: {zero_shot_context['cloud_type']}, light {zero_shot_context['light']}",
+            "clip": zero_shot_context,
+        }
+        if feature_contributions.empty or summary["kind"] == "embedding":
+            feature_contributions = pd.DataFrame(
+                [
+                    {
+                        "feature": f"clip_concept_{item['concept']}",
+                        "distance_from_typical": abs(float(item["z_score"])),
+                        "z_score": float(item["z_score"]),
+                        "value": float(item["score"]),
+                        "typical_value": 0.0,
+                        "attribution_kind": "zero_shot_concept",
+                    }
+                    for item in zero_shot_context["concepts"]
+                ]
+            ).sort_values("distance_from_typical", ascending=False)
     ground_truth = []
     if not labels.empty and "image_id" in labels.columns:
         ground_truth = labels.loc[labels["image_id"].astype(str) == str(image_id)].to_dict("records")
@@ -586,6 +671,8 @@ def explain_impl(
         "scientific_cloud_type": scientific_context,
         "top_regions": region_table.head(8).to_dict("records"),
         "nearest_neighbors": nearest_neighbors(features, image_id).to_dict("records") if not features.empty else [],
+        "embedding_neighbors": embedding_neighbors.to_dict("records") if not embedding_neighbors.empty else [],
+        "zero_shot": zero_shot_context,
         "ground_truth": ground_truth,
         "scientific_caveat": (
             "Heatmaps and feature attributions reflect model-associated evidence, not literal causal proof of aesthetic preference."
@@ -692,6 +779,38 @@ def import_friend_labels(
         f"{summary['ratings']} ratings, {summary['pairwise']} pairwise preferences, "
         f"and {summary['imported_images']} friend images."
     )
+
+
+@app.command("extract-embeddings")
+def extract_embeddings(
+    config: str = typer.Option("configs/embeddings/default.yaml", help="Embedding models config"),
+    model: list[str] = typer.Option(None, "--model", help="Only these model keys (default: all in config)"),
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+) -> None:
+    """Encode all active images with the configured embedding models (incremental cache)."""
+    from cloud_aesthetics.embeddings.store import extract_all_embeddings
+
+    dataset_cfg = _load_dataset_config(dataset_config)
+    manifest = _filter_active_manifest(read_table(dataset_cfg["manifest_path"]))
+    _require_non_empty(manifest, "image manifest", "Run `ingest-images` first.")
+    report = extract_all_embeddings(manifest, config, only=model or None, progress=typer.echo)
+    typer.echo(json.dumps(report, indent=2))
+
+
+@app.command("zero-shot")
+def zero_shot(
+    config: str = typer.Option("configs/embeddings/default.yaml", help="Embedding models config"),
+    model: str = typer.Option("clip_vit_b32", help="CLIP model key with cached image embeddings"),
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+) -> None:
+    """Score cloud types, light and concepts for every cached CLIP embedding."""
+    from cloud_aesthetics.embeddings.zero_shot_store import compute_zero_shot_table
+
+    dataset_cfg = _load_dataset_config(dataset_config)
+    manifest = _filter_active_manifest(read_table(dataset_cfg["manifest_path"]))
+    table = compute_zero_shot_table(manifest, config_path=config, model_key=model, progress=typer.echo)
+    counts = table["clip_cloud_type"].value_counts().to_dict() if not table.empty else {}
+    typer.echo(f"Zero-shot table has {len(table)} rows. Cloud types: {json.dumps(counts)}")
 
 
 @app.command("status")

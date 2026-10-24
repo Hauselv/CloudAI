@@ -12,6 +12,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from cloud_aesthetics.app.common import aggregate_labels_impl, dataset_config, extract_features_impl, list_runs, safe_read_table, train_impl
+from cloud_aesthetics.pipeline import run_leaderboard
 from cloud_aesthetics.settings import resolve_path
 
 
@@ -78,6 +79,9 @@ model_config = st.selectbox(
     "Model config",
     [
         "configs/models/baseline.yaml",
+        "configs/models/embedding_clip.yaml",
+        "configs/models/embedding_dinov2.yaml",
+        "configs/models/embedding_hybrid.yaml",
         "configs/models/deep_cnn.yaml",
         "configs/models/deep_cnn_gradcam.yaml",
         "configs/models/deep_cnn_rocm.yaml",
@@ -90,6 +94,17 @@ if col3.button("Train selected config"):
     summary = train_impl(model_config)
     st.success(f"Finished run {summary['run_id']}.")
     st.json(summary)
+
+st.subheader("Leaderboard")
+leaderboard = run_leaderboard()
+if leaderboard.empty:
+    st.info("No runs with metrics yet.")
+else:
+    st.caption(
+        "Sorted by out-of-fold Spearman on the dev partition. Compare the per-kind columns: a model that only "
+        "separates crops from originals scores well overall but poorly within originals."
+    )
+    st.dataframe(leaderboard.round(3), use_container_width=True, hide_index=True)
 
 st.subheader("Run Metrics")
 runs = list_runs()
@@ -131,7 +146,14 @@ if runs:
             if test_metrics:
                 st.write("Held-out test metrics")
                 st.json(test_metrics)
-        elif summary.get("kind") == "baseline":
+        elif summary.get("kind") in {"baseline", "embedding"}:
+            if summary.get("kind") == "embedding":
+                st.caption(
+                    "Embedding run: "
+                    + ", ".join(summary.get("embedding_models", []))
+                    + (" + hand-crafted features" if summary.get("include_features") else "")
+                    + (" + CLIP zero-shot" if summary.get("include_zero_shot") else "")
+                )
             evaluation = summary.get("evaluation", {})
             if evaluation:
                 eval_col1, eval_col2, eval_col3, eval_col4 = st.columns(4)
@@ -154,6 +176,8 @@ if runs:
                     if partition == "val" and cv.get("std"):
                         row["mae_fold_std"] = cv["std"].get("mae")
                         row["spearman_fold_std"] = cv["std"].get("spearman")
+                    if model_info.get("fitted_params"):
+                        row["params"] = ", ".join(f"{key}={value}" for key, value in model_info["fitted_params"].items())
                     rows.append(row)
             metrics_frame = pd.DataFrame(rows)
             if not metrics_frame.empty:

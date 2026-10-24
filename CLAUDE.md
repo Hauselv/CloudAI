@@ -21,6 +21,11 @@ vorhersagen und vor allem **erklären**, welche Bildeigenschaften das Rating tre
   (bis auf die in `.gitignore` freigegebenen `web_sample`-Dateien).
 - Code und Code-Kommentare auf Englisch, Doku für Michel auf Deutsch.
 
+## Embeddings
+- `extract-embeddings` (CLIP ViT-B/32, DINOv2-S; Cache in `data/processed/embeddings/`) und `zero-shot` laufen in ~2 Minuten
+  auf CPU; Embedding-Modelle (`configs/models/embedding_*.yaml`) trainieren in Sekunden. Bevorzugter Weg vor Deep-Training.
+- Streamlit cached importierte Paketmodule: nach Änderungen an `pipeline.py` o. ä. den Server neu starten.
+
 ## Bekannte Stolpersteine
 - `data/processed/aggregated_labels.parquet` kann leer sein, obwohl Rohlabels existieren → `aggregate-labels` ausführen.
 - Nach neuem Labeln immer: `aggregate-labels` → `extract-features` → `train`, sonst passen Splits und Runs nicht zusammen.

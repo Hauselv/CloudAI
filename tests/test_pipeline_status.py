@@ -45,6 +45,7 @@ def _setup(tmp_path: Path) -> tuple[Path, Path, pd.DataFrame]:
                 f"splits_path: {(tmp_path / 'splits.parquet').as_posix()}",
                 f"exclusions_path: {(tmp_path / 'exclusions.csv').as_posix()}",
                 f"artifacts_root: {(tmp_path / 'runs').as_posix()}",
+                f"embeddings_dir: {(tmp_path / 'embeddings').as_posix()}",
                 "allowed_extensions: ['.jpg']",
                 "capture_session_strategy: parent_dir",
                 "split: {n_splits: 2, score_bins: 2, test_fraction: 0.25, random_state: 1}",
@@ -97,4 +98,7 @@ def test_pipeline_status_tracks_missing_and_stale_stages(tmp_path: Path):
 
     frame = status_frame(pipeline_status(dataset_config, feature_config))
     assert list(frame.columns) == ["label", "state", "rows", "updated_at", "note"]
-    assert len(frame) == 7
+    assert len(frame) == 8
+    assert by_key["features"].state == "ok"
+    embeddings_stage = {stage.key: stage for stage in pipeline_status(dataset_config, feature_config)}["embeddings"]
+    assert embeddings_stage.exists is False

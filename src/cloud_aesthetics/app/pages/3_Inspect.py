@@ -13,6 +13,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from cloud_aesthetics.app.common import active_manifest, app_config, dataset_config, explain_impl, list_runs
+from cloud_aesthetics.app.ui import render_image_grid
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
 from cloud_aesthetics.explain.heatmaps import feature_diagnostic_map, heatmap_to_rgb, overlay_heatmap_on_image
 from cloud_aesthetics.explain.interpretation import generate_local_llm_interpretation
@@ -242,8 +243,36 @@ with tab_overview:
         cols[0].metric("Cloud type", str(scientific.get("primary_cloud_type", "unknown")))
         cols[1].metric("Confidence", f"{float(scientific.get('cloud_type_confidence', 0.0)):.2f}")
         cols[2].metric("Vision vote", str(scientific.get("vision_model_vote", "not_configured")))
+        if scientific.get("rule_based_cloud_type"):
+            st.caption(
+                f"Rule-based estimate: {scientific['rule_based_cloud_type']} "
+                f"({float(scientific.get('rule_based_confidence', 0.0)):.2f}); CLIP zero-shot is shown as primary."
+            )
         if scientific.get("scientific_caveat"):
             st.caption(str(scientific["scientific_caveat"]))
+    zero_shot = explanation.get("zero_shot") or {}
+    if zero_shot:
+        st.write("CLIP zero-shot attributes")
+        zs_metric1, zs_metric2, zs_metric3 = st.columns(3)
+        zs_metric1.metric("CLIP cloud type", str(zero_shot.get("cloud_type", "unknown")).replace("_", " "))
+        zs_metric2.metric("Top probability", f"{float(zero_shot.get('cloud_type_probability', 0.0)):.2f}")
+        zs_metric3.metric("Margin to 2nd", f"{float(zero_shot.get('cloud_type_confidence', 0.0)):.2f}")
+        zs_col1, zs_col2 = st.columns(2)
+        type_frame = pd.DataFrame(zero_shot.get("cloud_type_scores", [])).set_index("cloud_type")
+        if not type_frame.empty:
+            zs_col1.caption("Cloud type probabilities")
+            zs_col1.bar_chart(type_frame["score"])
+        light_frame = pd.DataFrame(zero_shot.get("light_scores", [])).set_index("light")
+        if not light_frame.empty:
+            zs_col2.caption(f"Light: {zero_shot.get('light', 'unknown')}")
+            zs_col2.bar_chart(light_frame["score"])
+        concept_frame = pd.DataFrame(zero_shot.get("all_concepts", []))
+        if not concept_frame.empty:
+            concept_frame = concept_frame.sort_values("z_score", ascending=False)
+            concept_frame["concept"] = concept_frame["concept"].str.replace("_", " ")
+            st.caption("Concept signals relative to the dataset (z-score of similarity gain over a neutral cloud prompt)")
+            st.bar_chart(concept_frame.set_index("concept")["z_score"])
+        st.caption(str(zero_shot.get("caveat", "")))
 
 with tab_heatmap:
     heatmap_variants = explanation.get("heatmap_variants", {})
@@ -289,9 +318,25 @@ with tab_signals:
         st.dataframe(pd.DataFrame(explanation["scientific_cloud_type"]["cloud_type_scores"]), use_container_width=True, hide_index=True)
 
 with tab_neighbors:
+    embedding_neighbors = explanation.get("embedding_neighbors") or []
+    if embedding_neighbors:
+        st.write("Most similar labeled training images (embedding space)")
+        neighbor_frame = pd.DataFrame(embedding_neighbors)
+        neighbor_frame["image_id"] = neighbor_frame["image_id"].astype(str)
+        neighbor_view = neighbor_frame.merge(manifest[["image_id", "relative_path", "kind"]], on="image_id", how="left")
+        render_image_grid(
+            neighbor_view,
+            columns=3,
+            caption=lambda row: (
+                f"human {float(row['mean_score']):.1f} | sim {float(row['similarity']):.2f} | {row.get('kind', '')}\n\n{row['image_id']}"
+                if pd.notna(row.get("mean_score"))
+                else f"sim {float(row['similarity']):.2f} | {row.get('kind', '')}\n\n{row['image_id']}"
+            ),
+        )
     if explanation.get("nearest_neighbors"):
+        st.write("Nearest neighbors in hand-crafted feature space")
         st.dataframe(pd.DataFrame(explanation["nearest_neighbors"]), use_container_width=True, hide_index=True)
-    else:
+    elif not embedding_neighbors:
         st.info("No neighbor table available.")
 
 with tab_debug:

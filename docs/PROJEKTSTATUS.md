@@ -158,6 +158,44 @@ Die Fold-Streuung von ±0,15 bei Spearman zeigt, wie wenig eine einzelne Fold au
 Das Gesamtergebnis (0,64) wird vom Crop-Confound getragen. Für die 10-vs-8-Frage bei echten Fotos ist
 das aktuelle Feature-Modell also noch schwach – genau das motiviert Roadmap P2 und P3.
 
+### Embedding-Runs (24.10.2026, P3)
+
+Alle Bilder einmal mit CLIP ViT-B/32 und DINOv2-S encodiert (je ~40 ms pro Bild auf CPU, Cache unter
+`data/processed/embeddings/`). Darauf Ridge/kNN/SVR mit derselben 5-fach-CV:
+
+| Run / Modell | OOF ρ | Fold-Std | Test ρ | OOF ρ Originale | OOF ρ Crops | Test ρ Originale |
+|---|---|---|---|---|---|---|
+| **CLIP · Ridge (α=300)** | **0,72** | 0,13 | **0,76** | **0,47** | 0,75 | **0,68** |
+| CLIP · SVR | 0,72 | 0,10 | 0,70 | 0,50 | 0,71 | 0,57 |
+| Hybrid (CLIP+DINO+Features+Zero-Shot) · Ridge | 0,72 | 0,16 | 0,74 | 0,48 | 0,73 | 0,64 |
+| CLIP · kNN (k=10, cosine) | 0,67 | 0,14 | 0,68 | 0,32 | 0,68 | 0,55 |
+| DINOv2 · SVR | 0,65 | 0,13 | 0,64 | 0,38 | 0,67 | 0,47 |
+| Baseline Features · RandomForest | 0,64 | 0,14 | 0,59 | 0,37 | 0,66 | 0,41 |
+| DINOv2 · Ridge | 0,63 | 0,12 | 0,70 | 0,28 | 0,68 | 0,61 |
+
+Lesart: CLIP-Embeddings sind der klar beste Einzelinput. Der Sprung ist dort am größten, wo es zählt:
+innerhalb der Originale (0,37 → 0,47 OOF, 0,41 → 0,68 auf dem kleinen Test-Set mit 35 Originalen).
+DINOv2 (rein visuell, ohne Sprachbezug) bringt weniger; die Kombination aller Inputs bringt gegenüber
+CLIP allein nichts – bei 265 Trainingsbildern dominiert Regularisierung (Ridge wählt das größte α).
+MAE bleibt bei ~1,35 Punkten; die Konformal-Halbbreiten (~3) sind weiterhin breit, weil Michels
+Labels selbst eine Test-Retest-Streuung von etwa ±1 Punkt haben (siehe Doppelbewertungen).
+
+### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
+
+Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.
+Verteilung über alle 939 Bilder: Cumulus 229, Altocumulus 128, klarer Himmel 121, Altostratus 109,
+Stratocumulus 72, Nimbostratus 70, Cirrus 66, Cirrostratus 58, Cumulonimbus 46, Stratus 25,
+Cirrocumulus 15 – deutlich plausibler als „70 % Cumulonimbus“. Mittleres Rating nach CLIP-Typ (gelabelt):
+Altocumulus 7,4, Cumulonimbus 7,3, Cirrus 7,3, Cumulus 6,8, Cirrostratus 6,4, Nimbostratus 4,8,
+Altostratus 3,1. Nach Licht: goldene Stunde 7,2 (n=27), Tageslicht 6,0 (n=205).
+
+Konzept-Korrelationen mit dem Rating (Spearman, alle 312 / nur Originale):
+`boring_sky` −0,44 / −0,14 · `spectacular_sky` +0,41 / +0,16 · `airplane_window` −0,40 / −0,17 ·
+`soft_haze` −0,37 / −0,13. Die Zero-Shot-Konzepte tragen also vor allem die Grob-Trennung; für die
+Feinunterscheidung unter guten Bildern sind sie (noch) schwach – ein Hinweis, dass die 10-vs-8-Frage
+eher über Nachbarschaft im Embedding-Raum und gezielte Prompts/Labels am oberen Ende zu knacken ist.
+Caveat bleibt: Zero-Shot ist eine Bild-Text-Ähnlichkeit, keine meteorologische Beobachtung.
+
 Einordnung der alten Runs:
 - Baumbasierte Baselines schlagen das Deep-Modell. Das eingefrorene ResNet18 mit linearem Kopf ist
   faktisch eine lineare Sonde auf ImageNet-Features, mit Batchgröße 4 trainiert – kein Wunder.
@@ -194,7 +232,8 @@ Erledigt in P1 (24.10.2026):
 
 Offen:
 
-7. **`hybrid`-Modell** nutzt PCA der handgebauten Features als „Embedding“ – kein Bild-Embedding (→ Roadmap P3).
+7. ~~`hybrid`-Modell ohne Bild-Embedding~~ → P3: echte CLIP/DINOv2-Embeddings (`embedding_*.yaml`); das alte
+   `hybrid.yaml` (PCA der Features) ist damit obsolet und kann entfernt werden.
 8. **Deep-Runs** werden weiterhin nur auf einer Fold evaluiert (CPU-Zeit).
 9. **pyproject** nennt als Autor „OpenAI Codex“; Lizenz MIT. Ggf. anpassen.
 10. Streamlit-Seiten lesen Manifest und Ratings-CSV bei jedem Rerun neu –

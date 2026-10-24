@@ -39,6 +39,9 @@ This avoids PowerShell execution-policy issues because it does not require `Acti
 - `python -m cloud_aesthetics.cli ingest-images`
 - `python -m cloud_aesthetics.cli aggregate-labels`
 - `python -m cloud_aesthetics.cli extract-features --config configs/features/v1.yaml`
+- `python -m cloud_aesthetics.cli extract-embeddings [--model clip_vit_b32]`
+- `python -m cloud_aesthetics.cli zero-shot`
+- `python -m cloud_aesthetics.cli train --config configs/models/embedding_clip.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/baseline.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/deep_cnn_gradcam.yaml`
 - `powershell -ExecutionPolicy Bypass -File D:\CloudAI\cloud-aesthetics\scripts\train_wsl_rocm.ps1`
@@ -108,6 +111,22 @@ Baseline runs evaluate with grouped k-fold cross-validation: every dev fold is h
 ### Image kind and dataset columns
 
 The manifest, aggregated labels and feature table carry `kind` (`original` or `crop`) and `dataset_name` (first folder under `data/raw/images`). Crops are rated systematically lower than originals, so baseline summaries report metrics per kind and dataset under `by_group`, and the Train page shows them. Compare models within a group, not only overall.
+
+## Image Embeddings And Zero-Shot Attributes
+
+Pretrained vision backbones give a far stronger signal than hand-crafted features and train in seconds on CPU because the embeddings are computed once and cached:
+
+```powershell
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli extract-embeddings
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli zero-shot
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli train --config configs/models/embedding_clip.yaml
+```
+
+- `configs/embeddings/default.yaml` lists the models: CLIP ViT-B/32 (`open_clip`, OpenAI weights) and DINOv2 ViT-S/14 (`timm`, 224 px). Weights are downloaded from the Hugging Face Hub on first use.
+- Embeddings are cached per model under `data/processed/embeddings/<model_key>.parquet` and extended incrementally when new images are imported.
+- `zero-shot` compares every CLIP image embedding with prompt ensembles for 11 cloud-type classes, 5 light situations and 16 aesthetic concepts (`clip_zero_shot.parquet`). Grouped attributes are softmax probabilities; concepts are similarity gains over a neutral cloud prompt, also z-scored across the dataset. Explanations show the CLIP cloud type as primary estimate and keep the rule-based one for reference.
+- Model configs: `embedding_clip.yaml`, `embedding_dinov2.yaml`, `embedding_hybrid.yaml` (both embeddings + features + zero-shot). Regressors: `ridge` (RidgeCV), `knn` (cosine), `svr`. They use the same grouped k-fold evaluation as the baseline and appear in the Train page leaderboard.
+- Explanations for embedding runs include the most similar labeled training images with their human scores (`Inspect` → `Neighbors`).
 
 ## Grad-CAM Analysis
 
