@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 import shutil
 from datetime import datetime, timezone
@@ -113,22 +114,32 @@ def import_friend_label_bundle(
     imported_images = bundle.get("imported_images", [])
 
     imported_count = 0
+    image_id_map: dict[str, str] = {}
     for image in imported_images:
+        original_image_id = str(image.get("image_id", ""))
         data_url = str(image.get("data_url", ""))
         if "," not in data_url:
             continue
         _, encoded = data_url.split(",", 1)
         suffix = ".jpg" if "jpeg" in data_url or "jpg" in data_url else ".png"
-        target = resolve_path(imported_images_root) / f"{image.get('image_id', 'friend_image')}{suffix}"
+        image_bytes = base64.b64decode(encoded)
+        manifest_image_id = hashlib.sha256(image_bytes).hexdigest()[:16]
+        target = resolve_path(imported_images_root) / f"{manifest_image_id}{suffix}"
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(base64.b64decode(encoded))
+        target.write_bytes(image_bytes)
+        if original_image_id:
+            image_id_map[original_image_id] = manifest_image_id
         imported_count += 1
+
+    def mapped_image_id(value: object) -> str:
+        image_id = str(value)
+        return image_id_map.get(image_id, image_id)
 
     rating_count = 0
     for item in ratings:
         record_rating(
             ratings_dir,
-            image_id=str(item["image_id"]),
+            image_id=mapped_image_id(item["image_id"]),
             rater_id=str(item.get("rater_id") or bundle.get("rater_id") or "friend"),
             score=float(item["score"]),
             rating_session_id=str(item.get("rating_session_id") or bundle.get("session_id") or "friend_export"),
@@ -138,12 +149,13 @@ def import_friend_label_bundle(
 
     pairwise_count = 0
     for item in pairwise:
+        winner = item.get("winner")
         record_pairwise_preference(
             pairwise_dir,
-            left_image_id=str(item["left_image_id"]),
-            right_image_id=str(item["right_image_id"]),
+            left_image_id=mapped_image_id(item["left_image_id"]),
+            right_image_id=mapped_image_id(item["right_image_id"]),
             rater_id=str(item.get("rater_id") or bundle.get("rater_id") or "friend"),
-            winner=item.get("winner"),
+            winner=mapped_image_id(winner) if winner else None,
             tie_flag=bool(item.get("tie_flag", False)),
             preference_strength=float(item.get("preference_strength", 0.5)),
         )

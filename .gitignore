@@ -11,6 +11,8 @@ __pycache__/
 .coverage
 htmlcov/
 .streamlit/
+android/friend-labeler/build/
+android/friend-labeler/debug.keystore
 data/raw/images/*
 data/raw/metadata/*
 !data/raw/images/.gitkeep
@@ -25,7 +27,6 @@ data/interim/*
 !data/interim/.gitkeep
 data/processed/features/*
 !data/processed/features/.gitkeep
-!data/processed/features/features_v1.parquet
 data/processed/embeddings/*
 !data/processed/embeddings/.gitkeep
 data/processed/splits/*

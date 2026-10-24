@@ -9,7 +9,6 @@ SRC_ROOT = Path(__file__).resolve().parents[4] / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cloud_aesthetics.cli import ingest_images_impl
 from cloud_aesthetics.data.exclusions import load_exclusions, set_exclusion
 
 st.set_page_config(page_title="Excluded Images", layout="wide")
@@ -42,6 +41,5 @@ if st.button("Restore to training pool", type="primary"):
         set_exclusion(selected, excluded=False, reason="restore", relative_path=str(row.get("relative_path", "")))
     except TypeError:
         set_exclusion(selected, excluded=False, reason="restore")
-    ingest_images_impl()
     st.success(f"Restored {selected}.")
     st.rerun()

@@ -12,6 +12,7 @@ if str(SRC_ROOT) not in sys.path:
 
 import pandas as pd
 
+from cloud_aesthetics.data.exclusions import active_excluded_ids
 from cloud_aesthetics.cli import (
     aggregate_labels_impl,
     explain_impl,
@@ -36,6 +37,16 @@ def safe_read_table(path_like: str | Path) -> pd.DataFrame:
     if not path.exists():
         return pd.DataFrame()
     return read_table(path)
+
+
+def active_manifest(path_like: str | Path) -> pd.DataFrame:
+    manifest = safe_read_table(path_like)
+    if manifest.empty:
+        return manifest
+    excluded_ids = active_excluded_ids()
+    if not excluded_ids:
+        return manifest
+    return manifest[~manifest["image_id"].astype(str).isin(excluded_ids)].reset_index(drop=True)
 
 
 def list_runs() -> list[str]:
@@ -68,6 +79,7 @@ __all__ = [
     "aggregate_labels_impl",
     "analyze_batch_impl",
     "app_config",
+    "active_manifest",
     "batch_predictions_path",
     "dataset_config",
     "explain_impl",

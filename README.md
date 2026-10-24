@@ -17,7 +17,7 @@ Local-first Python tooling for collecting cloud photo ratings, training models t
 - Grad-CAM preparation for Deep-CNN runs with selectable ResNet layers
 - Deterministic interpretation cards that translate scores, uncertainty, features, concepts, and cloud-type estimates into review actions
 - Optional local Ollama paraphrasing for explanation text; the structured deterministic result remains the source of truth
-- Streamlit UI for importing, rating, training, inspection, batch reporting, and comparison
+- Streamlit UI for importing, rating, training, inspection, source-group review, batch reporting, and comparison
 - Optional standalone no-install friend labeling package
 
 ## Quickstart
@@ -59,6 +59,7 @@ Pages:
 - `Rate`: label images, randomize or diversify order, use hotkeys, and skip unsuitable images.
 - `Gallery`: browse active originals/crops as tiles with labeled/open filters.
 - `Exclusions`: restore skipped images to the active pool.
+- `Source Groups`: review originals and their derived crops together, then exclude a single image or whole group.
 - `Train`: aggregate labels, refresh features, train models, and inspect split/test metrics.
 - `Inspect`: select model runs, pick images from thumbnails, view predictions, feature diagnostics, and heatmaps.
 - `Batch Report`: analyze import batches or legacy capture sessions with a local model and review top/low/uncertain/review-first predictions.
@@ -81,7 +82,7 @@ The importer writes derivative metadata to `data/raw/metadata/image_derivatives.
 
 Scalar labels are stored locally under `data/raw/metadata/ratings/` as per-rater CSV files. The current scale is 0.0-10.0 in 0.5 steps. Older 1-10 labels remain valid.
 
-When an image does not belong in training, use `Skip / exclude` in the `Rate` page. Exclusions are stored in `data/raw/metadata/exclusions.csv`; image files are not deleted. `ingest-images` filters active exclusions out of the manifest, and `Exclusions` can restore them.
+When an image does not belong in training, use `Skip / exclude` in the `Rate` page or exclude it from `Source Groups`. Exclusions are stored in `data/raw/metadata/exclusions.csv`; image files are not deleted. The Streamlit pages and training commands filter active exclusions at read time, and `Exclusions` can restore them.
 
 ## Training And Validation
 
@@ -203,6 +204,16 @@ D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli aggregate-labels
 
 If friends import their own images in the standalone app, the returned JSON embeds those images and crops. The import command restores them under `data/raw/images/friend_imports`.
 
+## Android Friend Labeler APK
+
+A native Android version is available under `android/friend-labeler` and can be built without Android Studio:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File D:\CloudAI\cloud-aesthetics\scripts\build_friend_labeler_apk.ps1 -OutputApk D:\CloudAI\cloud-aesthetics\data\artifacts\cloud_friend_labeler.apk
+```
+
+The APK includes the current manifest images, scalar ratings, Duel mode, local image import with sky/cloud crop generation, XP/streak gamification, and JSON export via Android mail/share. See `docs/ANDROID_LABELER.md` for the full phone workflow.
+
 ## Web Test Dataset
 
 The project can download a local test dataset of openly licensed cloud images from Wikimedia Commons:
@@ -226,7 +237,7 @@ Images are saved under `data/raw/images/web_sample`; attribution and license met
 
 Raw private images, labels, exclusions, processed features, and model artifacts are local data. Be careful before committing or pushing files under `data/raw`, `data/processed`, or `data/artifacts`, because they may contain private or derived information.
 
-Normal code commits should include `configs/`, `src/`, `tests/`, and documentation, not private datasets or generated feature tables.
+Normal code commits should include `configs/`, `src/`, `tests/`, and documentation, not private datasets or generated feature tables. `data/processed/features/features_v1.parquet` is intentionally local-only and ignored by Git.
 
 ## Directory Highlights
 

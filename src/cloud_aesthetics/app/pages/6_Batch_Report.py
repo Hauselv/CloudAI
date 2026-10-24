@@ -12,6 +12,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from cloud_aesthetics.app.common import (
+    active_manifest,
     analyze_batch_impl,
     batch_predictions_path,
     dataset_config,
@@ -19,6 +20,7 @@ from cloud_aesthetics.app.common import (
     list_runs,
     safe_read_table,
 )
+from cloud_aesthetics.app.ui import render_image_grid
 from cloud_aesthetics.explain.interpretation import build_interpretation
 from cloud_aesthetics.settings import resolve_path
 
@@ -100,28 +102,22 @@ def _concept_summary(frame: pd.DataFrame) -> pd.DataFrame:
 
 
 def _render_tiles(frame: pd.DataFrame) -> None:
-    if frame.empty:
-        st.info("No images in this group.")
-        return
-    columns = st.columns(4)
-    for index, (_, row) in enumerate(frame.iterrows()):
-        with columns[index % 4]:
-            image_path = resolve_path(row["relative_path"])
-            if image_path.exists():
-                st.image(str(image_path), use_container_width=True)
-            st.caption(
-                f"{row['image_id']}\n\n"
-                f"score {float(row['predicted_score']):.2f} "
-                f"({float(row['score_interval_low']):.2f}-{float(row['score_interval_high']):.2f}) | "
-                f"{row['recommendation']}"
-            )
+    render_image_grid(
+        frame,
+        caption=lambda row: (
+            f"{row['image_id']}\n\n"
+            f"score {float(row['predicted_score']):.2f} "
+            f"({float(row['score_interval_low']):.2f}-{float(row['score_interval_high']):.2f}) | "
+            f"{row['recommendation']}"
+        ),
+    )
 
 
 st.set_page_config(page_title="Batch Report", layout="wide")
 st.title("Batch Report")
 
 dataset_cfg = dataset_config()
-manifest = safe_read_table(dataset_cfg["manifest_path"])
+manifest = active_manifest(dataset_cfg["manifest_path"])
 runs = [run for run in list_runs() if (resolve_path("data/artifacts") / run / "summary.json").exists()]
 batches = list_import_batches()
 

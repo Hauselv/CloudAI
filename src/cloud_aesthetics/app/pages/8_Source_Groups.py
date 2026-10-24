@@ -10,18 +10,17 @@ SRC_ROOT = Path(__file__).resolve().parents[4] / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cloud_aesthetics.app.common import app_config, dataset_config, safe_read_table
-from cloud_aesthetics.cli import ingest_images_impl
+from cloud_aesthetics.app.common import active_manifest, app_config, dataset_config
+from cloud_aesthetics.app.ui import render_image_grid
 from cloud_aesthetics.data.exclusions import set_exclusion, set_exclusions
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
-from cloud_aesthetics.settings import resolve_path
 
 cfg = app_config()
 st.set_page_config(page_title="Source Groups", layout="wide")
 st.title("Source Groups")
 
 dataset_cfg = dataset_config()
-manifest = safe_read_table(dataset_cfg["manifest_path"])
+manifest = active_manifest(dataset_cfg["manifest_path"])
 
 if manifest.empty:
     st.warning("No active images found.")
@@ -119,24 +118,22 @@ exclude_reason = action_col2.selectbox(
 )
 if action_col1.button("Exclude whole group", type="primary", use_container_width=True):
     set_exclusions(group_frame[["image_id", "relative_path"]].to_dict("records"), excluded=True, reason=exclude_reason)
-    ingest_images_impl()
     st.success(f"Excluded {len(group_frame)} images from group {selected_group}.")
     st.rerun()
 
 st.subheader("Group Images")
-columns = st.columns(4)
-for index, (_, row) in enumerate(group_frame.iterrows()):
-    with columns[index % 4]:
-        image_path = resolve_path(row["relative_path"])
-        if image_path.exists():
-            st.image(str(image_path), use_container_width=True)
-        else:
-            st.warning("Missing image")
-        status = "labeled" if bool(row["rated"]) else "open"
-        st.caption(f"{status} | {row['kind']}\n\n{row['image_id']}")
-        safe_path_key = str(row["relative_path"]).replace("\\", "_").replace("/", "_").replace(":", "_")
-        if st.button("Exclude image", key=f"exclude_{selected_group}_{index}_{row['image_id']}_{safe_path_key}", use_container_width=True):
-            set_exclusion(row["image_id"], excluded=True, reason=exclude_reason, relative_path=str(row["relative_path"]))
-            ingest_images_impl()
-            st.success(f"Excluded {row['image_id']}.")
-            st.rerun()
+
+
+def _exclude_image_action(row: pd.Series, index: int) -> None:
+    safe_path_key = str(row["relative_path"]).replace("\\", "_").replace("/", "_").replace(":", "_")
+    if st.button("Exclude image", key=f"exclude_{selected_group}_{index}_{row['image_id']}_{safe_path_key}", use_container_width=True):
+        set_exclusion(row["image_id"], excluded=True, reason=exclude_reason, relative_path=str(row["relative_path"]))
+        st.success(f"Excluded {row['image_id']}.")
+        st.rerun()
+
+
+render_image_grid(
+    group_frame,
+    caption=lambda row: f"{'labeled' if bool(row['rated']) else 'open'} | {row['kind']}\n\n{row['image_id']}",
+    action=_exclude_image_action,
+)

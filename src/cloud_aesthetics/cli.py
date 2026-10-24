@@ -12,6 +12,7 @@ import typer
 from sklearn.decomposition import PCA
 
 from cloud_aesthetics.data.aggregation import aggregate_ratings
+from cloud_aesthetics.data.exclusions import active_excluded_ids
 from cloud_aesthetics.data.manifest import build_manifest, save_manifest
 from cloud_aesthetics.data.pairwise import generate_pseudo_pairs, merge_pairwise_tables
 from cloud_aesthetics.data.ratings import load_raw_pairwise_preferences, load_raw_scalar_ratings
@@ -59,6 +60,15 @@ def _require_non_empty(frame: pd.DataFrame, name: str, help_text: str) -> None:
 
 def _load_dataset_config(config_path: str | Path = "configs/dataset/default.yaml") -> dict[str, object]:
     return load_yaml(config_path)
+
+
+def _filter_active_manifest(manifest: pd.DataFrame) -> pd.DataFrame:
+    if manifest.empty:
+        return manifest
+    excluded_ids = active_excluded_ids()
+    if not excluded_ids:
+        return manifest
+    return manifest[~manifest["image_id"].astype(str).isin(excluded_ids)].reset_index(drop=True)
 
 
 def _save_processed_tables(config: dict[str, object], ratings: pd.DataFrame, pairwise: pd.DataFrame, aggregated: pd.DataFrame, splits: pd.DataFrame) -> None:
@@ -131,7 +141,7 @@ def aggregate_labels_impl(dataset_config_path: str | Path = "configs/dataset/def
     pseudo_pairwise = generate_pseudo_pairs(ratings, min_score_gap=2.0)
     pairwise = merge_pairwise_tables(explicit_pairwise, pseudo_pairwise)
     aggregated = aggregate_ratings(ratings, explicit_pairwise)
-    manifest = read_table(config["manifest_path"])
+    manifest = _filter_active_manifest(read_table(config["manifest_path"]))
     split_cfg = config["split"]
     splits = create_grouped_splits(
         manifest=manifest,
@@ -151,7 +161,7 @@ def extract_features_impl(
     dataset_config_path: str | Path = "configs/dataset/default.yaml",
 ) -> pd.DataFrame:
     dataset_config = _load_dataset_config(dataset_config_path)
-    manifest = read_table(dataset_config["manifest_path"])
+    manifest = _filter_active_manifest(read_table(dataset_config["manifest_path"]))
     return extract_and_save_features(manifest, feature_config_path)
 
 
@@ -175,7 +185,7 @@ def train_impl(model_config_path: str | Path, dataset_config_path: str | Path = 
     dataset_config = _load_dataset_config(dataset_config_path)
     kind = str(config["kind"])
     labels = read_table(config.get("labels_path", dataset_config["aggregated_labels_path"]))
-    manifest = read_table(config.get("manifest_path", dataset_config["manifest_path"]))
+    manifest = _filter_active_manifest(read_table(config.get("manifest_path", dataset_config["manifest_path"])))
     splits = read_table(dataset_config["splits_path"])
     pairwise = read_table(dataset_config["pairwise_path"])
     _require_non_empty(manifest, "image manifest", "Run `ingest-images` after placing images under `data/raw/images`.")

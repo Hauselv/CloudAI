@@ -12,7 +12,7 @@ SRC_ROOT = Path(__file__).resolve().parents[4] / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cloud_aesthetics.app.common import app_config, dataset_config, explain_impl, list_runs, safe_read_table
+from cloud_aesthetics.app.common import active_manifest, app_config, dataset_config, explain_impl, list_runs
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
 from cloud_aesthetics.explain.heatmaps import feature_diagnostic_map, heatmap_to_rgb, overlay_heatmap_on_image
 from cloud_aesthetics.explain.interpretation import generate_local_llm_interpretation
@@ -129,7 +129,7 @@ st.title("Inspect Predictions")
 
 cfg = app_config()
 dataset_cfg = dataset_config()
-manifest = safe_read_table(dataset_cfg["manifest_path"])
+manifest = active_manifest(dataset_cfg["manifest_path"])
 runs = [run for run in list_runs() if (resolve_path("data/artifacts") / run / "summary.json").exists()]
 if not runs:
     st.warning("No runs found yet. Train a model first.")
@@ -271,7 +271,7 @@ with tab_heatmap:
 with tab_signals:
     if explanation.get("top_features"):
         top_features = pd.DataFrame(explanation["top_features"])
-        feature_choice = st.selectbox("Feature diagnostic map", top_features["feature"].tolist())
+        feature_choice = st.selectbox("Feature diagnostic map (diagnostic only)", top_features["feature"].tolist())
         diagnostic = feature_diagnostic_map(image, feature_choice)
         diagnostic_overlay = overlay_heatmap_on_image(image, diagnostic, alpha=overlay_alpha)
         col_feature, col_feature_overlay = st.columns(2)

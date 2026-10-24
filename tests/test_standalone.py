@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 from pathlib import Path
 
@@ -52,12 +53,12 @@ def test_import_friend_label_bundle_writes_labels_and_images(tmp_path: Path) -> 
             {
                 "rater_id": "friend_a",
                 "session_id": "session_a",
-                "ratings": [{"image_id": "img_a", "score": 8.5, "note": "nice"}],
+                "ratings": [{"image_id": "friend_img", "score": 8.5, "note": "nice"}],
                 "pairwise": [
                     {
-                        "left_image_id": "img_a",
+                        "left_image_id": "friend_img",
                         "right_image_id": "img_b",
-                        "winner": "img_a",
+                        "winner": "friend_img",
                         "tie_flag": False,
                         "preference_strength": 0.75,
                     }
@@ -78,4 +79,6 @@ def test_import_friend_label_bundle_writes_labels_and_images(tmp_path: Path) -> 
     assert summary == {"ratings": 1, "pairwise": 1, "imported_images": 1}
     assert (tmp_path / "ratings" / "friend_a.csv").exists()
     assert (tmp_path / "pairwise" / "friend_a.csv").exists()
-    assert (tmp_path / "images" / "friend_img.png").read_bytes() == b"tiny-image"
+    manifest_id = hashlib.sha256(b"tiny-image").hexdigest()[:16]
+    assert (tmp_path / "images" / f"{manifest_id}.png").read_bytes() == b"tiny-image"
+    assert manifest_id in (tmp_path / "ratings" / "friend_a.csv").read_text(encoding="utf-8")

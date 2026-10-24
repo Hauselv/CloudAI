@@ -9,14 +9,14 @@ SRC_ROOT = Path(__file__).resolve().parents[4] / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cloud_aesthetics.app.common import analyze_batch_impl, dataset_config, import_images_impl, list_runs, safe_read_table
+from cloud_aesthetics.app.common import active_manifest, analyze_batch_impl, dataset_config, import_images_impl, list_runs
 from cloud_aesthetics.settings import resolve_path
 
 st.set_page_config(page_title="Import Images", layout="wide")
 st.title("Import Cloud Images")
 
 dataset_cfg = dataset_config()
-manifest = safe_read_table(dataset_cfg["manifest_path"])
+manifest = active_manifest(dataset_cfg["manifest_path"])
 
 source = st.text_input("Source folder", value="")
 dataset_name = st.text_input("Dataset name", value="private_clouds")

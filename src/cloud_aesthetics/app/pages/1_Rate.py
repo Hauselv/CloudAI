@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import base64
 import random
 import sys
 from datetime import datetime
@@ -13,8 +12,7 @@ SRC_ROOT = Path(__file__).resolve().parents[4] / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cloud_aesthetics.app.common import app_config, dataset_config, safe_read_table
-from cloud_aesthetics.cli import ingest_images_impl
+from cloud_aesthetics.app.common import active_manifest, app_config, dataset_config
 from cloud_aesthetics.data.exclusions import active_excluded_ids, set_exclusion
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings, record_pairwise_preference, record_rating
 from cloud_aesthetics.settings import resolve_path
@@ -24,7 +22,7 @@ st.set_page_config(page_title="Rate Images", layout="wide")
 st.title("Rate Cloud Images")
 
 dataset_cfg = dataset_config()
-manifest = safe_read_table(dataset_cfg["manifest_path"])
+manifest = active_manifest(dataset_cfg["manifest_path"])
 
 if manifest.empty:
     st.warning("No images found yet. Run the ingest command first and place images in data/raw/images.")
@@ -35,13 +33,6 @@ st.markdown(
     <style>
     .block-container { padding-top: 1.4rem; padding-bottom: 1.2rem; }
     div[data-testid="stImage"] img { max-height: calc(100vh - 310px); object-fit: contain; }
-    .cloud-rate-image {
-        width: 100%;
-        max-height: calc(100vh - 300px);
-        object-fit: contain;
-        background: #111;
-        border-radius: 6px;
-    }
     .cloud-hotkeys {
         color: #6b7280;
         font-size: 0.85rem;
@@ -51,14 +42,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
-
-def _image_html(path: Path) -> str:
-    suffix = path.suffix.lower().lstrip(".")
-    mime = "jpeg" if suffix in {"jpg", "jpeg"} else suffix
-    encoded = base64.b64encode(path.read_bytes()).decode("ascii")
-    return f'<img class="cloud-rate-image" src="data:image/{mime};base64,{encoded}" />'
-
 
 def _install_hotkeys() -> None:
     components.html(
@@ -211,7 +194,7 @@ with tab_scalar:
     image_id = selected_id
     row = ordered_manifest.loc[ordered_manifest["image_id"] == image_id].iloc[0]
     image_path = resolve_path(row["relative_path"])
-    st.markdown(_image_html(image_path), unsafe_allow_html=True)
+    st.image(str(image_path), use_container_width=True)
     st.caption(str(row["relative_path"]))
 
     score = st.slider("Score", min_value=0.0, max_value=10.0, value=8.0, step=0.5)
@@ -234,7 +217,6 @@ with tab_scalar:
             set_exclusion(image_id, excluded=True, reason=skip_reason, relative_path=str(row["relative_path"]))
         except TypeError:
             set_exclusion(image_id, excluded=True, reason=f"{skip_reason} | {row['relative_path']}")
-        ingest_images_impl()
         image_ids.remove(image_id)
         st.session_state.rate_index = _clamp_index(int(st.session_state.get("rate_index", 0)), max(1, len(image_ids)))
         st.rerun()

@@ -10,16 +10,16 @@ SRC_ROOT = Path(__file__).resolve().parents[4] / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cloud_aesthetics.app.common import app_config, dataset_config, safe_read_table
+from cloud_aesthetics.app.common import active_manifest, app_config, dataset_config
+from cloud_aesthetics.app.ui import render_image_grid, tile_columns
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
-from cloud_aesthetics.settings import resolve_path
 
 cfg = app_config()
 st.set_page_config(page_title="Image Gallery", layout="wide")
 st.title("Image Gallery")
 
 dataset_cfg = dataset_config()
-manifest = safe_read_table(dataset_cfg["manifest_path"])
+manifest = active_manifest(dataset_cfg["manifest_path"])
 
 if manifest.empty:
     st.warning("No images found yet.")
@@ -59,12 +59,9 @@ page_frame = view.iloc[start : start + page_size]
 
 st.caption(f"Showing {len(page_frame)} of {len(view)} images | labeled {int(view['rated'].sum())} | open {int((~view['rated']).sum())}")
 
-columns = st.columns(4)
-for index, (_, row) in enumerate(page_frame.iterrows()):
-    with columns[index % 4]:
-        status = "labeled" if bool(row["rated"]) else "open"
-        st.image(str(resolve_path(row["relative_path"])), use_container_width=True)
-        st.caption(f"{status} | {row['kind']}\n\n{row['image_id']}")
-
-if page_frame.empty:
-    st.info("No images match the selected filters.")
+render_image_grid(
+    page_frame,
+    columns=tile_columns(page_size),
+    caption=lambda row: f"{'labeled' if bool(row['rated']) else 'open'} | {row['kind']}\n\n{row['image_id']}",
+    empty_text="No images match the selected filters.",
+)
