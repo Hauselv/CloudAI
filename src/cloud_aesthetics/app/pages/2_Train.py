@@ -132,23 +132,55 @@ if runs:
                 st.write("Held-out test metrics")
                 st.json(test_metrics)
         elif summary.get("kind") == "baseline":
+            evaluation = summary.get("evaluation", {})
+            if evaluation:
+                eval_col1, eval_col2, eval_col3, eval_col4 = st.columns(4)
+                eval_col1.metric("Scheme", str(evaluation.get("scheme", "")).split(" on ")[0])
+                eval_col2.metric("Folds", int(evaluation.get("n_folds", 1)))
+                eval_col3.metric("Dev images", int(evaluation.get("n_dev", 0)))
+                eval_col4.metric("Test images", int(evaluation.get("n_test", 0)))
             rows = []
             for model_name, model_info in summary.get("models", {}).items():
+                cv = model_info.get("cv", {})
                 for partition, metrics in model_info.get("metrics", {}).items():
-                    rows.append(
-                        {
-                            "model": model_name,
-                            "partition": partition,
-                            "mae": metrics.get("mae"),
-                            "rmse": metrics.get("rmse"),
-                            "r2": metrics.get("r2"),
-                        }
-                    )
+                    row = {
+                        "model": model_name,
+                        "partition": "val (out-of-fold)" if partition == "val" else partition,
+                        "mae": metrics.get("mae"),
+                        "rmse": metrics.get("rmse"),
+                        "r2": metrics.get("r2"),
+                        "spearman": metrics.get("spearman"),
+                    }
+                    if partition == "val" and cv.get("std"):
+                        row["mae_fold_std"] = cv["std"].get("mae")
+                        row["spearman_fold_std"] = cv["std"].get("spearman")
+                    rows.append(row)
             metrics_frame = pd.DataFrame(rows)
             if not metrics_frame.empty:
-                st.dataframe(metrics_frame, use_container_width=True)
+                st.dataframe(metrics_frame.round(3), use_container_width=True, hide_index=True)
                 rmse_chart = metrics_frame.pivot(index="model", columns="partition", values="rmse")
                 st.bar_chart(rmse_chart)
+            group_rows = []
+            for model_name, model_info in summary.get("models", {}).items():
+                for partition, groups in model_info.get("by_group", {}).items():
+                    for column, values in groups.items():
+                        for group, metrics in values.items():
+                            group_rows.append(
+                                {
+                                    "model": model_name,
+                                    "partition": partition,
+                                    "group": f"{column}={group}",
+                                    "n": metrics.get("n"),
+                                    "mae": metrics.get("mae"),
+                                    "spearman": metrics.get("spearman"),
+                                    "mean_target": metrics.get("mean_target"),
+                                    "mean_prediction": metrics.get("mean_prediction"),
+                                }
+                            )
+            if group_rows:
+                st.write("Metrics by image kind and dataset")
+                st.caption("Crops and originals are rated very differently; a model that only separates the two groups looks good overall but weak within each group.")
+                st.dataframe(pd.DataFrame(group_rows).round(3), use_container_width=True, hide_index=True)
         else:
             st.json(summary)
     else:

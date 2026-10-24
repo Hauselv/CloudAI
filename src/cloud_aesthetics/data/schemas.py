@@ -18,6 +18,8 @@ class ImageRecord(BaseModel):
     capture_session_id: str
     phash: str
     split_group_id: str
+    kind: str = "original"
+    dataset_name: str | None = None
 
 
 class RatingRecord(BaseModel):
@@ -52,6 +54,8 @@ class AggregatedLabelRecord(BaseModel):
     agreement_index: float
     normalized_mean_score: float
     pairwise_win_rate: float
+    kind: str | None = None
+    dataset_name: str | None = None
 
 
 SCHEMA_COLUMNS: dict[str, list[str]] = {

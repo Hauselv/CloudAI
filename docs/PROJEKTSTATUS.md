@@ -106,11 +106,11 @@ Import · Rate (Skalar + Paarvergleich, Hotkeys, Reihenfolge-Modi, Skip) · Trai
 
 | Kennzahl | Wert |
 |---|---|
-| Bilder im Manifest | 952 (240 Originale: 90 privat + 150 Web; 712 Crops) |
+| Bilder im Manifest | 939 nach Deduplizierung (229 Originale: 89 privat + 140 Web; 710 Crops; 10 ausgeschlossen) |
 | Rohbewertungen | 321 von einem Rater (`friend_a`), alle am 26.04.2026 |
-| Bewertete Bilder | 312 (161 private Crops, 18 private Originale, 135 Web-Originale), 8 doppelt bewertet |
-| Split | 266 Dev (5 Folds à ~53) / 48 Test |
-| Noch unbewertet | ~640 Bilder, davon 72 Originale |
+| Bewertete Bilder | 312 (161 private Crops, 18 private Originale, 133 Web-Originale), 8 doppelt bewertet |
+| Split (neu, 24.10.2026) | 265 Dev (5 Folds) / 47 Test |
+| Noch unbewertet | ~630 Bilder, davon ~78 Originale |
 | Quelle der privaten Fotos | `G:\Wolken`, 90 Dateien (alle bereits importiert) |
 
 Score-Verteilung: Mittel 6,3, linksschief (Häufungen bei 8–9,5; Spitze 8,5). Die 8 Doppelbewertungen
@@ -145,7 +145,20 @@ Beide vorhandenen Runs stammen vom 26.04.2026 (mit damaligem Labelstand):
 | deep ResNet18 (frozen, 5 Ep., CPU) | MAE 1,70 · ρ 0,54 | MAE 1,62 · ρ 0,50 · R² 0,30 |
 | pairwise LogReg | – | Paar-Genauigkeit 0,70 · AUC 0,75 |
 
-Einordnung:
+### Neuer Baseline-Run mit 5-fach-CV (24.10.2026, `baseline_v1_20261024T115937Z`)
+
+| Modell | OOF (265 Dev) | Fold-Streuung | Test (47) | OOF nur Originale (116) | OOF nur Crops (149) |
+|---|---|---|---|---|---|
+| ElasticNet | MAE 1,50 · ρ 0,64 | ±0,21 · ±0,15 | MAE 1,39 · ρ 0,57 | ρ 0,32 | ρ 0,70 |
+| HistGB | MAE 1,51 · ρ 0,63 | ±0,22 · ±0,13 | MAE 1,45 · ρ 0,57 | ρ 0,33 | ρ 0,67 |
+| RandomForest | MAE 1,52 · ρ 0,64 | ±0,19 · ±0,14 | MAE 1,38 · ρ 0,59 | ρ 0,37 | ρ 0,66 |
+
+Die Fold-Streuung von ±0,15 bei Spearman zeigt, wie wenig eine einzelne Fold aussagt. Entscheidend:
+**innerhalb der Originale** liegt die Rangkorrelation nur bei 0,32–0,37, innerhalb der Crops bei 0,66–0,70.
+Das Gesamtergebnis (0,64) wird vom Crop-Confound getragen. Für die 10-vs-8-Frage bei echten Fotos ist
+das aktuelle Feature-Modell also noch schwach – genau das motiviert Roadmap P2 und P3.
+
+Einordnung der alten Runs:
 - Baumbasierte Baselines schlagen das Deep-Modell. Das eingefrorene ResNet18 mit linearem Kopf ist
   faktisch eine lineare Sonde auf ImageNet-Features, mit Batchgröße 4 trainiert – kein Wunder.
 - Die Konformal-Intervalle (90 %) haben Halbbreiten von 3,0–3,6 Punkten, sind also praktisch
@@ -168,23 +181,25 @@ Einordnung:
 
 ## 7. Gefundene Probleme / technische Schulden
 
-1. **Verarbeitete Label-Tabellen sind leer.** `aggregated_labels.parquet` und `ratings.parquet`
-   enthalten 0 Zeilen (geschrieben am 26.04. 17:33), obwohl 321 Rohlabels vorliegen. Home-Seite,
-   Compare und Train zeigen deshalb „0 Labels“. Ein Lauf von `aggregate-labels` behebt das
-   (Trockenlauf ergibt 312 Labels), verändert aber die Split-Tabelle gegenüber den alten Runs.
-2. **Unkommittierte Arbeit vom Mai**: Exclusion-Filter-Refactoring (`active_manifest`,
-   `_filter_active_manifest`), Umbenennung der Seiten 6/7 → 7/8, neue `ui.py`, Android-Ordner,
-   Build-Skript, Doku. Tests grün → sollte committed werden. `android/friend-labeler/build/`,
-   `debug.keystore` und `data/artifacts/*.apk` sind per .gitignore ausgeschlossen.
-3. **QWK-Metrik** clippt auf 1–10, Skala ist aber 0–10 (`eval/metrics.py`).
-4. **Kein Pipeline-Zustand sichtbar**: Nichts zeigt an, ob Features/Labels/Splits älter sind als die
-   Rohdaten oder ob ein Run zu den aktuellen Splits passt.
-5. **`hybrid`-Modell** nutzt PCA der handgebauten Features als „Embedding“ – kein Bild-Embedding.
-6. **Trainingsmetriken** nur auf einer Fold; keine Varianzschätzung.
-7. **pyproject** nennt als Autor „OpenAI Codex“; Lizenz MIT. Ggf. anpassen.
-8. Streamlit-Seiten lesen Manifest und Ratings-CSV bei jedem Rerun neu –
-   bei ~1.000 Bildern noch okay, skaliert aber nicht.
-9. Notebooks sind nur 2-Zellen-Platzhalter.
+Erledigt in P1 (24.10.2026):
+
+1. ~~Verarbeitete Label-Tabellen leer~~ → `aggregate-labels` neu gelaufen: 312 Labels, 265 Dev / 47 Test.
+2. ~~Unkommittierte Mai-Arbeit~~ → committed.
+3. ~~QWK clippt auf 1–10~~ → Skala 0–10.
+4. ~~Kein Pipeline-Zustand sichtbar~~ → `cloud_aesthetics/pipeline.py`, Home-Panel, CLI `status` / `refresh`.
+5. ~~Metriken nur auf einer Fold~~ → Baseline nutzt gruppierte 5-fach-CV (OOF-Metriken, Fold-Streuung,
+   Metriken nach `kind`/`dataset_name`, `predictions.parquet` pro Run).
+6. Neu gefunden und behoben: 3 byte-identische Bilder lagen unter zwei Pfaden und standen doppelt im
+   Manifest (gleiche `image_id`), was Labels und Splits duplizierte. Manifest dedupliziert jetzt nach `image_id`.
+
+Offen:
+
+7. **`hybrid`-Modell** nutzt PCA der handgebauten Features als „Embedding“ – kein Bild-Embedding (→ Roadmap P3).
+8. **Deep-Runs** werden weiterhin nur auf einer Fold evaluiert (CPU-Zeit).
+9. **pyproject** nennt als Autor „OpenAI Codex“; Lizenz MIT. Ggf. anpassen.
+10. Streamlit-Seiten lesen Manifest und Ratings-CSV bei jedem Rerun neu –
+    bei ~1.000 Bildern noch okay, skaliert aber nicht.
+11. Notebooks sind nur 2-Zellen-Platzhalter.
 
 ## 8. Was gut ist und bleiben sollte
 

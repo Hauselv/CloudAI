@@ -11,7 +11,7 @@ Aufwand grob: S = Stunden, M = 1–2 Tage, L = mehrere Tage.
 
 ## P – Primär: Fundament reparieren, Datenbasis ehrlich machen
 
-### P1 · Pipeline-Hygiene und Zustand sichtbar machen (Aufwand S)
+### P1 · Pipeline-Hygiene und Zustand sichtbar machen (Aufwand S) — erledigt 24.10.2026
 - `aggregate-labels` laufen lassen, damit die leeren Label-Tabellen wieder gefüllt sind; danach
   Features/Runs neu erzeugen, damit alles zu einem Labelstand passt.
 - Unkommittierte Mai-Arbeit committen (Tests sind grün).

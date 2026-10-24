@@ -33,6 +33,8 @@ This avoids PowerShell execution-policy issues because it does not require `Acti
 
 ## Main CLI Commands
 
+- `python -m cloud_aesthetics.cli status` (which pipeline stages exist, which are stale)
+- `python -m cloud_aesthetics.cli refresh [--features missing|full|skip] [--train-config <yaml>]`
 - `python -m cloud_aesthetics.cli import-images --source <folder> --dataset-name private_clouds`
 - `python -m cloud_aesthetics.cli ingest-images`
 - `python -m cloud_aesthetics.cli aggregate-labels`
@@ -55,6 +57,7 @@ D:\CloudAI\.venv\Scripts\python.exe -m streamlit run D:\CloudAI\cloud-aesthetics
 
 Pages:
 
+- `Home`: pipeline status panel (raw images, manifest, ratings, labels, splits, features, latest run) with stale markers and one-click refresh, plus rating distribution by image kind.
 - `Import`: import private folders, generate crops, and optionally start batch analysis after import.
 - `Rate`: label images, randomize or diversify order, use hotkeys, and skip unsuitable images.
 - `Gallery`: browse active originals/crops as tiles with labeled/open filters.
@@ -99,6 +102,12 @@ Recommended sequence:
 - originals and crops stay together via `split_group_id`
 
 Use `configs/models/baseline.yaml` first. It is fast and gives useful signal with fewer labels. Baseline models provide feature diagnostics and fallback/diagnostic maps, but not true Grad-CAM.
+
+Baseline runs evaluate with grouped k-fold cross-validation: every dev fold is held out once, `metrics.val` is computed on the pooled out-of-fold predictions, `cv` holds the per-fold mean and standard deviation, and the final model is refit on all dev images before the held-out test evaluation. Out-of-fold and test predictions are written to `<run>/predictions.parquet`.
+
+### Image kind and dataset columns
+
+The manifest, aggregated labels and feature table carry `kind` (`original` or `crop`) and `dataset_name` (first folder under `data/raw/images`). Crops are rated systematically lower than originals, so baseline summaries report metrics per kind and dataset under `by_group`, and the Train page shows them. Compare models within a group, not only overall.
 
 ## Grad-CAM Analysis
 

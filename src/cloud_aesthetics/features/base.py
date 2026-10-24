@@ -71,15 +71,18 @@ def extract_features_from_manifest(manifest: pd.DataFrame, config_path: str | Pa
     rows = []
     for _, row in manifest.iterrows():
         derivative_info = derivative_lookup.get(str(row["relative_path"]), {})
-        rows.append(
-            extract_feature_row(
-                str(row["image_id"]),
-                str(row["relative_path"]),
-                image_size=image_size,
-                is_full_original=_is_full_original(row, derivative_lookup),
-                source_image_id=derivative_info.get("source_image_id"),
-            )
+        is_full_original = _is_full_original(row, derivative_lookup)
+        feature_row = extract_feature_row(
+            str(row["image_id"]),
+            str(row["relative_path"]),
+            image_size=image_size,
+            is_full_original=is_full_original,
+            source_image_id=derivative_info.get("source_image_id"),
         )
+        # Carry the grouping columns along so analyses can split by crop/original and dataset.
+        feature_row["kind"] = str(row["kind"]) if "kind" in row and pd.notna(row["kind"]) else ("original" if is_full_original else "crop")
+        feature_row["dataset_name"] = str(row["dataset_name"]) if "dataset_name" in row and pd.notna(row["dataset_name"]) else None
+        rows.append(feature_row)
     frame = pd.DataFrame(rows)
     if frame.empty or "scientific_source_image_id" not in frame.columns:
         return frame

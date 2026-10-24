@@ -13,6 +13,7 @@ if str(SRC_ROOT) not in sys.path:
 from cloud_aesthetics.app.common import active_manifest, app_config, dataset_config
 from cloud_aesthetics.app.ui import render_image_grid
 from cloud_aesthetics.data.exclusions import set_exclusion, set_exclusions
+from cloud_aesthetics.data.manifest import image_kind_from_path
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
 
 cfg = app_config()
@@ -38,7 +39,9 @@ view["split_group_id"] = view["split_group_id"].fillna("ungrouped").astype(str)
 if "import_batch_id" not in view.columns:
     view["import_batch_id"] = ""
 view["rated"] = view["image_id"].isin(rated_ids)
-view["kind"] = view["relative_path"].apply(lambda value: "crop" if "/crops/" in str(value).replace("\\", "/") else "original")
+if "kind" not in view.columns:
+    view["kind"] = view["relative_path"].map(image_kind_from_path)
+view["kind"] = view["kind"].fillna(view["relative_path"].map(image_kind_from_path)).astype(str)
 
 group_summary = (
     view.groupby("split_group_id")

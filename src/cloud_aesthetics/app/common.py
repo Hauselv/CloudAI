@@ -13,6 +13,7 @@ if str(SRC_ROOT) not in sys.path:
 import pandas as pd
 
 from cloud_aesthetics.data.exclusions import active_excluded_ids
+from cloud_aesthetics.data.manifest import ensure_kind_columns
 from cloud_aesthetics.cli import (
     aggregate_labels_impl,
     explain_impl,
@@ -43,6 +44,7 @@ def active_manifest(path_like: str | Path) -> pd.DataFrame:
     manifest = safe_read_table(path_like)
     if manifest.empty:
         return manifest
+    manifest = ensure_kind_columns(manifest)
     excluded_ids = active_excluded_ids()
     if not excluded_ids:
         return manifest
@@ -53,7 +55,9 @@ def list_runs() -> list[str]:
     artifacts_root = resolve_path("data/artifacts")
     if not artifacts_root.exists():
         return []
-    return sorted([path.name for path in artifacts_root.iterdir() if path.is_dir()], reverse=True)
+    runs = [path for path in artifacts_root.iterdir() if path.is_dir() and (path / "summary.json").exists()]
+    runs.sort(key=lambda path: (path / "summary.json").stat().st_mtime, reverse=True)
+    return [path.name for path in runs]
 
 
 def _cli_attr(name: str) -> Any:

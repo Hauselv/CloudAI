@@ -49,6 +49,44 @@ def project_relative_or_absolute(path: Path) -> str:
     return str(path)
 
 
+def image_kind_from_path(relative_path: object, derivative_kind: str | None = None) -> str:
+    """Return ``crop`` or ``original`` for an image path.
+
+    Derivative metadata wins when available; otherwise the ``/crops/`` folder
+    convention of the importer is used.
+    """
+    if derivative_kind:
+        return "crop" if str(derivative_kind).endswith("crop") else "original"
+    normalized = str(relative_path).replace("\\", "/").lower()
+    return "crop" if "/crops/" in normalized else "original"
+
+
+def dataset_name_from_path(relative_path: object, image_root: Path) -> str | None:
+    """Return the first folder below ``image_root`` (the dataset folder) or None."""
+    path = Path(str(relative_path))
+    candidate = path if path.is_absolute() else PROJECT_ROOT / path
+    try:
+        parts = candidate.relative_to(image_root).parts
+    except ValueError:
+        return None
+    return parts[0] if len(parts) > 1 else None
+
+
+def ensure_kind_columns(manifest: pd.DataFrame, image_root: str | Path = "data/raw/images") -> pd.DataFrame:
+    """Add ``kind`` and ``dataset_name`` to older manifests that lack them."""
+    if manifest.empty:
+        return manifest
+    frame = manifest.copy()
+    if "kind" not in frame.columns or frame["kind"].isna().any():
+        kinds = frame["relative_path"].map(image_kind_from_path)
+        frame["kind"] = frame["kind"].fillna(kinds) if "kind" in frame.columns else kinds
+    if "dataset_name" not in frame.columns or frame["dataset_name"].isna().any():
+        root = resolve_path(image_root)
+        names = frame["relative_path"].map(lambda value: dataset_name_from_path(value, root))
+        frame["dataset_name"] = frame["dataset_name"].fillna(names) if "dataset_name" in frame.columns else names
+    return frame
+
+
 def build_manifest(
     image_root: str | Path,
     allowed_extensions: Iterable[str] | None = None,
@@ -61,6 +99,8 @@ def build_manifest(
     derivative_metadata = read_table(derivative_metadata_path)
     derivative_groups: dict[str, str] = {}
     derivative_batches: dict[str, str] = {}
+    derivative_kinds: dict[str, str] = {}
+    derivative_datasets: dict[str, str] = {}
     if not derivative_metadata.empty and {"relative_path", "source_image_id"}.issubset(derivative_metadata.columns):
         derivative_groups = {
             str(row["relative_path"]): str(row["source_image_id"])
@@ -70,6 +110,16 @@ def build_manifest(
         derivative_batches = {
             str(row["relative_path"]): str(row["import_batch_id"])
             for _, row in derivative_metadata.dropna(subset=["relative_path", "import_batch_id"]).iterrows()
+        }
+    if not derivative_metadata.empty and {"relative_path", "derivative_kind"}.issubset(derivative_metadata.columns):
+        derivative_kinds = {
+            str(row["relative_path"]): str(row["derivative_kind"])
+            for _, row in derivative_metadata.dropna(subset=["relative_path", "derivative_kind"]).iterrows()
+        }
+    if not derivative_metadata.empty and {"relative_path", "dataset_name"}.issubset(derivative_metadata.columns):
+        derivative_datasets = {
+            str(row["relative_path"]): str(row["dataset_name"])
+            for _, row in derivative_metadata.dropna(subset=["relative_path", "dataset_name"]).iterrows()
         }
     rows: list[dict[str, object]] = []
     for path in sorted(root.rglob("*")):
@@ -97,12 +147,15 @@ def build_manifest(
                 "capture_session_id": capture_session_id,
                 "phash": phash,
                 "split_group_id": split_group_id,
+                "kind": image_kind_from_path(relative_path, derivative_kinds.get(relative_path)),
+                "dataset_name": derivative_datasets.get(relative_path) or dataset_name_from_path(relative_path, root),
             }
         )
     frame = pd.DataFrame(rows, columns=SCHEMA_COLUMNS["manifest"])
     if not frame.empty:
-        dedupe_subset = ["relative_path"] if derivative_groups else ["sha256"]
-        frame = frame.drop_duplicates(subset=dedupe_subset).reset_index(drop=True)
+        # image_id is derived from the file hash, so byte-identical files at two paths are one image.
+        # Keeping both would duplicate labels and split rows downstream.
+        frame = frame.drop_duplicates(subset=["image_id"], keep="first").reset_index(drop=True)
         excluded_ids = active_excluded_ids(exclusions_path)
         if excluded_ids:
             frame = frame[~frame["image_id"].astype(str).isin(excluded_ids)].reset_index(drop=True)

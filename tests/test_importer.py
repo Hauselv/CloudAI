@@ -3,7 +3,7 @@ from __future__ import annotations
 import cv2
 import numpy as np
 
-from cloud_aesthetics.data.manifest import build_manifest
+from cloud_aesthetics.data.manifest import build_manifest, compute_sha256
 from cloud_aesthetics.preprocessing.importer import import_private_images
 
 
@@ -38,7 +38,10 @@ def test_import_private_images_creates_crops_and_groups_derivatives(tmp_path):
     assert imported["import_batch_id"].nunique() == 1
 
     manifest = build_manifest(image_root, allowed_extensions=[".jpg"], derivative_metadata_path=metadata_path)
-    assert len(manifest) == len(imported)
+    # Byte-identical files (a full-frame crop re-encoded like the original) collapse to one image_id.
+    written = [path for path in image_root.rglob("*.jpg")]
+    assert len(manifest) == len({compute_sha256(path) for path in written})
+    assert len(manifest) <= len(imported)
     assert manifest["split_group_id"].nunique() == 1
     assert manifest["import_batch_id"].nunique() == 1
 

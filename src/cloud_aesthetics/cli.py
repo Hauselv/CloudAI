@@ -13,7 +13,7 @@ from sklearn.decomposition import PCA
 
 from cloud_aesthetics.data.aggregation import aggregate_ratings
 from cloud_aesthetics.data.exclusions import active_excluded_ids
-from cloud_aesthetics.data.manifest import build_manifest, save_manifest
+from cloud_aesthetics.data.manifest import build_manifest, ensure_kind_columns, image_kind_from_path, save_manifest
 from cloud_aesthetics.data.pairwise import generate_pseudo_pairs, merge_pairwise_tables
 from cloud_aesthetics.data.ratings import load_raw_pairwise_preferences, load_raw_scalar_ratings
 from cloud_aesthetics.data.splits import create_grouped_splits
@@ -65,10 +65,24 @@ def _load_dataset_config(config_path: str | Path = "configs/dataset/default.yaml
 def _filter_active_manifest(manifest: pd.DataFrame) -> pd.DataFrame:
     if manifest.empty:
         return manifest
+    manifest = ensure_kind_columns(manifest)
     excluded_ids = active_excluded_ids()
     if not excluded_ids:
         return manifest
     return manifest[~manifest["image_id"].astype(str).isin(excluded_ids)].reset_index(drop=True)
+
+
+def attach_manifest_groups(table: pd.DataFrame, manifest: pd.DataFrame) -> pd.DataFrame:
+    """Attach ``kind`` and ``dataset_name`` from the manifest to a per-image table."""
+    if table.empty or manifest.empty or "image_id" not in table.columns:
+        return table
+    manifest = ensure_kind_columns(manifest)
+    groups = manifest[["image_id", "kind", "dataset_name"]].copy()
+    groups["image_id"] = groups["image_id"].astype(str)
+    groups = groups.drop_duplicates(subset=["image_id"], keep="first")
+    result = table.drop(columns=[column for column in ("kind", "dataset_name") if column in table.columns]).copy()
+    result["image_id"] = result["image_id"].astype(str)
+    return result.merge(groups, on="image_id", how="left")
 
 
 def _save_processed_tables(config: dict[str, object], ratings: pd.DataFrame, pairwise: pd.DataFrame, aggregated: pd.DataFrame, splits: pd.DataFrame) -> None:
@@ -142,6 +156,7 @@ def aggregate_labels_impl(dataset_config_path: str | Path = "configs/dataset/def
     pairwise = merge_pairwise_tables(explicit_pairwise, pseudo_pairwise)
     aggregated = aggregate_ratings(ratings, explicit_pairwise)
     manifest = _filter_active_manifest(read_table(config["manifest_path"]))
+    aggregated = attach_manifest_groups(aggregated, manifest)
     split_cfg = config["split"]
     splits = create_grouped_splits(
         manifest=manifest,
@@ -376,7 +391,7 @@ def analyze_batch_impl(
                 "run_id": str(run_id),
                 "image_id": image_id,
                 "relative_path": str(image_row["relative_path"]),
-                "kind": "crop" if "/crops/" in str(image_row["relative_path"]).replace("\\", "/") else "original",
+                "kind": str(image_row["kind"]) if "kind" in image_row and pd.notna(image_row["kind"]) else image_kind_from_path(image_row["relative_path"]),
                 "predicted_score": float(explanation.get("predicted_score", float("nan"))),
                 "uncertainty": float(explanation.get("uncertainty", 0.0)),
                 "top_features": json.dumps(explanation.get("top_features", [])),
@@ -677,6 +692,39 @@ def import_friend_labels(
         f"{summary['ratings']} ratings, {summary['pairwise']} pairwise preferences, "
         f"and {summary['imported_images']} friend images."
     )
+
+
+@app.command("status")
+def status(
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+    feature_config: str = typer.Option("configs/features/v1.yaml"),
+) -> None:
+    """Show which pipeline stages exist and which are stale."""
+    from cloud_aesthetics.pipeline import pipeline_status, status_frame
+
+    stages = pipeline_status(dataset_config, feature_config)
+    typer.echo(status_frame(stages).to_string(index=False))
+
+
+@app.command("refresh")
+def refresh(
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+    feature_config: str = typer.Option("configs/features/v1.yaml"),
+    features: str = typer.Option("missing", help="missing | full | skip"),
+    train_config: str | None = typer.Option(None, help="Optional model config to train afterwards"),
+) -> None:
+    """Aggregate labels, compute features and optionally train in one go."""
+    from cloud_aesthetics.pipeline import refresh_pipeline
+
+    report = refresh_pipeline(
+        aggregate=True,
+        features=features,
+        train_config=train_config,
+        dataset_config_path=dataset_config,
+        feature_config_path=feature_config,
+        progress=typer.echo,
+    )
+    typer.echo(json.dumps(report, indent=2))
 
 
 @app.command("aggregate-labels")

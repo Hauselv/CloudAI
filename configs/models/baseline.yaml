@@ -7,6 +7,8 @@ features_path: data/processed/features/features_v1.parquet
 output_dir: data/artifacts
 target_column: mean_score
 split_column: fold
+# All dev folds are held out in turn (grouped k-fold CV); fold_holdout is only used when cross_validate is false.
+cross_validate: true
 fold_holdout: 0
 regressors:
   - elasticnet

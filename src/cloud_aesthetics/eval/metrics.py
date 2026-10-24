@@ -7,7 +7,8 @@ from scipy.stats import kendalltau, pearsonr, spearmanr
 from sklearn.metrics import accuracy_score, mean_absolute_error, mean_squared_error, r2_score, roc_auc_score
 
 
-def quadratic_weighted_kappa(y_true: np.ndarray, y_pred: np.ndarray, min_rating: int = 1, max_rating: int = 10) -> float:
+def quadratic_weighted_kappa(y_true: np.ndarray, y_pred: np.ndarray, min_rating: int = 0, max_rating: int = 10) -> float:
+    """Quadratic weighted kappa on the 0-10 rating scale (scores are rounded to whole points)."""
     y_true_int = np.clip(np.rint(y_true), min_rating, max_rating).astype(int)
     y_pred_int = np.clip(np.rint(y_pred), min_rating, max_rating).astype(int)
     n = max_rating - min_rating + 1

@@ -147,7 +147,9 @@ if not ratings.empty:
 manifest = manifest.copy()
 manifest["image_id"] = manifest["image_id"].astype(str)
 manifest["rated"] = manifest["image_id"].isin(rated_ids)
-manifest["kind"] = manifest["relative_path"].apply(_image_kind)
+if "kind" not in manifest.columns:
+    manifest["kind"] = manifest["relative_path"].apply(_image_kind)
+manifest["kind"] = manifest["kind"].fillna(manifest["relative_path"].apply(_image_kind)).astype(str)
 
 if "inspect_image_id" not in st.session_state:
     st.session_state.inspect_image_id = manifest["image_id"].iloc[0]

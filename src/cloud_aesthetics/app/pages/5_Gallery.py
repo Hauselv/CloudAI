@@ -12,6 +12,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from cloud_aesthetics.app.common import active_manifest, app_config, dataset_config
 from cloud_aesthetics.app.ui import render_image_grid, tile_columns
+from cloud_aesthetics.data.manifest import image_kind_from_path
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
 
 cfg = app_config()
@@ -34,7 +35,9 @@ if not ratings.empty:
 view = manifest.copy()
 view["image_id"] = view["image_id"].astype(str)
 view["rated"] = view["image_id"].isin(rated_ids)
-view["kind"] = view["relative_path"].apply(lambda value: "crop" if "/crops/" in str(value).replace("\\", "/") else "original")
+if "kind" not in view.columns:
+    view["kind"] = view["relative_path"].map(image_kind_from_path)
+view["kind"] = view["kind"].fillna(view["relative_path"].map(image_kind_from_path)).astype(str)
 
 col1, col2, col3, col4 = st.columns([1.3, 1.3, 1, 1])
 status_filter = col1.selectbox("Status", ["All", "Labeled", "Open"])
