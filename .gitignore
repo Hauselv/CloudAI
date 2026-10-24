@@ -33,3 +33,6 @@ data/processed/splits/*
 !data/processed/splits/.gitkeep
 data/artifacts/*
 !data/artifacts/.gitkeep
+
+data/processed/judge/*
+!data/processed/judge/.gitkeep
