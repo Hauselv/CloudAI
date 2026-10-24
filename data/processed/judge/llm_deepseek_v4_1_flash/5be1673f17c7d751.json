@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-10-24T13:10:39.943320+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "5be1673f17c7d751",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "golden",
+      "tan"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A clean, attractive prairie sky with a striking central cumulus, though the light and composition are fairly ordinary.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 7.0,
+    "strengths": [
+      "crisp, well-defined cumulus tower",
+      "strong blue-and-white contrast",
+      "pleasing golden prairie foreground"
+    ],
+    "weaknesses": [
+      "flat midday lighting",
+      "large area of plain blue sky",
+      "simple composition with centered horizon"
+    ]
+  },
+  "latency_seconds": 5.495867999999973,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 566,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "golden",
+      "tan"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A clean, attractive prairie sky with a striking central cumulus, though the light and composition are fairly ordinary.",
+    "quality_flags": [],
+    "score": 7.0,
+    "strengths": [
+      "crisp, well-defined cumulus tower",
+      "strong blue-and-white contrast",
+      "pleasing golden prairie foreground"
+    ],
+    "weaknesses": [
+      "flat midday lighting",
+      "large area of plain blue sky",
+      "simple composition with centered horizon"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T12:52:06.724008+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "ce2bb00b9b8f9be9",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "altostratus",
+      "cumulus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "dark blue",
+      "gray",
+      "pale blue",
+      "peach"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A moody, heavy sky with a faint warm glow, but the power lines and murky exposure keep it from being more than a decent snapshot.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.0,
+    "strengths": [
+      "moody heavy cloud mass",
+      "subtle warm tint near horizon",
+      "layered depth"
+    ],
+    "weaknesses": [
+      "power lines intrude",
+      "overall too dark and low-contrast",
+      "cloud structure is soft rather than crisp"
+    ]
+  },
+  "latency_seconds": 10.784599400001753,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 600,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "altostratus",
+      "cumulus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "dark blue",
+      "gray",
+      "pale blue",
+      "peach"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A moody, heavy sky with a faint warm glow, but the power lines and murky exposure keep it from being more than a decent snapshot.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.0,
+    "strengths": [
+      "moody heavy cloud mass",
+      "subtle warm tint near horizon",
+      "layered depth"
+    ],
+    "weaknesses": [
+      "power lines intrude",
+      "overall too dark and low-contrast",
+      "cloud structure is soft rather than crisp"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:47:03.532333+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "a6bf8ec89641768a",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "pale blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent textured sky with layered clouds, but the flat light keeps it from being especially striking.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "textured cloud field",
+      "layered darker band adds depth",
+      "sky fills the frame"
+    ],
+    "weaknesses": [
+      "flat diffuse light",
+      "lacks dramatic color or contrast",
+      "no strong focal point"
+    ]
+  },
+  "latency_seconds": 4.507379000000583,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 444,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "pale blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent textured sky with layered clouds, but the flat light keeps it from being especially striking.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "textured cloud field",
+      "layered darker band adds depth",
+      "sky fills the frame"
+    ],
+    "weaknesses": [
+      "flat diffuse light",
+      "lacks dramatic color or contrast",
+      "no strong focal point"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T13:02:00.612488+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "2a35a7ae6849f31d",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altostratus"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "dark gray",
+      "orange",
+      "gold",
+      "pale blue-gray"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A striking sunset sky with dark cloud masses and glowing warm edges, though the image is somewhat soft and noisy.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 7.0,
+    "strengths": [
+      "dramatic dark cloud silhouettes",
+      "warm golden rim light",
+      "layered framing around bright sky gap"
+    ],
+    "weaknesses": [
+      "soft/noisy image quality",
+      "large empty central area",
+      "limited fine cloud texture"
+    ]
+  },
+  "latency_seconds": 4.065845700000864,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 394,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altostratus"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "dark gray",
+      "orange",
+      "gold",
+      "pale blue-gray"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A striking sunset sky with dark cloud masses and glowing warm edges, though the image is somewhat soft and noisy.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 7.0,
+    "strengths": [
+      "dramatic dark cloud silhouettes",
+      "warm golden rim light",
+      "layered framing around bright sky gap"
+    ],
+    "weaknesses": [
+      "soft/noisy image quality",
+      "large empty central area",
+      "limited fine cloud texture"
+    ]
+  },
+  "stop_reason": "stop"
+}

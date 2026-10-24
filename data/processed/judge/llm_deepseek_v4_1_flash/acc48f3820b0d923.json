@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:54:16.932466+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "acc48f3820b0d923",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "cirrus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary blue-sky scene with a textured band of white clouds and little else to make it stand out.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "clean blue sky",
+      "layered cloud band with some texture",
+      "pleasant white-and-blue contrast"
+    ],
+    "weaknesses": [
+      "large empty upper area",
+      "flat midday lighting",
+      "no dramatic or distinctive cloud shape"
+    ]
+  },
+  "latency_seconds": 3.7945636000004015,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 371,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "cirrus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary blue-sky scene with a textured band of white clouds and little else to make it stand out.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "clean blue sky",
+      "layered cloud band with some texture",
+      "pleasant white-and-blue contrast"
+    ],
+    "weaknesses": [
+      "large empty upper area",
+      "flat midday lighting",
+      "no dramatic or distinctive cloud shape"
+    ]
+  },
+  "stop_reason": "stop"
+}

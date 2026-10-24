@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T13:12:34.672729+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 235,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 420,
+    "image_width": 420
+  },
+  "image_id": "f6bf7658aaeab45d",
+  "input_tokens": 798,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "altocumulus",
+      "stratus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "white",
+      "blue",
+      "grey"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A quiet, softly textured sky patch with muted tones and no dramatic features.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 4.5,
+    "strengths": [
+      "soft tonal variation",
+      "gentle cloud texture"
+    ],
+    "weaknesses": [
+      "flat lighting",
+      "lacks strong structure or contrast"
+    ]
+  },
+  "latency_seconds": 1.2038403999995353,
+  "model": "qwen3.6-35b",
+  "output_tokens": 157,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "altocumulus",
+      "stratus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "white",
+      "blue",
+      "grey"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A quiet, softly textured sky patch with muted tones and no dramatic features.",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 4.5,
+    "strengths": [
+      "soft tonal variation",
+      "gentle cloud texture"
+    ],
+    "weaknesses": [
+      "flat lighting",
+      "lacks strong structure or contrast"
+    ]
+  },
+  "stop_reason": "stop"
+}

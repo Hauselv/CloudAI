@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:48:25.277106+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 197,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 384,
+    "image_width": 384
+  },
+  "image_id": "85ca373428dbfc15",
+  "input_tokens": 822,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "contrail"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "dark gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent but ordinary sky snapshot with some cloud contrast, held back by flat light and distracting foreground objects.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [],
+    "score": 5.0,
+    "strengths": [
+      "contrast between dark upper cloud band and blue sky",
+      "distinct puffy cumulus in lower right",
+      "faint contrail adds a diagonal line"
+    ],
+    "weaknesses": [
+      "streetlights and building clutter the composition",
+      "flat daylight with little color",
+      "cloud structure is fairly ordinary"
+    ]
+  },
+  "latency_seconds": 6.965667100001156,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 657,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "contrail"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "dark gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent but ordinary sky snapshot with some cloud contrast, held back by flat light and distracting foreground objects.",
+    "quality_flags": [],
+    "score": 5.0,
+    "strengths": [
+      "contrast between dark upper cloud band and blue sky",
+      "distinct puffy cumulus in lower right",
+      "faint contrail adds a diagonal line"
+    ],
+    "weaknesses": [
+      "streetlights and building clutter the composition",
+      "flat daylight with little color",
+      "cloud structure is fairly ordinary"
+    ]
+  },
+  "stop_reason": "stop"
+}

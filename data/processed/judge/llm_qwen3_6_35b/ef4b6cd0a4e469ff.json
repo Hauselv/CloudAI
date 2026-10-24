@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-10-24T13:11:59.701126+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "ef4b6cd0a4e469ff",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "stratus",
+      "stratocumulus",
+      "unknown"
+    ],
+    "confidence": 0.9,
+    "dominant_colors": [
+      "grey",
+      "blue-grey",
+      "slate",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A flat, featureless grey sky with no structure or light to make it worth keeping.",
+    "primary_cloud_type": "stratus",
+    "quality_flags": [],
+    "score": 2.5,
+    "strengths": [
+      "uniform overcast texture"
+    ],
+    "weaknesses": [
+      "completely flat and dull",
+      "no structure or light variation",
+      "visually uninteresting"
+    ]
+  },
+  "latency_seconds": 1.3089478999991115,
+  "model": "qwen3.6-35b",
+  "output_tokens": 159,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "stratus",
+      "stratocumulus",
+      "unknown"
+    ],
+    "confidence": 0.9,
+    "dominant_colors": [
+      "grey",
+      "blue-grey",
+      "slate",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A flat, featureless grey sky with no structure or light to make it worth keeping.",
+    "quality_flags": [],
+    "score": 2.5,
+    "strengths": [
+      "uniform overcast texture"
+    ],
+    "weaknesses": [
+      "completely flat and dull",
+      "no structure or light variation",
+      "visually uninteresting"
+    ]
+  },
+  "stop_reason": "stop"
+}

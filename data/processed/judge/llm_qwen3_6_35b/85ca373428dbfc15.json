@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T13:13:12.967925+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 197,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 384,
+    "image_width": 384
+  },
+  "image_id": "85ca373428dbfc15",
+  "input_tokens": 773,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "contrail"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey",
+      "silver"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent sky photo with some nice cloud formations, but the prominent streetlights and rooftops distract from the sky itself.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "people_or_objects_dominant"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "clear blue sky with fluffy cumulus clouds",
+      "interesting contrast between dark and light cloud layers",
+      "distinct contrail adds a nice linear element"
+    ],
+    "weaknesses": [
+      "composition is cluttered by streetlights and rooftops",
+      "lighting is flat and lacks dramatic impact",
+      "sky is only a portion of the frame"
+    ]
+  },
+  "latency_seconds": 1.7687638999996125,
+  "model": "qwen3.6-35b",
+  "output_tokens": 256,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "contrail"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey",
+      "silver"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent sky photo with some nice cloud formations, but the prominent streetlights and rooftops distract from the sky itself.",
+    "quality_flags": [
+      "people_or_objects_dominant"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "clear blue sky with fluffy cumulus clouds",
+      "interesting contrast between dark and light cloud layers",
+      "distinct contrail adds a nice linear element"
+    ],
+    "weaknesses": [
+      "composition is cluttered by streetlights and rooftops",
+      "lighting is flat and lacks dramatic impact",
+      "sky is only a portion of the frame"
+    ]
+  },
+  "stop_reason": "stop"
+}

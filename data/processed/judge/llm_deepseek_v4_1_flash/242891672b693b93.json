@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:59:37.186872+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "242891672b693b93",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "deep blue",
+      "gray",
+      "white",
+      "black"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent, textured sky with layered clouds and silhouettes, but the dark, flat light keeps it from being especially striking.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "expansive sky with layered cloud texture",
+      "silhouetted treeline adds depth",
+      "rich blue background"
+    ],
+    "weaknesses": [
+      "overall underexposed and somewhat dull",
+      "clouds lack dramatic light or color",
+      "foreground silhouette is minor and slightly distracting"
+    ]
+  },
+  "latency_seconds": 4.960886300001221,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 499,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "deep blue",
+      "gray",
+      "white",
+      "black"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent, textured sky with layered clouds and silhouettes, but the dark, flat light keeps it from being especially striking.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "expansive sky with layered cloud texture",
+      "silhouetted treeline adds depth",
+      "rich blue background"
+    ],
+    "weaknesses": [
+      "overall underexposed and somewhat dull",
+      "clouds lack dramatic light or color",
+      "foreground silhouette is minor and slightly distracting"
+    ]
+  },
+  "stop_reason": "stop"
+}

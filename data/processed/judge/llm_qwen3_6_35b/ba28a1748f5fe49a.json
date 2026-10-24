@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:11:46.396762+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "ba28a1748f5fe49a",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "cirrostratus",
+      "stratus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "white",
+      "pale blue",
+      "gray",
+      "cream"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A quiet, softly textured sky with a faint iridescent hint, but overall too muted and unremarkable to be truly captivating.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [],
+    "score": 4.5,
+    "strengths": [
+      "subtle iridescent glow near the sun",
+      "soft layered texture",
+      "gentle tonal transitions"
+    ],
+    "weaknesses": [
+      "low contrast and flat appearance",
+      "no strong focal point or drama",
+      "lacks vivid color or striking structure"
+    ]
+  },
+  "latency_seconds": 1.46248100000048,
+  "model": "qwen3.6-35b",
+  "output_tokens": 190,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "cirrostratus",
+      "stratus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "white",
+      "pale blue",
+      "gray",
+      "cream"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A quiet, softly textured sky with a faint iridescent hint, but overall too muted and unremarkable to be truly captivating.",
+    "quality_flags": [],
+    "score": 4.5,
+    "strengths": [
+      "subtle iridescent glow near the sun",
+      "soft layered texture",
+      "gentle tonal transitions"
+    ],
+    "weaknesses": [
+      "low contrast and flat appearance",
+      "no strong focal point or drama",
+      "lacks vivid color or striking structure"
+    ]
+  },
+  "stop_reason": "stop"
+}

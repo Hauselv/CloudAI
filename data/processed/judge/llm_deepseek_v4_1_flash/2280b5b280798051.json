@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T12:58:32.223750+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "2280b5b280798051",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "cirrus"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "green",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant mountain sky with bold cumulus and rich blue, but the flat daylight and dominant foreground keep it from being more striking.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "vivid deep blue sky",
+      "large billowing cumulus with good structure",
+      "mountain valley framing adds depth"
+    ],
+    "weaknesses": [
+      "flat midday light",
+      "foreground meadow takes up much of the frame",
+      "some bright cloud areas look slightly clipped"
+    ]
+  },
+  "latency_seconds": 4.716964900000676,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 462,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "cirrus"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "green",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant mountain sky with bold cumulus and rich blue, but the flat daylight and dominant foreground keep it from being more striking.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "vivid deep blue sky",
+      "large billowing cumulus with good structure",
+      "mountain valley framing adds depth"
+    ],
+    "weaknesses": [
+      "flat midday light",
+      "foreground meadow takes up much of the frame",
+      "some bright cloud areas look slightly clipped"
+    ]
+  },
+  "stop_reason": "stop"
+}

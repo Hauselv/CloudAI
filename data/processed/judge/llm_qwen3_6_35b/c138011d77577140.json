@@ -1,0 +1,70 @@
+{
+  "created_at": "2026-10-24T13:11:38.025531+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "c138011d77577140",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary daytime sky with scattered clouds that lacks the drama or composition to be truly striking.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "clean blue sky",
+      "soft white clouds",
+      "pleasant color contrast"
+    ],
+    "weaknesses": [
+      "lacks dramatic structure or light",
+      "composition feels casual and unremarkable"
+    ]
+  },
+  "latency_seconds": 1.3270905999997922,
+  "model": "qwen3.6-35b",
+  "output_tokens": 162,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary daytime sky with scattered clouds that lacks the drama or composition to be truly striking.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "clean blue sky",
+      "soft white clouds",
+      "pleasant color contrast"
+    ],
+    "weaknesses": [
+      "lacks dramatic structure or light",
+      "composition feels casual and unremarkable"
+    ]
+  },
+  "stop_reason": "stop"
+}

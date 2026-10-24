@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T13:08:34.170972+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "21b2f7eb6981a1d7",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "green",
+      "brick red"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, well-structured everyday cumulus sky, but the flat light and busy foreground keep it from being special.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "layered cumulus structure",
+      "good blue-sky contrast",
+      "sense of depth across cloud bands"
+    ],
+    "weaknesses": [
+      "flat midday light",
+      "cluttered foreground rooftops and foliage",
+      "no dramatic color or texture"
+    ]
+  },
+  "latency_seconds": 5.724188099999083,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 532,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "green",
+      "brick red"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, well-structured everyday cumulus sky, but the flat light and busy foreground keep it from being special.",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "layered cumulus structure",
+      "good blue-sky contrast",
+      "sense of depth across cloud bands"
+    ],
+    "weaknesses": [
+      "flat midday light",
+      "cluttered foreground rooftops and foliage",
+      "no dramatic color or texture"
+    ]
+  },
+  "stop_reason": "stop"
+}

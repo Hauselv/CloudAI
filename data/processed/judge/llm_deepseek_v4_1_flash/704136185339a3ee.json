@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T13:10:45.703175+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "704136185339a3ee",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, layered aerial cloudscape with good depth, though the window glare and ordinary framing keep it from being truly striking.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "airplane_window"
+    ],
+    "score": 7.0,
+    "strengths": [
+      "expansive layered cloud field",
+      "good depth from high cirrus to lower cumulus",
+      "sunlit texture across cloud tops"
+    ],
+    "weaknesses": [
+      "window glare and flare upper left",
+      "composition feels like a generic aerial view",
+      "slightly hazy contrast"
+    ]
+  },
+  "latency_seconds": 5.751274800000829,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 600,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, layered aerial cloudscape with good depth, though the window glare and ordinary framing keep it from being truly striking.",
+    "quality_flags": [
+      "airplane_window"
+    ],
+    "score": 7.0,
+    "strengths": [
+      "expansive layered cloud field",
+      "good depth from high cirrus to lower cumulus",
+      "sunlit texture across cloud tops"
+    ],
+    "weaknesses": [
+      "window glare and flare upper left",
+      "composition feels like a generic aerial view",
+      "slightly hazy contrast"
+    ]
+  },
+  "stop_reason": "stop"
+}

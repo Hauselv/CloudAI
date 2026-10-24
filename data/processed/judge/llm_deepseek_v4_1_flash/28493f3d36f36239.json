@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T12:53:53.553246+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "28493f3d36f36239",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary daytime cloud study with soft shapes and little drama.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.0,
+    "strengths": [
+      "pleasant blue sky",
+      "soft layered cloud shapes",
+      "some depth from multiple cloud bands"
+    ],
+    "weaknesses": [
+      "flat daylight",
+      "soft focus and low contrast",
+      "no dramatic structure or color"
+    ]
+  },
+  "latency_seconds": 3.7927202000009856,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 372,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary daytime cloud study with soft shapes and little drama.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.0,
+    "strengths": [
+      "pleasant blue sky",
+      "soft layered cloud shapes",
+      "some depth from multiple cloud bands"
+    ],
+    "weaknesses": [
+      "flat daylight",
+      "soft focus and low contrast",
+      "no dramatic structure or color"
+    ]
+  },
+  "stop_reason": "stop"
+}

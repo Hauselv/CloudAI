@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:04:19.283423+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "adf9eea4c2069011",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulonimbus",
+      "stratocumulus",
+      "nimbostratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "dark gray",
+      "slate blue",
+      "green",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A striking, ominous storm-shelf sky that is worth keeping despite the dull light and mundane airport foreground.",
+    "primary_cloud_type": "cumulonimbus",
+    "quality_flags": [],
+    "score": 7.0,
+    "strengths": [
+      "dramatic dark shelf cloud",
+      "strong layered structure",
+      "ominous depth and scale"
+    ],
+    "weaknesses": [
+      "flat gray light",
+      "cluttered foreground building",
+      "some haze and low detail"
+    ]
+  },
+  "latency_seconds": 6.613294499999029,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 628,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulonimbus",
+      "stratocumulus",
+      "nimbostratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "dark gray",
+      "slate blue",
+      "green",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A striking, ominous storm-shelf sky that is worth keeping despite the dull light and mundane airport foreground.",
+    "quality_flags": [],
+    "score": 7.0,
+    "strengths": [
+      "dramatic dark shelf cloud",
+      "strong layered structure",
+      "ominous depth and scale"
+    ],
+    "weaknesses": [
+      "flat gray light",
+      "cluttered foreground building",
+      "some haze and low detail"
+    ]
+  },
+  "stop_reason": "stop"
+}

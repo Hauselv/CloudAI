@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T13:12:13.967030+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 235,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 420,
+    "image_width": 420
+  },
+  "image_id": "ba408462ee43cf32",
+  "input_tokens": 798,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A nice but ordinary sky with gentle cloud texture and no standout light or color.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "pleasant texture and pattern",
+      "soft tonal variation",
+      "clean composition"
+    ],
+    "weaknesses": [
+      "flat, overcast light",
+      "lacks dramatic color or contrast",
+      "no focal point or depth"
+    ]
+  },
+  "latency_seconds": 1.503436299999521,
+  "model": "qwen3.6-35b",
+  "output_tokens": 208,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A nice but ordinary sky with gentle cloud texture and no standout light or color.",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "pleasant texture and pattern",
+      "soft tonal variation",
+      "clean composition"
+    ],
+    "weaknesses": [
+      "flat, overcast light",
+      "lacks dramatic color or contrast",
+      "no focal point or depth"
+    ]
+  },
+  "stop_reason": "stop"
+}

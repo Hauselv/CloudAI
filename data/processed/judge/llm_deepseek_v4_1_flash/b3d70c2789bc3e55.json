@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T12:47:09.425440+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "b3d70c2789bc3e55",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "dark gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "Pleasant layered cumulus and stratocumulus with good contrast, but flat daylight keeps it from being striking.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "layered cloud structure",
+      "strong contrast between dark mass and bright cumulus",
+      "blue sky gaps add depth"
+    ],
+    "weaknesses": [
+      "flat midday light",
+      "heavy dark cloud dominates without dramatic shape",
+      "slightly soft detail"
+    ]
+  },
+  "latency_seconds": 5.879130999999688,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 617,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "dark gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "Pleasant layered cumulus and stratocumulus with good contrast, but flat daylight keeps it from being striking.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "layered cloud structure",
+      "strong contrast between dark mass and bright cumulus",
+      "blue sky gaps add depth"
+    ],
+    "weaknesses": [
+      "flat midday light",
+      "heavy dark cloud dominates without dramatic shape",
+      "slightly soft detail"
+    ]
+  },
+  "stop_reason": "stop"
+}

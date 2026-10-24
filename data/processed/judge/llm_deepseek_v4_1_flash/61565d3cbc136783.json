@@ -1,0 +1,70 @@
+{
+  "created_at": "2026-10-24T12:43:33.841070+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "61565d3cbc136783",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "cirrus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, clean blue sky with scattered fair-weather cumulus, but too ordinary and flatly lit to be memorable.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 4.5,
+    "strengths": [
+      "clean saturated blue sky",
+      "crisp small cumulus puffs",
+      "uncluttered composition"
+    ],
+    "weaknesses": [
+      "flat midday light",
+      "little drama or depth",
+      "sparse, scattered structure"
+    ]
+  },
+  "latency_seconds": 2.2042772000004334,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 183,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "cirrus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, clean blue sky with scattered fair-weather cumulus, but too ordinary and flatly lit to be memorable.",
+    "quality_flags": [],
+    "score": 4.5,
+    "strengths": [
+      "clean saturated blue sky",
+      "crisp small cumulus puffs",
+      "uncluttered composition"
+    ],
+    "weaknesses": [
+      "flat midday light",
+      "little drama or depth",
+      "sparse, scattered structure"
+    ]
+  },
+  "stop_reason": "stop"
+}

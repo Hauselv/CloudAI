@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-10-24T12:55:42.268912+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "ce4b7b94a6ca5676",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altostratus",
+      "stratus",
+      "stratocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "pale beige"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A mostly uniform gray overcast with only a faint glow of sun, pleasant but unremarkable as a sky photo.",
+    "primary_cloud_type": "altostratus",
+    "quality_flags": [],
+    "score": 3.0,
+    "strengths": [
+      "soft diffuse light",
+      "faint glowing break in the overcast"
+    ],
+    "weaknesses": [
+      "flat, featureless cloud sheet",
+      "low contrast and dull color",
+      "no distinct structure or composition"
+    ]
+  },
+  "latency_seconds": 2.9081685000001016,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 261,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altostratus",
+      "stratus",
+      "stratocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "pale beige"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A mostly uniform gray overcast with only a faint glow of sun, pleasant but unremarkable as a sky photo.",
+    "quality_flags": [],
+    "score": 3.0,
+    "strengths": [
+      "soft diffuse light",
+      "faint glowing break in the overcast"
+    ],
+    "weaknesses": [
+      "flat, featureless cloud sheet",
+      "low contrast and dull color",
+      "no distinct structure or composition"
+    ]
+  },
+  "stop_reason": "stop"
+}

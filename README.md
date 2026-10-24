@@ -136,15 +136,19 @@ D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli train --config confi
 
 ## LLM Judge (Vision Model As An Extra Rater)
 
-A Claude vision model can rate images on the same 0-10 scale and describe what it sees. It is stored as **its own rater** (`llm_<model>`), registered in `data/raw/metadata/raters.csv` with `rater_kind: llm`, and never mixed into the human consensus labels (`include_llm_raters: false` in the dataset config). Credentials come from `ANTHROPIC_API_KEY` or an `ant auth login` profile; nothing is stored in the repo.
+A vision model can rate images on the same 0-10 scale and describe what it sees. It is stored as **its own rater** (`llm_<model>`), registered in `data/raw/metadata/raters.csv` with `rater_kind: llm`, and never mixed into the human consensus labels (`include_llm_raters: false` in the dataset config). Two backends exist, selected in the `judge` block of `configs/app/default.yaml` or with `--backend`:
+
+- `gateway`: any OpenAI-compatible server (default: the university LLM gateway with `deepseek-v4.1-flash` or `qwen3.6-35b`). The key is read from the environment variable `CLOUD_JUDGE_GATEWAY_API_KEY` or from a secrets JSON file (`gateway_secrets_file`); it is never copied into the repo.
+- `anthropic`: Claude via the Anthropic SDK (`ANTHROPIC_API_KEY` or `ant auth login`), default model `claude-opus-5-5`, structured outputs.
 
 ```powershell
-D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli judge-images --limit 5          # probe
-D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli judge-images                    # all human-labeled images
-D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli judge-report --rater llm_claude_opus_5_5
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli judge-images --limit 5                      # probe
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli judge-images                                # all human-labeled images
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli judge-images --model qwen3.6-35b            # second gateway judge
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli judge-report --rater llm_deepseek_v4_1_flash
 ```
 
-- Default model `claude-opus-5-5` (`--model` to change); images are downscaled to 1024 px before upload; the rubric is in `judge/prompt.py`.
+- Images are downscaled to 1024 px before upload; the rubric is in `judge/prompt.py`, the gateway adds a JSON format hint and uses JSON mode.
 - Each judgement is a structured JSON object (score, confidence, cloud types, light, colors, strengths, weaknesses, quality flags, one-sentence verdict), cached under `data/processed/judge/<rater_id>/` so re-runs are free; attributes are flattened into `<rater_id>_attributes.parquet`.
 - `--only-labeled` (default) restricts the run to images with human labels: validation first, scaling later (`--no-only-labeled`).
 - The report (`data/artifacts/judge_reports/`) and the `Rater Comparison` page show Spearman, MAE, bias, agreement within ±1 point, per crop class, agreement at the top of the scale, and the largest disagreements with the judge's verdict next to the photo.

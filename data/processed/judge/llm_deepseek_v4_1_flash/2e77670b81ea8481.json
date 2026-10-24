@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T12:53:01.078448+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "2e77670b81ea8481",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "altocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "Pleasant layered cloud bands in a blue sky, but flat light and soft focus keep it ordinary.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.0,
+    "strengths": [
+      "layered cloud bands",
+      "soft textured edges",
+      "calm blue-sky backdrop"
+    ],
+    "weaknesses": [
+      "flat lighting",
+      "low contrast",
+      "soft focus"
+    ]
+  },
+  "latency_seconds": 6.183441400000447,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 610,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "altocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "Pleasant layered cloud bands in a blue sky, but flat light and soft focus keep it ordinary.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.0,
+    "strengths": [
+      "layered cloud bands",
+      "soft textured edges",
+      "calm blue-sky backdrop"
+    ],
+    "weaknesses": [
+      "flat lighting",
+      "low contrast",
+      "soft focus"
+    ]
+  },
+  "stop_reason": "stop"
+}

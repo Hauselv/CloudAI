@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-24T13:01:34.785251+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "5db6128e29f56229",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "altocumulus",
+      "altostratus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "dark green",
+      "blue",
+      "silver"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A moody, layered sky over water with good silhouette structure, but the flat light and heavy dark foreground keep it from being more striking.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "layered, backlit cloud structure",
+      "strong silhouette composition",
+      "water reflection adds depth"
+    ],
+    "weaknesses": [
+      "bright central sky is somewhat blown out",
+      "large dark foreground competes with sky",
+      "muted color palette"
+    ]
+  },
+  "latency_seconds": 6.726463799999692,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 631,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "altocumulus",
+      "altostratus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "dark green",
+      "blue",
+      "silver"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A moody, layered sky over water with good silhouette structure, but the flat light and heavy dark foreground keep it from being more striking.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "layered, backlit cloud structure",
+      "strong silhouette composition",
+      "water reflection adds depth"
+    ],
+    "weaknesses": [
+      "bright central sky is somewhat blown out",
+      "large dark foreground competes with sky",
+      "muted color palette"
+    ]
+  },
+  "stop_reason": "stop"
+}

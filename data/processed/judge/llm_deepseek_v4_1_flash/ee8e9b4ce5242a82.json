@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T12:50:46.908478+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "ee8e9b4ce5242a82",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "cirrostratus"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "blue",
+      "peach",
+      "pink",
+      "white",
+      "lavender"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A calm pastel sky with softly lit clouds, pleasant but not especially striking.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "soft pastel color",
+      "gentle cloud texture",
+      "calm mood"
+    ],
+    "weaknesses": [
+      "large empty upper sky",
+      "low contrast and hazy",
+      "lacks a strong focal structure"
+    ]
+  },
+  "latency_seconds": 5.738024500000392,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 576,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "cirrostratus"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "blue",
+      "peach",
+      "pink",
+      "white",
+      "lavender"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A calm pastel sky with softly lit clouds, pleasant but not especially striking.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "soft pastel color",
+      "gentle cloud texture",
+      "calm mood"
+    ],
+    "weaknesses": [
+      "large empty upper sky",
+      "low contrast and hazy",
+      "lacks a strong focal structure"
+    ]
+  },
+  "stop_reason": "stop"
+}

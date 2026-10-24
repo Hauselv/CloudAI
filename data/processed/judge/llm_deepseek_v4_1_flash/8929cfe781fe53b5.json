@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T12:48:06.912566+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "8929cfe781fe53b5",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "blue",
+      "pink",
+      "lavender",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A gentle, pretty twilight sky with pink-tinted clouds and leafy framing, but too soft and unstructured to be more than a pleasant snapshot.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "pleasing pastel blue-to-pink gradient",
+      "silhouetted leaves give foreground framing",
+      "soft warm light on the cloud edges"
+    ],
+    "weaknesses": [
+      "clouds are wispy and lack dramatic structure",
+      "large expanse of plain blue sky",
+      "slightly soft/grainy rendering"
+    ]
+  },
+  "latency_seconds": 4.379949999998644,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 400,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "blue",
+      "pink",
+      "lavender",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A gentle, pretty twilight sky with pink-tinted clouds and leafy framing, but too soft and unstructured to be more than a pleasant snapshot.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "pleasing pastel blue-to-pink gradient",
+      "silhouetted leaves give foreground framing",
+      "soft warm light on the cloud edges"
+    ],
+    "weaknesses": [
+      "clouds are wispy and lack dramatic structure",
+      "large expanse of plain blue sky",
+      "slightly soft/grainy rendering"
+    ]
+  },
+  "stop_reason": "stop"
+}

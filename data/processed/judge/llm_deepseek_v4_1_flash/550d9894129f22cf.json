@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:05:11.423102+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "550d9894129f22cf",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "deep blue",
+      "orange",
+      "gold",
+      "dark green"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A beautiful low-sun sky with a glowing layered cloud band set against deep blue, though the composition is a bit top-heavy and simple.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [],
+    "score": 7.5,
+    "strengths": [
+      "striking warm illumination on layered clouds",
+      "strong blue-orange color contrast",
+      "clean horizontal composition"
+    ],
+    "weaknesses": [
+      "large empty upper sky feels unbalanced",
+      "cloud band is somewhat flat and horizontal",
+      "minimal foreground interest"
+    ]
+  },
+  "latency_seconds": 5.275489600000583,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 538,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "deep blue",
+      "orange",
+      "gold",
+      "dark green"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A beautiful low-sun sky with a glowing layered cloud band set against deep blue, though the composition is a bit top-heavy and simple.",
+    "quality_flags": [],
+    "score": 7.5,
+    "strengths": [
+      "striking warm illumination on layered clouds",
+      "strong blue-orange color contrast",
+      "clean horizontal composition"
+    ],
+    "weaknesses": [
+      "large empty upper sky feels unbalanced",
+      "cloud band is somewhat flat and horizontal",
+      "minimal foreground interest"
+    ]
+  },
+  "stop_reason": "stop"
+}

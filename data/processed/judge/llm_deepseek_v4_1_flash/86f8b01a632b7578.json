@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:54:25.067642+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "86f8b01a632b7578",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "stratocumulus",
+      "cumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "green",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, well-structured sky with layered cirrus and a low cumulus line, but the flat daylight keeps it from being especially striking.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "expansive sky with layered wispy cloud bands",
+      "distinct lower line of puffy clouds",
+      "clear horizon and depth"
+    ],
+    "weaknesses": [
+      "ordinary daylight with little dramatic light",
+      "dark foreground trees distract slightly",
+      "hazy horizon reduces contrast"
+    ]
+  },
+  "latency_seconds": 5.308012299999973,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 544,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "stratocumulus",
+      "cumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "green",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, well-structured sky with layered cirrus and a low cumulus line, but the flat daylight keeps it from being especially striking.",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "expansive sky with layered wispy cloud bands",
+      "distinct lower line of puffy clouds",
+      "clear horizon and depth"
+    ],
+    "weaknesses": [
+      "ordinary daylight with little dramatic light",
+      "dark foreground trees distract slightly",
+      "hazy horizon reduces contrast"
+    ]
+  },
+  "stop_reason": "stop"
+}

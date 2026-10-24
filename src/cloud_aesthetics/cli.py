@@ -847,18 +847,61 @@ def zero_shot(
     typer.echo(f"Zero-shot table has {len(table)} rows. Cloud types: {json.dumps(counts)}")
 
 
+def build_judge(
+    backend: str | None = None,
+    model: str | None = None,
+    *,
+    effort: str = "medium",
+    max_edge: int = 1024,
+    gateway_url: str | None = None,
+    secrets_file: str | None = None,
+    app_config_path: str | Path = "configs/app/default.yaml",
+):
+    """Create the judge named by the CLI flags, falling back to the ``judge`` block of the app config."""
+    settings = dict(load_yaml(app_config_path).get("judge", {}) or {})
+    backend = (backend or settings.get("backend") or "anthropic").lower()
+    if backend == "anthropic":
+        from cloud_aesthetics.judge.client import ClaudeJudge
+
+        return ClaudeJudge(model=model or str(settings.get("anthropic_model", "claude-opus-5-5")), effort=effort, max_edge=max_edge)
+    if backend == "gateway":
+        from cloud_aesthetics.judge.gateway import GatewayJudge, load_gateway_api_key
+
+        base_url = gateway_url or str(settings.get("gateway_base_url", ""))
+        if not base_url:
+            raise typer.BadParameter("Gateway backend needs --gateway-url or judge.gateway_base_url in configs/app/default.yaml")
+        api_key = load_gateway_api_key(
+            env_var=str(settings.get("gateway_api_key_env", "CLOUD_JUDGE_GATEWAY_API_KEY")),
+            secrets_file=secrets_file or settings.get("gateway_secrets_file"),
+            secrets_key=str(settings.get("gateway_secrets_key", "gateway_api_key")),
+        )
+        return GatewayJudge(
+            base_url,
+            model or str(settings.get("gateway_model", "")),
+            api_key,
+            max_edge=max_edge,
+            max_tokens=int(settings.get("gateway_max_tokens", 1500)),
+            disable_thinking=bool(settings.get("gateway_disable_thinking", True)),
+            json_mode=bool(settings.get("gateway_json_mode", True)),
+            on_wait=lambda seconds, detail: typer.echo(f"gateway rate limit; waiting {seconds:.0f}s ({detail})"),
+        )
+    raise typer.BadParameter(f"Unknown judge backend: {backend}")
+
+
 @app.command("judge-images")
 def judge_images(
-    model: str = typer.Option("claude-opus-5-5", help="Claude model id used as the vision judge"),
+    backend: str | None = typer.Option(None, help="anthropic | gateway (default from configs/app/default.yaml)"),
+    model: str | None = typer.Option(None, help="Model id for the chosen backend"),
     only_labeled: bool = typer.Option(True, help="Judge only images that already have human labels (validation mode)"),
     limit: int | None = typer.Option(None, help="Stop after this many newly judged images"),
-    effort: str = typer.Option("medium", help="output_config.effort for the judge"),
+    effort: str = typer.Option("medium", help="output_config.effort (Anthropic backend only)"),
     max_edge: int = typer.Option(1024, help="Images are downscaled to this long edge before upload"),
+    gateway_url: str | None = typer.Option(None, help="OpenAI-compatible base URL, e.g. https://host/api"),
+    secrets_file: str | None = typer.Option(None, help="JSON file holding the gateway key (never copied anywhere)"),
     dataset_config: str = typer.Option("configs/dataset/default.yaml"),
     report: bool = typer.Option(True, help="Write the comparison report against human labels afterwards"),
 ) -> None:
-    """Rate images with a Claude vision judge and store the scores as a separate rater."""
-    from cloud_aesthetics.judge.client import ClaudeJudge
+    """Rate images with a vision judge and store the scores as a separate rater."""
     from cloud_aesthetics.judge.store import run_judge
 
     dataset_cfg = _load_dataset_config(dataset_config)
@@ -869,7 +912,8 @@ def judge_images(
         labels = read_table(dataset_cfg["aggregated_labels_path"])
         _require_non_empty(labels, "aggregated labels", "Run `aggregate-labels` first or pass --no-only-labeled.")
         image_ids = labels["image_id"].astype(str).tolist()
-    judge = ClaudeJudge(model=model, effort=effort, max_edge=max_edge)
+    judge = build_judge(backend, model, effort=effort, max_edge=max_edge, gateway_url=gateway_url, secrets_file=secrets_file)
+    typer.echo(f"Judge: {judge.rater_id} ({judge.model})")
     summary = run_judge(
         judge,
         manifest,
@@ -881,7 +925,11 @@ def judge_images(
     )
     typer.echo(json.dumps(summary, indent=2))
     if report and summary["judged"] + summary["cached"] > 0:
-        judge_report_impl(summary["rater_id"], dataset_config)
+        from cloud_aesthetics.judge.validation import report_markdown
+
+        result = judge_report_impl(summary["rater_id"], dataset_config)
+        typer.echo(report_markdown(result))
+        typer.echo(f"Report files: {json.dumps(result['paths'], indent=2)}")
 
 
 def judge_report_impl(rater_id: str, dataset_config_path: str | Path = "configs/dataset/default.yaml", output_dir: str | Path = "data/artifacts/judge_reports") -> dict[str, object]:

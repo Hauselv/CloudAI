@@ -1,0 +1,70 @@
+{
+  "created_at": "2026-10-24T12:50:21.162508+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "dd616e7a3d06ac2e",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altostratus",
+      "stratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "muted blue-gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A flat, gray overcast sky with little structure or color, making it an ordinary sky photo rather than a striking one.",
+    "primary_cloud_type": "altostratus",
+    "quality_flags": [],
+    "score": 3.0,
+    "strengths": [
+      "large expanse of sky",
+      "subtle soft cloud texture"
+    ],
+    "weaknesses": [
+      "flat low-contrast light",
+      "featureless overcast",
+      "buildings and chimney distract at the bottom"
+    ]
+  },
+  "latency_seconds": 8.061535599999843,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 569,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altostratus",
+      "stratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "muted blue-gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A flat, gray overcast sky with little structure or color, making it an ordinary sky photo rather than a striking one.",
+    "quality_flags": [],
+    "score": 3.0,
+    "strengths": [
+      "large expanse of sky",
+      "subtle soft cloud texture"
+    ],
+    "weaknesses": [
+      "flat low-contrast light",
+      "featureless overcast",
+      "buildings and chimney distract at the bottom"
+    ]
+  },
+  "stop_reason": "stop"
+}

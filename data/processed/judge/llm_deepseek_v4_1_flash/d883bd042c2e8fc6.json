@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:45:29.594787+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "d883bd042c2e8fc6",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary patch of bright cumulus clouds with good blue contrast and little special light or composition.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "vivid blue sky contrast",
+      "billowing cloud texture",
+      "clear puffy cloud shapes"
+    ],
+    "weaknesses": [
+      "soft focus and low detail",
+      "flat midday lighting",
+      "no compositional context"
+    ]
+  },
+  "latency_seconds": 7.852217499999824,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 691,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary patch of bright cumulus clouds with good blue contrast and little special light or composition.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "vivid blue sky contrast",
+      "billowing cloud texture",
+      "clear puffy cloud shapes"
+    ],
+    "weaknesses": [
+      "soft focus and low detail",
+      "flat midday lighting",
+      "no compositional context"
+    ]
+  },
+  "stop_reason": "stop"
+}

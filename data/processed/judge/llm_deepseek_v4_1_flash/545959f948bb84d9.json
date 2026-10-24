@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:47:18.289015+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 235,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 420,
+    "image_width": 420
+  },
+  "image_id": "545959f948bb84d9",
+  "input_tokens": 822,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "contrail",
+      "clear_sky"
+    ],
+    "confidence": 0.65,
+    "dominant_colors": [
+      "blue",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A calm but unremarkable patch of blue sky with a thin diagonal cirrus streak that offers modest visual interest.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 4.5,
+    "strengths": [
+      "soft diagonal band of fibrous cirrus adds some structure",
+      "clean, uncluttered sky",
+      "gentle gradient of blue tones"
+    ],
+    "weaknesses": [
+      "flat, even lighting with no drama",
+      "sparse content, mostly empty blue",
+      "little depth or contrast"
+    ]
+  },
+  "latency_seconds": 3.0871169999991253,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 297,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "contrail",
+      "clear_sky"
+    ],
+    "confidence": 0.65,
+    "dominant_colors": [
+      "blue",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A calm but unremarkable patch of blue sky with a thin diagonal cirrus streak that offers modest visual interest.",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 4.5,
+    "strengths": [
+      "soft diagonal band of fibrous cirrus adds some structure",
+      "clean, uncluttered sky",
+      "gentle gradient of blue tones"
+    ],
+    "weaknesses": [
+      "flat, even lighting with no drama",
+      "sparse content, mostly empty blue",
+      "little depth or contrast"
+    ]
+  },
+  "stop_reason": "stop"
+}

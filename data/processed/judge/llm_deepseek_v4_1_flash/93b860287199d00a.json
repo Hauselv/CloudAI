@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:44:36.522513+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "93b860287199d00a",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "altostratus",
+      "nimbostratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "grey",
+      "blue-grey",
+      "slate",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A heavy, layered overcast sky with some mood but too flat and ordinary to be a standout sky photograph.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [],
+    "score": 4.5,
+    "strengths": [
+      "moody layered cloud deck",
+      "broad sky-dominant composition",
+      "subtle banding texture"
+    ],
+    "weaknesses": [
+      "flat low-contrast light",
+      "little color or drama",
+      "buildings clipped at bottom edge"
+    ]
+  },
+  "latency_seconds": 5.900197900000421,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 550,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "altostratus",
+      "nimbostratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "grey",
+      "blue-grey",
+      "slate",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A heavy, layered overcast sky with some mood but too flat and ordinary to be a standout sky photograph.",
+    "quality_flags": [],
+    "score": 4.5,
+    "strengths": [
+      "moody layered cloud deck",
+      "broad sky-dominant composition",
+      "subtle banding texture"
+    ],
+    "weaknesses": [
+      "flat low-contrast light",
+      "little color or drama",
+      "buildings clipped at bottom edge"
+    ]
+  },
+  "stop_reason": "stop"
+}

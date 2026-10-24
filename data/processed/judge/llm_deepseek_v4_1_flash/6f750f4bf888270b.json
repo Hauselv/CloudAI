@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T13:02:18.191782+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "6f750f4bf888270b",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "lenticular",
+      "altostratus",
+      "cirrus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "white",
+      "slate blue",
+      "grey",
+      "dark navy"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A striking orographic cloud plume against a moody dark sky makes this a memorable, worth-keeping sky photo despite the plain foreground.",
+    "primary_cloud_type": "lenticular",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 7.5,
+    "strengths": [
+      "Dramatic banner/lenticular cloud streaming off the ridge",
+      "Strong tonal contrast between bright cloud and dark sky",
+      "Clean, simple composition with the ridge anchoring the frame"
+    ],
+    "weaknesses": [
+      "Upper sky is a flat, featureless dark wash",
+      "Foreground snow is plain and adds little",
+      "Slightly tight crop on the cloud's rightward tail"
+    ]
+  },
+  "latency_seconds": 5.479864099999759,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 562,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "lenticular",
+      "altostratus",
+      "cirrus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "white",
+      "slate blue",
+      "grey",
+      "dark navy"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A striking orographic cloud plume against a moody dark sky makes this a memorable, worth-keeping sky photo despite the plain foreground.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 7.5,
+    "strengths": [
+      "Dramatic banner/lenticular cloud streaming off the ridge",
+      "Strong tonal contrast between bright cloud and dark sky",
+      "Clean, simple composition with the ridge anchoring the frame"
+    ],
+    "weaknesses": [
+      "Upper sky is a flat, featureless dark wash",
+      "Foreground snow is plain and adds little",
+      "Slightly tight crop on the cloud's rightward tail"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-24T12:56:20.555866+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "74c471787f8ad3c5",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "clear_sky",
+      "stratocumulus",
+      "cumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "peach",
+      "pink",
+      "gray",
+      "terracotta"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A pleasant pastel twilight scene, but the sky itself is too sparse and the rooftops too prominent for a strong cloud photograph.",
+    "primary_cloud_type": "clear_sky",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 4.5,
+    "strengths": [
+      "smooth pastel twilight gradient",
+      "calm horizon glow",
+      "peaceful lake setting"
+    ],
+    "weaknesses": [
+      "sky is mostly empty",
+      "clouds are small and incidental",
+      "rooftops and antenna dominate foreground"
+    ]
+  },
+  "latency_seconds": 6.017228700000487,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 630,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "clear_sky",
+      "stratocumulus",
+      "cumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "peach",
+      "pink",
+      "gray",
+      "terracotta"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A pleasant pastel twilight scene, but the sky itself is too sparse and the rooftops too prominent for a strong cloud photograph.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 4.5,
+    "strengths": [
+      "smooth pastel twilight gradient",
+      "calm horizon glow",
+      "peaceful lake setting"
+    ],
+    "weaknesses": [
+      "sky is mostly empty",
+      "clouds are small and incidental",
+      "rooftops and antenna dominate foreground"
+    ]
+  },
+  "stop_reason": "stop"
+}

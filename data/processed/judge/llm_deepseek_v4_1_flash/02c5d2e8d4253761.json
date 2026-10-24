@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T12:59:52.755207+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "02c5d2e8d4253761",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "fog",
+      "stratus",
+      "clear_sky"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "dark green",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A striking mountain scene with cloud spilling over the ridge, but it works more as a landscape than as a dedicated sky photograph.",
+    "primary_cloud_type": "fog",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "Cloud spilling over the ridge adds motion and texture",
+      "Strong contrast between snow, dark trees, and white cloud",
+      "Clean blue sky backdrop"
+    ],
+    "weaknesses": [
+      "Mountain landscape dominates the frame",
+      "Foreground shadows are very dark",
+      "Sky occupies a limited portion of the image"
+    ]
+  },
+  "latency_seconds": 6.542832699999053,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 692,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "fog",
+      "stratus",
+      "clear_sky"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "dark green",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A striking mountain scene with cloud spilling over the ridge, but it works more as a landscape than as a dedicated sky photograph.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "Cloud spilling over the ridge adds motion and texture",
+      "Strong contrast between snow, dark trees, and white cloud",
+      "Clean blue sky backdrop"
+    ],
+    "weaknesses": [
+      "Mountain landscape dominates the frame",
+      "Foreground shadows are very dark",
+      "Sky occupies a limited portion of the image"
+    ]
+  },
+  "stop_reason": "stop"
+}

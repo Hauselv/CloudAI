@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T12:59:07.301875+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "2eece60d2f651380",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "altostratus",
+      "cumulus"
+    ],
+    "confidence": 0.86,
+    "dominant_colors": [
+      "orange",
+      "red",
+      "blue",
+      "purple",
+      "black"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A striking sunset sky with a glowing band of layered clouds above a dark treeline, worth keeping and showing.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [],
+    "score": 8.0,
+    "strengths": [
+      "vivid layered sunset color",
+      "strong horizontal cloud band",
+      "clean silhouetted horizon"
+    ],
+    "weaknesses": [
+      "foreground is very dark and empty",
+      "upper sky is comparatively plain",
+      "slight softness/noise in shadows"
+    ]
+  },
+  "latency_seconds": 4.117729200001122,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 403,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "altostratus",
+      "cumulus"
+    ],
+    "confidence": 0.86,
+    "dominant_colors": [
+      "orange",
+      "red",
+      "blue",
+      "purple",
+      "black"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A striking sunset sky with a glowing band of layered clouds above a dark treeline, worth keeping and showing.",
+    "quality_flags": [],
+    "score": 8.0,
+    "strengths": [
+      "vivid layered sunset color",
+      "strong horizontal cloud band",
+      "clean silhouetted horizon"
+    ],
+    "weaknesses": [
+      "foreground is very dark and empty",
+      "upper sky is comparatively plain",
+      "slight softness/noise in shadows"
+    ]
+  },
+  "stop_reason": "stop"
+}

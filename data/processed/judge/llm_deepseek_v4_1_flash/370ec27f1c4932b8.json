@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:46:30.661482+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "370ec27f1c4932b8",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "stratus",
+      "altostratus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "gray",
+      "blue-gray",
+      "slate"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A nearly featureless gray overcast patch with no structure or light to hold the eye.",
+    "primary_cloud_type": "stratus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 1.5,
+    "strengths": [
+      "subtle soft gradient",
+      "calm muted tone"
+    ],
+    "weaknesses": [
+      "featureless overcast expanse",
+      "flat, dull light",
+      "slightly blurry and noisy"
+    ]
+  },
+  "latency_seconds": 2.675879899999927,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 234,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratus",
+      "altostratus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "gray",
+      "blue-gray",
+      "slate"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A nearly featureless gray overcast patch with no structure or light to hold the eye.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 1.5,
+    "strengths": [
+      "subtle soft gradient",
+      "calm muted tone"
+    ],
+    "weaknesses": [
+      "featureless overcast expanse",
+      "flat, dull light",
+      "slightly blurry and noisy"
+    ]
+  },
+  "stop_reason": "stop"
+}

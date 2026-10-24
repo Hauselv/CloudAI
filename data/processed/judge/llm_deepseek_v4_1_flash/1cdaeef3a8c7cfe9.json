@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:07:00.235740+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "1cdaeef3a8c7cfe9",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "altostratus",
+      "cirrus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "orange",
+      "red",
+      "dark blue",
+      "black"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A striking layered sunset with glowing orange cloud bands and a dramatic dark silhouette, though the lower half is quite heavy.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [],
+    "score": 8.0,
+    "strengths": [
+      "vivid layered sunset color",
+      "strong horizontal cloud structure",
+      "effective silhouetted horizon"
+    ],
+    "weaknesses": [
+      "lower sky is very dark and heavy",
+      "color saturation feels slightly intense",
+      "limited foreground interest"
+    ]
+  },
+  "latency_seconds": 5.149146300000211,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 500,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "altostratus",
+      "cirrus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "orange",
+      "red",
+      "dark blue",
+      "black"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A striking layered sunset with glowing orange cloud bands and a dramatic dark silhouette, though the lower half is quite heavy.",
+    "quality_flags": [],
+    "score": 8.0,
+    "strengths": [
+      "vivid layered sunset color",
+      "strong horizontal cloud structure",
+      "effective silhouetted horizon"
+    ],
+    "weaknesses": [
+      "lower sky is very dark and heavy",
+      "color saturation feels slightly intense",
+      "limited foreground interest"
+    ]
+  },
+  "stop_reason": "stop"
+}

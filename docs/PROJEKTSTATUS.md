@@ -209,18 +209,21 @@ nicht im Training. Konsequenz: weiter auf allem trainieren, aber **immer nach `c
 für die Feinanalyse Originale labeln. Innerhalb der Crops erreicht CLIP-Ridge ρ 0,74–0,79, innerhalb der
 Originale 0,47: Der schwierige Teil ist das Ranking unter echten Fotos.
 
-### LLM-Judge (24.10.2026, P4 – Infrastruktur fertig, Validierungslauf ausstehend)
+### LLM-Judge (24.10.2026, P4)
 
-`cloud_aesthetics/judge/`: Ein Claude-Vision-Modell bewertet Bilder mit derselben 0–10-Rubrik und liefert
-ein strukturiertes Urteil (Score, Konfidenz, Wolkentypen, Licht, Farben, Stärken, Schwächen, Qualitätsflags,
+`cloud_aesthetics/judge/`: Ein Vision-Modell bewertet Bilder mit derselben 0–10-Rubrik und liefert ein
+strukturiertes Urteil (Score, Konfidenz, Wolkentypen, Licht, Farben, Stärken, Schwächen, Qualitätsflags,
 Ein-Satz-Fazit). Jedes Modell ist ein eigener Rater `llm_<modell>`, in `raters.csv` als `llm` registriert und
 aus dem menschlichen Konsens ausgeschlossen. Urteile werden pro Bild gecacht, Attribute in eine Tabelle
 geflacht, der Vergleich mit den menschlichen Labels (Spearman, MAE, Bias, ±1-Trefferquote, pro `crop_class`,
 oberes Ende der Skala, größte Abweichungen) läuft per `judge-report` und auf der Seite „Rater Comparison“.
 
-Kostenrahmen für den Validierungslauf (312 Bilder, 1024 px, Opus 5.5): ca. 1.000 Bild-Token + 700 Prompt-Token
-(gecacht) pro Bild Eingabe, ca. 200 Token Ausgabe → grob 0,5 Mio. Eingabe-, 60 Tsd. Ausgabe-Token, also wenige
-Dollar. Erst nach dem Lauf lässt sich sagen, ob der Judge als Skalierungs-Rater taugt (Ziel: ρ ≥ 0,6 zu Michel).
+Zwei Backends: der **Uni-LLM-Server** (OpenAI-kompatibles Gateway `ki-chat.uni-mainz.de`, Modelle
+`deepseek-v4.1-flash` und `qwen3.6-35b`, beide bildfähig, ca. 3 s pro Bild, Key aus der Secrets-Datei des
+Spider-Projekts) und die **Anthropic-API** (Claude Opus 5.5 mit strukturierter Ausgabe, braucht
+`ANTHROPIC_API_KEY`). Der Uni-Server ist der Standard, weil er kostenfrei ist und bereits genutzt wird.
+
+Validierungsläufe gegen Michels 312 Labels: siehe Abschnitt „Judge-Validierung“ unten.
 
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 

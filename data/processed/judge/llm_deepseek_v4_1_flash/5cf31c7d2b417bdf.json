@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-24T12:55:18.465809+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 373,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 529,
+    "image_width": 529
+  },
+  "image_id": "5cf31c7d2b417bdf",
+  "input_tokens": 822,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "cirrostratus",
+      "altocumulus"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "pale blue",
+      "white",
+      "green",
+      "dark green",
+      "gray-blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A calm landscape with a pale, thinly textured sky that is pleasant but not a striking cloud photograph.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 4.0,
+    "strengths": [
+      "clean exposure",
+      "tranquil lake-and-forest composition",
+      "subtle wispy cloud texture"
+    ],
+    "weaknesses": [
+      "flat, low-contrast sky",
+      "little distinct cloud structure",
+      "sky feels incidental to the landscape"
+    ]
+  },
+  "latency_seconds": 3.912411200000861,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 386,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "cirrostratus",
+      "altocumulus"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "pale blue",
+      "white",
+      "green",
+      "dark green",
+      "gray-blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A calm landscape with a pale, thinly textured sky that is pleasant but not a striking cloud photograph.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 4.0,
+    "strengths": [
+      "clean exposure",
+      "tranquil lake-and-forest composition",
+      "subtle wispy cloud texture"
+    ],
+    "weaknesses": [
+      "flat, low-contrast sky",
+      "little distinct cloud structure",
+      "sky feels incidental to the landscape"
+    ]
+  },
+  "stop_reason": "stop"
+}

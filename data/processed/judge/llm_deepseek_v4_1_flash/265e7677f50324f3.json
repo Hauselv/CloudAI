@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T12:51:44.978412+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "265e7677f50324f3",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.6,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "peach",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A pleasant golden-hour sky with a nicely lit streak of cloud, but it lacks the drama or structure to be more than a decent snapshot.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "warm low-sun glow on the streaky cloud",
+      "layered depth from scattered puffs to dark bank",
+      "pleasant pastel palette"
+    ],
+    "weaknesses": [
+      "composition lacks a strong focal point",
+      "lower cloud bank is muddy and flat",
+      "image is somewhat soft"
+    ]
+  },
+  "latency_seconds": 3.990104500000598,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 397,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.6,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "peach",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A pleasant golden-hour sky with a nicely lit streak of cloud, but it lacks the drama or structure to be more than a decent snapshot.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "warm low-sun glow on the streaky cloud",
+      "layered depth from scattered puffs to dark bank",
+      "pleasant pastel palette"
+    ],
+    "weaknesses": [
+      "composition lacks a strong focal point",
+      "lower cloud bank is muddy and flat",
+      "image is somewhat soft"
+    ]
+  },
+  "stop_reason": "stop"
+}

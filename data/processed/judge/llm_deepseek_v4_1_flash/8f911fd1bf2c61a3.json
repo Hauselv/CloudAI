@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T12:48:54.834594+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "8f911fd1bf2c61a3",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "cirrostratus",
+      "altocumulus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "pale gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A calm but ordinary patch of blue sky with thin wispy clouds that lacks the structure or light to be especially striking.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 4.5,
+    "strengths": [
+      "pleasant blue sky",
+      "delicate wispy texture",
+      "calm overall mood"
+    ],
+    "weaknesses": [
+      "flat light",
+      "little distinct structure",
+      "soft focus reduces crispness"
+    ]
+  },
+  "latency_seconds": 6.271751800000857,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 445,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "cirrostratus",
+      "altocumulus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "pale gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A calm but ordinary patch of blue sky with thin wispy clouds that lacks the structure or light to be especially striking.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 4.5,
+    "strengths": [
+      "pleasant blue sky",
+      "delicate wispy texture",
+      "calm overall mood"
+    ],
+    "weaknesses": [
+      "flat light",
+      "little distinct structure",
+      "soft focus reduces crispness"
+    ]
+  },
+  "stop_reason": "stop"
+}

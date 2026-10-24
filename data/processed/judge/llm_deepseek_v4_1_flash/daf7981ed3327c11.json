@@ -1,0 +1,16 @@
+{
+  "created_at": "2026-10-24T13:00:12.018828+00:00",
+  "error": "no JSON object in response",
+  "extra": {},
+  "image_id": "daf7981ed3327c11",
+  "input_tokens": 1134,
+  "judgement": {},
+  "latency_seconds": 7.489542499999516,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 700,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "content": ""
+  },
+  "stop_reason": "length"
+}

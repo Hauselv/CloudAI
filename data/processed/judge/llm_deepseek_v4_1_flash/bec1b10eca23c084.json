@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:45:45.788992+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "bec1b10eca23c084",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, bright cumulus sky patch with good texture and color, but it is a fairly ordinary crop without a stronger composition or special light.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "vivid blue-and-white contrast",
+      "billowing cloud texture",
+      "some depth from shadowed bases"
+    ],
+    "weaknesses": [
+      "crop lacks sky/land context",
+      "highlights look slightly blown",
+      "ordinary daylight with no dramatic color"
+    ]
+  },
+  "latency_seconds": 5.225098200000502,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 528,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, bright cumulus sky patch with good texture and color, but it is a fairly ordinary crop without a stronger composition or special light.",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "vivid blue-and-white contrast",
+      "billowing cloud texture",
+      "some depth from shadowed bases"
+    ],
+    "weaknesses": [
+      "crop lacks sky/land context",
+      "highlights look slightly blown",
+      "ordinary daylight with no dramatic color"
+    ]
+  },
+  "stop_reason": "stop"
+}

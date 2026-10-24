@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-10-24T13:10:18.883526+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "e48445142f88ad45",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary scattered cumulus sky with decent texture and no special light.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "Crisp puffy cumulus shapes",
+      "Pleasant scattered arrangement",
+      "Clean blue backdrop"
+    ],
+    "weaknesses": [
+      "Flat midday light",
+      "Limited dramatic depth or color",
+      "Generic composition"
+    ]
+  },
+  "latency_seconds": 4.5516039000012825,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 460,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary scattered cumulus sky with decent texture and no special light.",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "Crisp puffy cumulus shapes",
+      "Pleasant scattered arrangement",
+      "Clean blue backdrop"
+    ],
+    "weaknesses": [
+      "Flat midday light",
+      "Limited dramatic depth or color",
+      "Generic composition"
+    ]
+  },
+  "stop_reason": "stop"
+}

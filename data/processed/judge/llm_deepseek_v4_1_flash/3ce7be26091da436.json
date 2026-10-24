@@ -1,0 +1,70 @@
+{
+  "created_at": "2026-10-24T12:44:28.006993+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "3ce7be26091da436",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altostratus",
+      "stratus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue-grey",
+      "slate",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A flat, nearly featureless overcast sky that offers little visual interest or structure.",
+    "primary_cloud_type": "altostratus",
+    "quality_flags": [],
+    "score": 2.5,
+    "strengths": [
+      "soft even tonality",
+      "subtle layered texture in lower area"
+    ],
+    "weaknesses": [
+      "no distinct cloud structure",
+      "flat, dull light",
+      "featureless expanse with no focal point"
+    ]
+  },
+  "latency_seconds": 2.9471601999994164,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 233,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altostratus",
+      "stratus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue-grey",
+      "slate",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A flat, nearly featureless overcast sky that offers little visual interest or structure.",
+    "quality_flags": [],
+    "score": 2.5,
+    "strengths": [
+      "soft even tonality",
+      "subtle layered texture in lower area"
+    ],
+    "weaknesses": [
+      "no distinct cloud structure",
+      "flat, dull light",
+      "featureless expanse with no focal point"
+    ]
+  },
+  "stop_reason": "stop"
+}

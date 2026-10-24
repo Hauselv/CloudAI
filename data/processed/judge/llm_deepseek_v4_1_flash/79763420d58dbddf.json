@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-24T12:56:32.121394+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "79763420d58dbddf",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "pale blue",
+      "peach",
+      "gray",
+      "sand",
+      "green"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A pleasant pastel beach twilight with scattered clouds, but the sky itself is fairly ordinary and not especially striking.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "soft pastel sunset glow",
+      "scattered clouds add some texture",
+      "pleasant beach setting"
+    ],
+    "weaknesses": [
+      "sky lacks dramatic structure",
+      "foreground beach dominates the frame",
+      "hazy, low-contrast light"
+    ]
+  },
+  "latency_seconds": 5.052082799998971,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 505,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "pale blue",
+      "peach",
+      "gray",
+      "sand",
+      "green"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A pleasant pastel beach twilight with scattered clouds, but the sky itself is fairly ordinary and not especially striking.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "soft pastel sunset glow",
+      "scattered clouds add some texture",
+      "pleasant beach setting"
+    ],
+    "weaknesses": [
+      "sky lacks dramatic structure",
+      "foreground beach dominates the frame",
+      "hazy, low-contrast light"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T13:01:09.570070+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "7df4898ce84a00f5",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "contrail"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "orange",
+      "yellow",
+      "dark gray",
+      "black"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "An intriguingly shaped dark cloud against a warm sky, but the newspaper clipping format and grainy reproduction keep it from being a strong standalone sky photograph.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [
+      "blurry_or_noisy",
+      "landscape_dominant"
+    ],
+    "score": 4.5,
+    "strengths": [
+      "striking, unusual cloud silhouette",
+      "warm sunset gradient"
+    ],
+    "weaknesses": [
+      "newspaper reproduction with visible halftone and text",
+      "sky is secondary to the article context",
+      "grainy and low detail"
+    ]
+  },
+  "latency_seconds": 7.126985599999898,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 485,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "contrail"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "orange",
+      "yellow",
+      "dark gray",
+      "black"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "An intriguingly shaped dark cloud against a warm sky, but the newspaper clipping format and grainy reproduction keep it from being a strong standalone sky photograph.",
+    "quality_flags": [
+      "blurry_or_noisy",
+      "landscape_dominant"
+    ],
+    "score": 4.5,
+    "strengths": [
+      "striking, unusual cloud silhouette",
+      "warm sunset gradient"
+    ],
+    "weaknesses": [
+      "newspaper reproduction with visible halftone and text",
+      "sky is secondary to the article context",
+      "grainy and low detail"
+    ]
+  },
+  "stop_reason": "stop"
+}

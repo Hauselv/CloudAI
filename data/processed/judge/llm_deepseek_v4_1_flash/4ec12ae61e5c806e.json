@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:53:49.747484+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 197,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 384,
+    "image_width": 384
+  },
+  "image_id": "4ec12ae61e5c806e",
+  "input_tokens": 822,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "cirrus",
+      "stratocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, clean sky with textured white clouds, but the flat light and simple composition keep it from being especially striking.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "crisp white clouds against saturated blue",
+      "textured cloud edges",
+      "pleasant contrast"
+    ],
+    "weaknesses": [
+      "flat midday light",
+      "no dramatic structure",
+      "simple cropped composition"
+    ]
+  },
+  "latency_seconds": 4.658095099999628,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 467,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "cirrus",
+      "stratocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, clean sky with textured white clouds, but the flat light and simple composition keep it from being especially striking.",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "crisp white clouds against saturated blue",
+      "textured cloud edges",
+      "pleasant contrast"
+    ],
+    "weaknesses": [
+      "flat midday light",
+      "no dramatic structure",
+      "simple cropped composition"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:12:24.766548+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 235,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 420,
+    "image_width": 420
+  },
+  "image_id": "03b878c2e86df7bf",
+  "input_tokens": 822,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "altocumulus",
+      "cumulus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "pale yellow"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, textured sky with nice backlit cloud edges, but it is somewhat ordinary and slightly compromised by the rooftop intrusion.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [],
+    "score": 6.5,
+    "strengths": [
+      "textured broken cloud field",
+      "backlit cloud edges",
+      "broad sky composition"
+    ],
+    "weaknesses": [
+      "rooftop and antenna intrude at bottom",
+      "light is somewhat hazy and washed out",
+      "lacks dramatic color or contrast"
+    ]
+  },
+  "latency_seconds": 7.46291200000087,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 709,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "altocumulus",
+      "cumulus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "pale yellow"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, textured sky with nice backlit cloud edges, but it is somewhat ordinary and slightly compromised by the rooftop intrusion.",
+    "quality_flags": [],
+    "score": 6.5,
+    "strengths": [
+      "textured broken cloud field",
+      "backlit cloud edges",
+      "broad sky composition"
+    ],
+    "weaknesses": [
+      "rooftop and antenna intrude at bottom",
+      "light is somewhat hazy and washed out",
+      "lacks dramatic color or contrast"
+    ]
+  },
+  "stop_reason": "stop"
+}

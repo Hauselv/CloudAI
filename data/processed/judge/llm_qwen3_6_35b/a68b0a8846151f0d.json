@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T13:12:46.250982+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "a68b0a8846151f0d",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "altocumulus",
+      "stratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey",
+      "brown",
+      "green"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but unexceptional daytime sky with soft clouds over a quiet landscape\u2014decent but not memorable.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [],
+    "score": 5.0,
+    "strengths": [
+      "clear blue sky with wispy clouds",
+      "gentle layered cloud structure",
+      "natural landscape context"
+    ],
+    "weaknesses": [
+      "flat, unremarkable lighting",
+      "lack of dramatic color or contrast",
+      "clouds are diffuse and not very striking"
+    ]
+  },
+  "latency_seconds": 1.4716666000003897,
+  "model": "qwen3.6-35b",
+  "output_tokens": 185,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "altocumulus",
+      "stratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey",
+      "brown",
+      "green"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but unexceptional daytime sky with soft clouds over a quiet landscape\u2014decent but not memorable.",
+    "quality_flags": [],
+    "score": 5.0,
+    "strengths": [
+      "clear blue sky with wispy clouds",
+      "gentle layered cloud structure",
+      "natural landscape context"
+    ],
+    "weaknesses": [
+      "flat, unremarkable lighting",
+      "lack of dramatic color or contrast",
+      "clouds are diffuse and not very striking"
+    ]
+  },
+  "stop_reason": "stop"
+}

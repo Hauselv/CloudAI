@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T12:56:14.520250+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "748575521c62b018",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "contrail",
+      "stratocumulus"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "green",
+      "tan"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, well-lit sky with delicate cirrus and a striking contrail, but it lacks the drama or color of a truly memorable sky photo.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "sweeping cirrus texture across a strong blue sky",
+      "the contrail adds a clear vertical focal line",
+      "good open sky composition"
+    ],
+    "weaknesses": [
+      "the contrail is artificial and dominates the scene",
+      "lower cloud band is fairly flat gray",
+      "houses and trees slightly distract at the horizon"
+    ]
+  },
+  "latency_seconds": 5.517453399999795,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 569,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "contrail",
+      "stratocumulus"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "green",
+      "tan"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, well-lit sky with delicate cirrus and a striking contrail, but it lacks the drama or color of a truly memorable sky photo.",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "sweeping cirrus texture across a strong blue sky",
+      "the contrail adds a clear vertical focal line",
+      "good open sky composition"
+    ],
+    "weaknesses": [
+      "the contrail is artificial and dominates the scene",
+      "lower cloud band is fairly flat gray",
+      "houses and trees slightly distract at the horizon"
+    ]
+  },
+  "stop_reason": "stop"
+}

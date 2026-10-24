@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:52:46.362351+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "909e2fadaf6f7845",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "altocumulus",
+      "cumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "gray",
+      "blue",
+      "white",
+      "slate"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A softly textured, gray-blue sky with some layered interest, but the flat light keeps it from being especially striking.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [],
+    "score": 5.0,
+    "strengths": [
+      "layered cloud texture",
+      "small blue-sky breaks add depth",
+      "fills the frame with varied cloud shapes"
+    ],
+    "weaknesses": [
+      "flat diffuse light",
+      "low contrast and muted color",
+      "no focal point or horizon context"
+    ]
+  },
+  "latency_seconds": 4.77232770000046,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 487,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "altocumulus",
+      "cumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "gray",
+      "blue",
+      "white",
+      "slate"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A softly textured, gray-blue sky with some layered interest, but the flat light keeps it from being especially striking.",
+    "quality_flags": [],
+    "score": 5.0,
+    "strengths": [
+      "layered cloud texture",
+      "small blue-sky breaks add depth",
+      "fills the frame with varied cloud shapes"
+    ],
+    "weaknesses": [
+      "flat diffuse light",
+      "low contrast and muted color",
+      "no focal point or horizon context"
+    ]
+  },
+  "stop_reason": "stop"
+}

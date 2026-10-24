@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:44:25.046812+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "ba9c3c8e72df682c",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altostratus",
+      "stratus",
+      "nimbostratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "gray",
+      "blue-gray",
+      "slate"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A nearly featureless gray overcast patch with faint soft gradients that offers little to hold the eye.",
+    "primary_cloud_type": "altostratus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 2.5,
+    "strengths": [
+      "subtle soft tonal variation",
+      "calm muted palette"
+    ],
+    "weaknesses": [
+      "almost no cloud structure",
+      "flat, dull light",
+      "featureless composition with visible noise"
+    ]
+  },
+  "latency_seconds": 2.695930900001258,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 207,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altostratus",
+      "stratus",
+      "nimbostratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "gray",
+      "blue-gray",
+      "slate"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A nearly featureless gray overcast patch with faint soft gradients that offers little to hold the eye.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 2.5,
+    "strengths": [
+      "subtle soft tonal variation",
+      "calm muted palette"
+    ],
+    "weaknesses": [
+      "almost no cloud structure",
+      "flat, dull light",
+      "featureless composition with visible noise"
+    ]
+  },
+  "stop_reason": "stop"
+}

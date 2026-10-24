@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T13:12:19.217740+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 480,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 600,
+    "image_width": 600
+  },
+  "image_id": "1c0f8a8526dcc106",
+  "input_tokens": 990,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey",
+      "pale yellow"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A visually pleasing sky with rich cloud texture and soft lighting, though it lacks the drama or color to be truly outstanding.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [
+      "people_or_objects_dominant"
+    ],
+    "score": 7.0,
+    "strengths": [
+      "distinct and textured cloud pattern",
+      "pleasing contrast between bright highlights and shadowed bases",
+      "good coverage of the sky without being empty"
+    ],
+    "weaknesses": [
+      "light is somewhat flat and lacks dramatic color",
+      "building in corner adds minor distraction",
+      "no strong focal point or mood"
+    ]
+  },
+  "latency_seconds": 1.7941308000008576,
+  "model": "qwen3.6-35b",
+  "output_tokens": 253,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey",
+      "pale yellow"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A visually pleasing sky with rich cloud texture and soft lighting, though it lacks the drama or color to be truly outstanding.",
+    "quality_flags": [
+      "people_or_objects_dominant"
+    ],
+    "score": 7.0,
+    "strengths": [
+      "distinct and textured cloud pattern",
+      "pleasing contrast between bright highlights and shadowed bases",
+      "good coverage of the sky without being empty"
+    ],
+    "weaknesses": [
+      "light is somewhat flat and lacks dramatic color",
+      "building in corner adds minor distraction",
+      "no strong focal point or mood"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:54:07.283249+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "a39033e7ec092f45",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "light gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, cheerful blue-sky cumulus scene that is well exposed but lacks the drama or distinctive structure of a standout sky photo.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "vivid saturated blue sky",
+      "clean bright white cumulus",
+      "layered depth from foreground cloud bank to distant puffs"
+    ],
+    "weaknesses": [
+      "flat midday light with little shadow contrast",
+      "ordinary fair-weather cloud shapes",
+      "lower cloud bank looks soft and slightly washed out"
+    ]
+  },
+  "latency_seconds": 3.1087130999985675,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 293,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "light gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, cheerful blue-sky cumulus scene that is well exposed but lacks the drama or distinctive structure of a standout sky photo.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "vivid saturated blue sky",
+      "clean bright white cumulus",
+      "layered depth from foreground cloud bank to distant puffs"
+    ],
+    "weaknesses": [
+      "flat midday light with little shadow contrast",
+      "ordinary fair-weather cloud shapes",
+      "lower cloud bank looks soft and slightly washed out"
+    ]
+  },
+  "stop_reason": "stop"
+}

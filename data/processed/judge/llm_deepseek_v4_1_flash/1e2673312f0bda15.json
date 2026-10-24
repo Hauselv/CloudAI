@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T12:48:37.647417+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 235,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 420,
+    "image_width": 420
+  },
+  "image_id": "1e2673312f0bda15",
+  "input_tokens": 822,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "cirrostratus",
+      "altocumulus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "pale gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary patch of wispy cirrus against blue sky, with nice texture but little drama or context.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "delicate wispy cloud texture",
+      "clean blue-and-white contrast",
+      "natural exposure"
+    ],
+    "weaknesses": [
+      "no landscape context or composition",
+      "flat daylight",
+      "small sky-only crop"
+    ]
+  },
+  "latency_seconds": 5.477348400001574,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 522,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "cirrostratus",
+      "altocumulus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "pale gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary patch of wispy cirrus against blue sky, with nice texture but little drama or context.",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "delicate wispy cloud texture",
+      "clean blue-and-white contrast",
+      "natural exposure"
+    ],
+    "weaknesses": [
+      "no landscape context or composition",
+      "flat daylight",
+      "small sky-only crop"
+    ]
+  },
+  "stop_reason": "stop"
+}

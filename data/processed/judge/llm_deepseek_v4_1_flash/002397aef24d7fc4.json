@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-24T13:02:29.808876+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "002397aef24d7fc4",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "blue",
+      "orange",
+      "gold",
+      "gray",
+      "purple"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A striking layered sunset sky with rich warm bands and textured clouds, though slightly over-saturated and heavy in the middle.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [
+      "over_processed"
+    ],
+    "score": 7.5,
+    "strengths": [
+      "layered cloud bands with strong texture",
+      "warm sunset color contrast against blue sky",
+      "expansive sky composition"
+    ],
+    "weaknesses": [
+      "heavy dark cloud band feels a bit murky",
+      "colors look slightly over-saturated",
+      "horizon is very minimal and low"
+    ]
+  },
+  "latency_seconds": 4.92195300000094,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 488,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "blue",
+      "orange",
+      "gold",
+      "gray",
+      "purple"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A striking layered sunset sky with rich warm bands and textured clouds, though slightly over-saturated and heavy in the middle.",
+    "quality_flags": [
+      "over_processed"
+    ],
+    "score": 7.5,
+    "strengths": [
+      "layered cloud bands with strong texture",
+      "warm sunset color contrast against blue sky",
+      "expansive sky composition"
+    ],
+    "weaknesses": [
+      "heavy dark cloud band feels a bit murky",
+      "colors look slightly over-saturated",
+      "horizon is very minimal and low"
+    ]
+  },
+  "stop_reason": "stop"
+}

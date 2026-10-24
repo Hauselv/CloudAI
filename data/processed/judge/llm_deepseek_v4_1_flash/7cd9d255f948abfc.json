@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-24T13:09:59.729501+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "7cd9d255f948abfc",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "hazy blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A hazy airborne view of ordinary cumulus clouds, weakened by the large airplane wing taking up much of the frame.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "airplane_window",
+      "landscape_dominant"
+    ],
+    "score": 4.0,
+    "strengths": [
+      "clear cumulus field",
+      "sense of altitude and depth",
+      "bright blue sky"
+    ],
+    "weaknesses": [
+      "airplane wing dominates composition",
+      "hazy flat light",
+      "ordinary cloud structure"
+    ]
+  },
+  "latency_seconds": 4.224708800000371,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 389,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "hazy blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A hazy airborne view of ordinary cumulus clouds, weakened by the large airplane wing taking up much of the frame.",
+    "quality_flags": [
+      "airplane_window",
+      "landscape_dominant"
+    ],
+    "score": 4.0,
+    "strengths": [
+      "clear cumulus field",
+      "sense of altitude and depth",
+      "bright blue sky"
+    ],
+    "weaknesses": [
+      "airplane wing dominates composition",
+      "hazy flat light",
+      "ordinary cloud structure"
+    ]
+  },
+  "stop_reason": "stop"
+}

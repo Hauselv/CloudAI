@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:12:45.980429+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "6ff85879c12f7492",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "cream",
+      "beige"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "daylight",
+    "one_sentence_verdict": "A softly textured but fairly ordinary altocumulus sky with a faint warm glow, pleasant but not especially striking.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [],
+    "score": 5.0,
+    "strengths": [
+      "textured rippled cloud field",
+      "soft warm glow near the horizon",
+      "layered depth from pale to darker cloud"
+    ],
+    "weaknesses": [
+      "flat overall contrast",
+      "muted gray palette",
+      "no strong focal point or dramatic structure"
+    ]
+  },
+  "latency_seconds": 6.311616500001037,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 547,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "cream",
+      "beige"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "daylight",
+    "one_sentence_verdict": "A softly textured but fairly ordinary altocumulus sky with a faint warm glow, pleasant but not especially striking.",
+    "quality_flags": [],
+    "score": 5.0,
+    "strengths": [
+      "textured rippled cloud field",
+      "soft warm glow near the horizon",
+      "layered depth from pale to darker cloud"
+    ],
+    "weaknesses": [
+      "flat overall contrast",
+      "muted gray palette",
+      "no strong focal point or dramatic structure"
+    ]
+  },
+  "stop_reason": "stop"
+}

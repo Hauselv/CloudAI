@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:03:29.366557+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "bbb47416be7d2fa2",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "cumulonimbus",
+      "cirrus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "dark gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A striking, well-composed cumulus mass with good contrast and texture, though the light is fairly ordinary.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 7.0,
+    "strengths": [
+      "strong contrast between bright cloud edge and deep blue sky",
+      "billowing textured cloud mass with fibrous edge detail",
+      "effective negative space on the left"
+    ],
+    "weaknesses": [
+      "highlights are slightly clipped",
+      "image is a bit soft",
+      "no special warm or dramatic light"
+    ]
+  },
+  "latency_seconds": 11.265699100000347,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 589,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "cumulonimbus",
+      "cirrus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "dark gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A striking, well-composed cumulus mass with good contrast and texture, though the light is fairly ordinary.",
+    "quality_flags": [],
+    "score": 7.0,
+    "strengths": [
+      "strong contrast between bright cloud edge and deep blue sky",
+      "billowing textured cloud mass with fibrous edge detail",
+      "effective negative space on the left"
+    ],
+    "weaknesses": [
+      "highlights are slightly clipped",
+      "image is a bit soft",
+      "no special warm or dramatic light"
+    ]
+  },
+  "stop_reason": "stop"
+}

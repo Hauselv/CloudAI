@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:50:27.039062+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "257b685ecd7026ea",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altostratus",
+      "stratus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "grey",
+      "white",
+      "beige",
+      "dark grey"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A flat, mostly featureless overcast sky with buildings intruding, making it an ordinary and unmemorable sky photo.",
+    "primary_cloud_type": "altostratus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 3.0,
+    "strengths": [
+      "large expanse of sky",
+      "subtle soft cloud texture"
+    ],
+    "weaknesses": [
+      "flat, featureless overcast light",
+      "little cloud structure or contrast",
+      "buildings distract from the sky"
+    ]
+  },
+  "latency_seconds": 5.860462300001018,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 527,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altostratus",
+      "stratus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "grey",
+      "white",
+      "beige",
+      "dark grey"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A flat, mostly featureless overcast sky with buildings intruding, making it an ordinary and unmemorable sky photo.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 3.0,
+    "strengths": [
+      "large expanse of sky",
+      "subtle soft cloud texture"
+    ],
+    "weaknesses": [
+      "flat, featureless overcast light",
+      "little cloud structure or contrast",
+      "buildings distract from the sky"
+    ]
+  },
+  "stop_reason": "stop"
+}

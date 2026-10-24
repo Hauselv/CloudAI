@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-10-24T12:44:30.605623+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "07eb8f5e03243635",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altostratus",
+      "stratocumulus",
+      "stratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "gray",
+      "blue-gray",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A flat, gray overcast sky with only faint layering, offering little visual interest for a sky collector.",
+    "primary_cloud_type": "altostratus",
+    "quality_flags": [],
+    "score": 3.0,
+    "strengths": [
+      "soft even tonality",
+      "subtle layered texture in lower half"
+    ],
+    "weaknesses": [
+      "flat, featureless overcast",
+      "no distinct structure or contrast",
+      "dull uniform light"
+    ]
+  },
+  "latency_seconds": 2.5861996000003273,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 199,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altostratus",
+      "stratocumulus",
+      "stratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "gray",
+      "blue-gray",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A flat, gray overcast sky with only faint layering, offering little visual interest for a sky collector.",
+    "quality_flags": [],
+    "score": 3.0,
+    "strengths": [
+      "soft even tonality",
+      "subtle layered texture in lower half"
+    ],
+    "weaknesses": [
+      "flat, featureless overcast",
+      "no distinct structure or contrast",
+      "dull uniform light"
+    ]
+  },
+  "stop_reason": "stop"
+}

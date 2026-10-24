@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:12:49.199744+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "b3d70c2789bc3e55",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey",
+      "green"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent sky photo with interesting cloud layers and good color contrast, but the flat lighting and busy composition keep it from being truly striking.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "good cloud variety and layering",
+      "nice contrast between dark and light clouds",
+      "pleasing blue sky patches"
+    ],
+    "weaknesses": [
+      "flat, overcast lighting reduces drama",
+      "composition feels a bit cluttered",
+      "lacks a strong focal point"
+    ]
+  },
+  "latency_seconds": 1.465105900000708,
+  "model": "qwen3.6-35b",
+  "output_tokens": 192,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey",
+      "green"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent sky photo with interesting cloud layers and good color contrast, but the flat lighting and busy composition keep it from being truly striking.",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "good cloud variety and layering",
+      "nice contrast between dark and light clouds",
+      "pleasing blue sky patches"
+    ],
+    "weaknesses": [
+      "flat, overcast lighting reduces drama",
+      "composition feels a bit cluttered",
+      "lacks a strong focal point"
+    ]
+  },
+  "stop_reason": "stop"
+}

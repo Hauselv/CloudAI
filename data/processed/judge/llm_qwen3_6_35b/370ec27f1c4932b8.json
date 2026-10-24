@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:12:38.990318+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "370ec27f1c4932b8",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "stratus",
+      "stratocumulus",
+      "unknown"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "grey",
+      "blue-grey",
+      "white",
+      "pale lavender"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A very flat, grey sky with almost no structure or interesting light, making it a dull and unremarkable sky photo.",
+    "primary_cloud_type": "stratus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 3.0,
+    "strengths": [
+      "subtle color variation in the clouds",
+      "smooth, uniform texture"
+    ],
+    "weaknesses": [
+      "extremely flat and dull light",
+      "no distinct cloud structure or depth"
+    ]
+  },
+  "latency_seconds": 1.3972375999983342,
+  "model": "qwen3.6-35b",
+  "output_tokens": 179,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "stratus",
+      "stratocumulus",
+      "unknown"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "grey",
+      "blue-grey",
+      "white",
+      "pale lavender"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A very flat, grey sky with almost no structure or interesting light, making it a dull and unremarkable sky photo.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 3.0,
+    "strengths": [
+      "subtle color variation in the clouds",
+      "smooth, uniform texture"
+    ],
+    "weaknesses": [
+      "extremely flat and dull light",
+      "no distinct cloud structure or depth"
+    ]
+  },
+  "stop_reason": "stop"
+}

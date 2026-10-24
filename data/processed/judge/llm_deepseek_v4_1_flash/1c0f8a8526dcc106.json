@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:45:18.501369+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 480,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 600,
+    "image_width": 600
+  },
+  "image_id": "1c0f8a8526dcc106",
+  "input_tokens": 880,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cumulus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "cream"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, textured altocumulus sky with nice backlighting, though it is somewhat ordinary and slightly compromised by the building edge.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [],
+    "score": 6.5,
+    "strengths": [
+      "textured, widespread cloud field",
+      "backlit cloud edges add depth",
+      "pleasant blue sky contrast"
+    ],
+    "weaknesses": [
+      "building corner intrudes at bottom right",
+      "repetitive cloud pattern lacks a focal point",
+      "bright sun area slightly blown out"
+    ]
+  },
+  "latency_seconds": 7.409403400000883,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 631,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cumulus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "cream"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, textured altocumulus sky with nice backlighting, though it is somewhat ordinary and slightly compromised by the building edge.",
+    "quality_flags": [],
+    "score": 6.5,
+    "strengths": [
+      "textured, widespread cloud field",
+      "backlit cloud edges add depth",
+      "pleasant blue sky contrast"
+    ],
+    "weaknesses": [
+      "building corner intrudes at bottom right",
+      "repetitive cloud pattern lacks a focal point",
+      "bright sun area slightly blown out"
+    ]
+  },
+  "stop_reason": "stop"
+}

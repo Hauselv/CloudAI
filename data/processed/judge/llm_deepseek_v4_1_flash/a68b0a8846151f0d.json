@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:46:59.010285+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "a68b0a8846151f0d",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altostratus",
+      "cirrus",
+      "stratocumulus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "light blue",
+      "white",
+      "gray",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A calm, ordinary sky with layered clouds and a faint contrail, but too flat and hazy to be especially striking.",
+    "primary_cloud_type": "altostratus",
+    "quality_flags": [],
+    "score": 4.5,
+    "strengths": [
+      "layered cloud band adds some texture",
+      "diagonal contrail gives a subtle line",
+      "open blue sky balances the scene"
+    ],
+    "weaknesses": [
+      "flat, hazy light",
+      "little dramatic contrast or color",
+      "cloud structure is mostly soft and indistinct"
+    ]
+  },
+  "latency_seconds": 5.844462900000508,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 604,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altostratus",
+      "cirrus",
+      "stratocumulus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "light blue",
+      "white",
+      "gray",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A calm, ordinary sky with layered clouds and a faint contrail, but too flat and hazy to be especially striking.",
+    "quality_flags": [],
+    "score": 4.5,
+    "strengths": [
+      "layered cloud band adds some texture",
+      "diagonal contrail gives a subtle line",
+      "open blue sky balances the scene"
+    ],
+    "weaknesses": [
+      "flat, hazy light",
+      "little dramatic contrast or color",
+      "cloud structure is mostly soft and indistinct"
+    ]
+  },
+  "stop_reason": "stop"
+}

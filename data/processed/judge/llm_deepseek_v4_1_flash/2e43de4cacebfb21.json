@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-10-24T12:52:54.880992+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "2e43de4cacebfb21",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, clear blue-sky scene with textured cumulus, but the flat light and simple composition keep it from being especially striking.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "crisp white cloud edges",
+      "layered cloud band adds structure",
+      "clean blue sky contrast"
+    ],
+    "weaknesses": [
+      "flat midday lighting",
+      "large empty upper area",
+      "ordinary composition"
+    ]
+  },
+  "latency_seconds": 3.541453300000285,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 337,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, clear blue-sky scene with textured cumulus, but the flat light and simple composition keep it from being especially striking.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "crisp white cloud edges",
+      "layered cloud band adds structure",
+      "clean blue sky contrast"
+    ],
+    "weaknesses": [
+      "flat midday lighting",
+      "large empty upper area",
+      "ordinary composition"
+    ]
+  },
+  "stop_reason": "stop"
+}

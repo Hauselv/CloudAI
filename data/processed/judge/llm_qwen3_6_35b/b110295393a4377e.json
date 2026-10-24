@@ -1,0 +1,66 @@
+{
+  "created_at": "2026-10-24T13:11:26.297127+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "b110295393a4377e",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "stratus"
+    ],
+    "confidence": 0.95,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A completely flat, featureless gray sky with no clouds, structure, or color to make it worthwhile.",
+    "primary_cloud_type": "stratus",
+    "quality_flags": [],
+    "score": 1.5,
+    "strengths": [
+      "uniform overcast tone"
+    ],
+    "weaknesses": [
+      "completely flat and featureless",
+      "no structure or interest",
+      "dull and empty"
+    ]
+  },
+  "latency_seconds": 1.2720571000008931,
+  "model": "qwen3.6-35b",
+  "output_tokens": 150,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "stratus"
+    ],
+    "confidence": 0.95,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A completely flat, featureless gray sky with no clouds, structure, or color to make it worthwhile.",
+    "quality_flags": [],
+    "score": 1.5,
+    "strengths": [
+      "uniform overcast tone"
+    ],
+    "weaknesses": [
+      "completely flat and featureless",
+      "no structure or interest",
+      "dull and empty"
+    ]
+  },
+  "stop_reason": "stop"
+}

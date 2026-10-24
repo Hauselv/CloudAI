@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-24T13:13:03.821727+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 270,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 450,
+    "image_width": 450
+  },
+  "image_id": "0b16692e72779b9b",
+  "input_tokens": 825,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "stratus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "orange",
+      "pink",
+      "white",
+      "peach"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A peaceful sky with a lovely color transition, but the composition feels unbalanced and lacks a strong focal point.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "soft pastel color gradient",
+      "gentle cloud texture",
+      "calm mood"
+    ],
+    "weaknesses": [
+      "composition is top-heavy with empty sky",
+      "low contrast and flat light",
+      "tree silhouettes are distracting and small"
+    ]
+  },
+  "latency_seconds": 1.4187215999991167,
+  "model": "qwen3.6-35b",
+  "output_tokens": 186,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "stratus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "orange",
+      "pink",
+      "white",
+      "peach"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A peaceful sky with a lovely color transition, but the composition feels unbalanced and lacks a strong focal point.",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "soft pastel color gradient",
+      "gentle cloud texture",
+      "calm mood"
+    ],
+    "weaknesses": [
+      "composition is top-heavy with empty sky",
+      "low contrast and flat light",
+      "tree silhouettes are distracting and small"
+    ]
+  },
+  "stop_reason": "stop"
+}

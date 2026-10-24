@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:48:42.775658+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "15b2e1e3b74c331b",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrostratus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "pale blue",
+      "white",
+      "light gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary layered-cloud sky, with the tower adding context but not enough drama to make it especially striking.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [],
+    "score": 5.0,
+    "strengths": [
+      "layered cloud bands add some texture",
+      "soft pastel sky tones",
+      "tower gives scale and context"
+    ],
+    "weaknesses": [
+      "flat, low-contrast light",
+      "large areas of sky are fairly featureless",
+      "composition feels incidental rather than deliberate"
+    ]
+  },
+  "latency_seconds": 5.112805699998717,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 474,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrostratus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "pale blue",
+      "white",
+      "light gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary layered-cloud sky, with the tower adding context but not enough drama to make it especially striking.",
+    "quality_flags": [],
+    "score": 5.0,
+    "strengths": [
+      "layered cloud bands add some texture",
+      "soft pastel sky tones",
+      "tower gives scale and context"
+    ],
+    "weaknesses": [
+      "flat, low-contrast light",
+      "large areas of sky are fairly featureless",
+      "composition feels incidental rather than deliberate"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:51:21.816871+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "82afb8c266205915",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "altostratus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "grey",
+      "white",
+      "blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent layered sky with strong grey-white contrast and blue gaps, but the flat light and heavy grey mass keep it ordinary.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "layered cloud structure",
+      "strong dark-light contrast",
+      "blue gaps add depth"
+    ],
+    "weaknesses": [
+      "dull grey upper mass",
+      "flat daylight",
+      "random crop with no focal point"
+    ]
+  },
+  "latency_seconds": 13.34966170000007,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 554,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "altostratus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "grey",
+      "white",
+      "blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent layered sky with strong grey-white contrast and blue gaps, but the flat light and heavy grey mass keep it ordinary.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "layered cloud structure",
+      "strong dark-light contrast",
+      "blue gaps add depth"
+    ],
+    "weaknesses": [
+      "dull grey upper mass",
+      "flat daylight",
+      "random crop with no focal point"
+    ]
+  },
+  "stop_reason": "stop"
+}

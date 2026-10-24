@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T13:09:08.557282+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "0b40804e08409184",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "altostratus",
+      "cirrus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "black"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A striking sky with dramatic dark-to-bright contrast and a colorful halo, though the blown-out sun and heavy processing keep it from being fully refined.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [
+      "over_processed"
+    ],
+    "score": 7.5,
+    "strengths": [
+      "dramatic contrast between dark cloud mass and bright sun",
+      "iridescent halo/rainbow effect around the sun",
+      "layered cloud bands add depth"
+    ],
+    "weaknesses": [
+      "sun area is heavily blown out",
+      "colors and contrast look somewhat overprocessed",
+      "foreground silhouette is very dark and lacks detail"
+    ]
+  },
+  "latency_seconds": 7.28621849999945,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 685,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "altostratus",
+      "cirrus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "black"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A striking sky with dramatic dark-to-bright contrast and a colorful halo, though the blown-out sun and heavy processing keep it from being fully refined.",
+    "quality_flags": [
+      "over_processed"
+    ],
+    "score": 7.5,
+    "strengths": [
+      "dramatic contrast between dark cloud mass and bright sun",
+      "iridescent halo/rainbow effect around the sun",
+      "layered cloud bands add depth"
+    ],
+    "weaknesses": [
+      "sun area is heavily blown out",
+      "colors and contrast look somewhat overprocessed",
+      "foreground silhouette is very dark and lacks detail"
+    ]
+  },
+  "stop_reason": "stop"
+}

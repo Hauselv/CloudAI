@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-24T13:08:28.435911+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "42e05ba0ffd12716",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "altostratus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "gray",
+      "blue",
+      "gold",
+      "white",
+      "dark blue"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A pleasant low-sun seascape with layered clouds and a bright reflection, but the sky itself is fairly muted and the composition is dominated by dark water.",
+    "primary_cloud_type": "altostratus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "layered cloud bands add structure",
+      "bright sun glow and water reflection",
+      "clear horizon with distant land"
+    ],
+    "weaknesses": [
+      "large dark sea area dominates the frame",
+      "sun is heavily blown out",
+      "cloud color is mostly muted gray"
+    ]
+  },
+  "latency_seconds": 10.20531149999988,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 571,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altostratus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "gray",
+      "blue",
+      "gold",
+      "white",
+      "dark blue"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A pleasant low-sun seascape with layered clouds and a bright reflection, but the sky itself is fairly muted and the composition is dominated by dark water.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "layered cloud bands add structure",
+      "bright sun glow and water reflection",
+      "clear horizon with distant land"
+    ],
+    "weaknesses": [
+      "large dark sea area dominates the frame",
+      "sun is heavily blown out",
+      "cloud color is mostly muted gray"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:47:35.640598+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 480,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 600,
+    "image_width": 600
+  },
+  "image_id": "9e7f08973cbbd2fd",
+  "input_tokens": 880,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A cheerful, well-exposed blue sky with puffy cumulus, but the cloud shapes are common and the composition is slightly undercut by the building edge.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "vivid saturated blue sky",
+      "pleasant puffy cumulus with soft shading",
+      "good contrast between cloud and sky"
+    ],
+    "weaknesses": [
+      "ordinary fair-weather cloud structure",
+      "building and statue intrude at bottom edge",
+      "somewhat blown-out cloud highlights"
+    ]
+  },
+  "latency_seconds": 3.4229345000003377,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 331,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A cheerful, well-exposed blue sky with puffy cumulus, but the cloud shapes are common and the composition is slightly undercut by the building edge.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "vivid saturated blue sky",
+      "pleasant puffy cumulus with soft shading",
+      "good contrast between cloud and sky"
+    ],
+    "weaknesses": [
+      "ordinary fair-weather cloud structure",
+      "building and statue intrude at bottom edge",
+      "somewhat blown-out cloud highlights"
+    ]
+  },
+  "stop_reason": "stop"
+}

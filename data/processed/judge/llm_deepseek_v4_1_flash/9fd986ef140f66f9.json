@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T13:09:45.172299+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "9fd986ef140f66f9",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "contrail"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "teal"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent cumulus-and-contrail sky study with good contrast, but the composition and grain keep it from standing out.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "Strong contrast between bright cumulus and deep blue sky",
+      "Textured cloud edges give some depth",
+      "Thin contrail adds a focal accent"
+    ],
+    "weaknesses": [
+      "Cloud mass is cropped awkwardly at the bottom",
+      "Large area of empty sky weakens composition",
+      "Visible grain/noise reduces polish"
+    ]
+  },
+  "latency_seconds": 4.169262499999604,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 416,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "contrail"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "teal"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent cumulus-and-contrail sky study with good contrast, but the composition and grain keep it from standing out.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "Strong contrast between bright cumulus and deep blue sky",
+      "Textured cloud edges give some depth",
+      "Thin contrail adds a focal accent"
+    ],
+    "weaknesses": [
+      "Cloud mass is cropped awkwardly at the bottom",
+      "Large area of empty sky weakens composition",
+      "Visible grain/noise reduces polish"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:54:04.160617+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "2d4fbd0f7a8ea750",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, well-exposed sky with crisp cumulus and vivid blue, but the flat daylight and ordinary composition keep it from being especially striking.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "vivid blue sky",
+      "crisp puffy cumulus",
+      "layered cloud band adds depth"
+    ],
+    "weaknesses": [
+      "flat midday light",
+      "no strong focal point",
+      "ordinary composition"
+    ]
+  },
+  "latency_seconds": 4.022275100000115,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 393,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, well-exposed sky with crisp cumulus and vivid blue, but the flat daylight and ordinary composition keep it from being especially striking.",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "vivid blue sky",
+      "crisp puffy cumulus",
+      "layered cloud band adds depth"
+    ],
+    "weaknesses": [
+      "flat midday light",
+      "no strong focal point",
+      "ordinary composition"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T12:48:48.548077+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "7aa34659e2849aa7",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "cumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "beige"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary city sky with wispy clouds and a few puffy accents, not especially striking as a sky photograph.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 5.0,
+    "strengths": [
+      "pleasant blue sky",
+      "wispy high-cloud texture",
+      "small puffy clouds add some interest"
+    ],
+    "weaknesses": [
+      "clouds are mostly thin and flat",
+      "city and tree clutter the frame",
+      "no dramatic light or depth"
+    ]
+  },
+  "latency_seconds": 5.7533790999987104,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 545,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "cumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "beige"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary city sky with wispy clouds and a few puffy accents, not especially striking as a sky photograph.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 5.0,
+    "strengths": [
+      "pleasant blue sky",
+      "wispy high-cloud texture",
+      "small puffy clouds add some interest"
+    ],
+    "weaknesses": [
+      "clouds are mostly thin and flat",
+      "city and tree clutter the frame",
+      "no dramatic light or depth"
+    ]
+  },
+  "stop_reason": "stop"
+}

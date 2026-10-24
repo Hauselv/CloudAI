@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T12:59:58.437526+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "c713211631db10fe",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "gold",
+      "orange",
+      "gray",
+      "white"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A pleasing sunset sky with textured altocumulus and warm light, though the bright sun and dark foreground keep it from being more striking.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [],
+    "score": 7.0,
+    "strengths": [
+      "textured rippled cloud field",
+      "warm sunset glow",
+      "layered horizon"
+    ],
+    "weaknesses": [
+      "blown-out sun",
+      "cluttered dark foreground",
+      "hazy lower sky"
+    ]
+  },
+  "latency_seconds": 5.672616200001357,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 587,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "gold",
+      "orange",
+      "gray",
+      "white"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A pleasing sunset sky with textured altocumulus and warm light, though the bright sun and dark foreground keep it from being more striking.",
+    "quality_flags": [],
+    "score": 7.0,
+    "strengths": [
+      "textured rippled cloud field",
+      "warm sunset glow",
+      "layered horizon"
+    ],
+    "weaknesses": [
+      "blown-out sun",
+      "cluttered dark foreground",
+      "hazy lower sky"
+    ]
+  },
+  "stop_reason": "stop"
+}

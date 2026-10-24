@@ -27,10 +27,11 @@ vorhersagen und vor allem **erklären**, welche Bildeigenschaften das Rating tre
 - Streamlit cached importierte Paketmodule: nach Änderungen an `pipeline.py` o. ä. den Server neu starten.
 
 ## LLM-Judge
-- `judge-images` nutzt die Anthropic-SDK (`client.messages.parse` mit `output_format`), Standardmodell `claude-opus-5-5`.
-  Key nur über `ANTHROPIC_API_KEY`/`ant auth login`, nie in Dateien. Urteile werden gecacht (`data/processed/judge/`),
+- `judge-images` hat zwei Backends (`configs/app/default.yaml`, Block `judge`): `gateway` = Uni-LLM-Server
+  (OpenAI-kompatibel, Key aus `CLOUD_JUDGE_GATEWAY_API_KEY` oder der Secrets-Datei des Spider-Projekts, nie im Repo)
+  und `anthropic` (SDK `client.messages.parse`, `ANTHROPIC_API_KEY`). Urteile werden gecacht (`data/processed/judge/`),
   Scores landen als eigener Rater `llm_<modell>` in den Ratings-CSVs; `raters.csv` markiert sie als `llm`, die
-  Aggregation ignoriert sie (`include_llm_raters: false`).
+  Aggregation ignoriert sie (`include_llm_raters: false`). Key-Werte nie ausgeben, auch nicht in Logs.
 
 ## Bekannte Stolpersteine
 - `data/processed/aggregated_labels.parquet` kann leer sein, obwohl Rohlabels existieren → `aggregate-labels` ausführen.

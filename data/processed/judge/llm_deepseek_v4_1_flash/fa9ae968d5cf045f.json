@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-24T12:57:25.165727+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "fa9ae968d5cf045f",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "pink",
+      "orange",
+      "lavender",
+      "blue",
+      "green"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A colorful, textured sunset sky that is pleasant and worth keeping, though the foreground tree and buildings keep it from being a pure standout sky photo.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 7.5,
+    "strengths": [
+      "vivid layered sunset color",
+      "textured cloud bands across the sky",
+      "nice depth toward the distant horizon"
+    ],
+    "weaknesses": [
+      "large foreground tree blocks much of the sky",
+      "landscape and buildings compete with the clouds",
+      "composition feels a bit busy"
+    ]
+  },
+  "latency_seconds": 4.947836499999539,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 488,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.82,
+    "dominant_colors": [
+      "pink",
+      "orange",
+      "lavender",
+      "blue",
+      "green"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A colorful, textured sunset sky that is pleasant and worth keeping, though the foreground tree and buildings keep it from being a pure standout sky photo.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 7.5,
+    "strengths": [
+      "vivid layered sunset color",
+      "textured cloud bands across the sky",
+      "nice depth toward the distant horizon"
+    ],
+    "weaknesses": [
+      "large foreground tree blocks much of the sky",
+      "landscape and buildings compete with the clouds",
+      "composition feels a bit busy"
+    ]
+  },
+  "stop_reason": "stop"
+}

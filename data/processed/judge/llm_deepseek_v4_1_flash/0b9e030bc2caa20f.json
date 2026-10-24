@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:47:25.393329+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 480,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 600,
+    "image_width": 600
+  },
+  "image_id": "0b9e030bc2caa20f",
+  "input_tokens": 880,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "cirrostratus",
+      "contrail"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "dark green",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary sky photo with delicate cirrus streaks over a dark tree line.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "layered wispy streaks add texture",
+      "clean blue sky gradient",
+      "trees provide natural framing"
+    ],
+    "weaknesses": [
+      "clouds are thin and low-contrast",
+      "foreground trees are dark and lack detail",
+      "light is ordinary with no dramatic color"
+    ]
+  },
+  "latency_seconds": 7.097569800000201,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 693,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "cirrostratus",
+      "contrail"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "dark green",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary sky photo with delicate cirrus streaks over a dark tree line.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "layered wispy streaks add texture",
+      "clean blue sky gradient",
+      "trees provide natural framing"
+    ],
+    "weaknesses": [
+      "clouds are thin and low-contrast",
+      "foreground trees are dark and lack detail",
+      "light is ordinary with no dramatic color"
+    ]
+  },
+  "stop_reason": "stop"
+}

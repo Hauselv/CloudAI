@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T12:58:56.459232+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "358d51f14951e256",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "altostratus",
+      "stratocumulus",
+      "unknown"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue-gray",
+      "black",
+      "white",
+      "slate"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "twilight",
+    "one_sentence_verdict": "A moody winter silhouette scene, but the sky itself is flat and dull with little cloud interest.",
+    "primary_cloud_type": "altostratus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 3.0,
+    "strengths": [
+      "moody silhouetted treeline",
+      "snow adds foreground contrast"
+    ],
+    "weaknesses": [
+      "flat featureless sky",
+      "underexposed foreground",
+      "little cloud structure or color"
+    ]
+  },
+  "latency_seconds": 5.053737399999591,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 509,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altostratus",
+      "stratocumulus",
+      "unknown"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue-gray",
+      "black",
+      "white",
+      "slate"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "twilight",
+    "one_sentence_verdict": "A moody winter silhouette scene, but the sky itself is flat and dull with little cloud interest.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 3.0,
+    "strengths": [
+      "moody silhouetted treeline",
+      "snow adds foreground contrast"
+    ],
+    "weaknesses": [
+      "flat featureless sky",
+      "underexposed foreground",
+      "little cloud structure or color"
+    ]
+  },
+  "stop_reason": "stop"
+}

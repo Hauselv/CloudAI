@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:56:02.158854+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "58707feebd796d12",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "altostratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "green",
+      "blue-gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "An ordinary overcast sky with some layered cloud interest, but too flat and gray to be especially striking.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [],
+    "score": 4.0,
+    "strengths": [
+      "layered cloud bands add some structure",
+      "brighter cumulus near the horizon gives contrast",
+      "open sky composition with a grounding landscape strip"
+    ],
+    "weaknesses": [
+      "flat, dull gray light",
+      "large featureless upper sky",
+      "limited color or drama"
+    ]
+  },
+  "latency_seconds": 4.152853300000061,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 408,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "altostratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "green",
+      "blue-gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "An ordinary overcast sky with some layered cloud interest, but too flat and gray to be especially striking.",
+    "quality_flags": [],
+    "score": 4.0,
+    "strengths": [
+      "layered cloud bands add some structure",
+      "brighter cumulus near the horizon gives contrast",
+      "open sky composition with a grounding landscape strip"
+    ],
+    "weaknesses": [
+      "flat, dull gray light",
+      "large featureless upper sky",
+      "limited color or drama"
+    ]
+  },
+  "stop_reason": "stop"
+}

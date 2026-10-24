@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:44:22.337966+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "11409298a6a8af58",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altostratus",
+      "stratus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "gray",
+      "blue-gray",
+      "slate"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A nearly uniform gray overcast patch with only the faintest tonal variation, offering little for a sky collector to linger on.",
+    "primary_cloud_type": "altostratus",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 2.5,
+    "strengths": [
+      "subtle soft tonal gradient",
+      "calm, even exposure"
+    ],
+    "weaknesses": [
+      "almost featureless overcast",
+      "flat, low-contrast light",
+      "no distinct cloud structure or focal point"
+    ]
+  },
+  "latency_seconds": 3.0248362999991514,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 244,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altostratus",
+      "stratus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "gray",
+      "blue-gray",
+      "slate"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A nearly uniform gray overcast patch with only the faintest tonal variation, offering little for a sky collector to linger on.",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 2.5,
+    "strengths": [
+      "subtle soft tonal gradient",
+      "calm, even exposure"
+    ],
+    "weaknesses": [
+      "almost featureless overcast",
+      "flat, low-contrast light",
+      "no distinct cloud structure or focal point"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:53:40.546118+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "4076baaa86d6a57b",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "cumulus"
+    ],
+    "confidence": 0.6,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "pale gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but unremarkable blue sky with thin cirrus wisps that lacks the structure or light to be truly striking.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [
+      "over_processed"
+    ],
+    "score": 5.0,
+    "strengths": [
+      "vivid deep blue background",
+      "delicate wispy cirrus texture in the center",
+      "clean, uncluttered sky"
+    ],
+    "weaknesses": [
+      "sparse composition with much empty blue",
+      "central cloud patch is faint and low-contrast",
+      "bright corner cloud is blown out and clipped"
+    ]
+  },
+  "latency_seconds": 3.8440840000002936,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 368,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "cumulus"
+    ],
+    "confidence": 0.6,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "pale gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but unremarkable blue sky with thin cirrus wisps that lacks the structure or light to be truly striking.",
+    "quality_flags": [
+      "over_processed"
+    ],
+    "score": 5.0,
+    "strengths": [
+      "vivid deep blue background",
+      "delicate wispy cirrus texture in the center",
+      "clean, uncluttered sky"
+    ],
+    "weaknesses": [
+      "sparse composition with much empty blue",
+      "central cloud patch is faint and low-contrast",
+      "bright corner cloud is blown out and clipped"
+    ]
+  },
+  "stop_reason": "stop"
+}

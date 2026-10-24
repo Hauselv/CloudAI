@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T12:49:13.219588+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "1fdc6bcf18a459ef",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "pink",
+      "lavender",
+      "blue",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A pretty pastel sky with gentle texture, but it lacks the contrast and structure to be truly striking.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "pleasing pastel palette",
+      "textured cloud field",
+      "soft layered depth"
+    ],
+    "weaknesses": [
+      "low contrast",
+      "no focal point or horizon",
+      "slightly soft/blurry"
+    ]
+  },
+  "latency_seconds": 7.076450200000181,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 640,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "pink",
+      "lavender",
+      "blue",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A pretty pastel sky with gentle texture, but it lacks the contrast and structure to be truly striking.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "pleasing pastel palette",
+      "textured cloud field",
+      "soft layered depth"
+    ],
+    "weaknesses": [
+      "low contrast",
+      "no focal point or horizon",
+      "slightly soft/blurry"
+    ]
+  },
+  "stop_reason": "stop"
+}

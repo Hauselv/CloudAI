@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T13:12:28.648566+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "079ae39af91028f2",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary daytime sky with fluffy clouds and vivid blue\u2014nice to look at, but not memorable enough to keep in a curated collection.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "strong contrast between blue sky and white clouds",
+      "good cloud texture and volume",
+      "clean, bright exposure"
+    ],
+    "weaknesses": [
+      "no dramatic lighting or color variation",
+      "composition feels like a random patch without focal point",
+      "lacks emotional or atmospheric impact"
+    ]
+  },
+  "latency_seconds": 1.5192341999991186,
+  "model": "qwen3.6-35b",
+  "output_tokens": 196,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but ordinary daytime sky with fluffy clouds and vivid blue\u2014nice to look at, but not memorable enough to keep in a curated collection.",
+    "quality_flags": [
+      "tiny_detail_crop"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "strong contrast between blue sky and white clouds",
+      "good cloud texture and volume",
+      "clean, bright exposure"
+    ],
+    "weaknesses": [
+      "no dramatic lighting or color variation",
+      "composition feels like a random patch without focal point",
+      "lacks emotional or atmospheric impact"
+    ]
+  },
+  "stop_reason": "stop"
+}

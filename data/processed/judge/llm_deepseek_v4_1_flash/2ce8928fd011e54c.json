@@ -1,0 +1,70 @@
+{
+  "created_at": "2026-10-24T12:54:44.438851+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "2ce8928fd011e54c",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altostratus",
+      "stratus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "lavender-gray",
+      "pale gray",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A nearly uniform overcast sky with a faint lavender cast and one soft bright patch, too flat and structureless to be a keeper.",
+    "primary_cloud_type": "altostratus",
+    "quality_flags": [],
+    "score": 2.5,
+    "strengths": [
+      "soft pastel tone",
+      "subtle bright patch where sun diffuses through"
+    ],
+    "weaknesses": [
+      "flat, featureless light",
+      "almost no cloud structure or texture",
+      "no focal point or composition"
+    ]
+  },
+  "latency_seconds": 3.7188357999984873,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 364,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altostratus",
+      "stratus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "lavender-gray",
+      "pale gray",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A nearly uniform overcast sky with a faint lavender cast and one soft bright patch, too flat and structureless to be a keeper.",
+    "quality_flags": [],
+    "score": 2.5,
+    "strengths": [
+      "soft pastel tone",
+      "subtle bright patch where sun diffuses through"
+    ],
+    "weaknesses": [
+      "flat, featureless light",
+      "almost no cloud structure or texture",
+      "no focal point or composition"
+    ]
+  },
+  "stop_reason": "stop"
+}

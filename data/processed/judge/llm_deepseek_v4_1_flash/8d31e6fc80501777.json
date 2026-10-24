@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:55:05.405853+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "8d31e6fc80501777",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "altostratus",
+      "contrail"
+    ],
+    "confidence": 0.65,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "pale gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A plain blue sky with a thin cloud band and a faint contrail, pleasant but unremarkable and lacking drama or structure.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [],
+    "score": 3.5,
+    "strengths": [
+      "clean blue gradient",
+      "contrail adds a faint diagonal line",
+      "soft layered haze at bottom"
+    ],
+    "weaknesses": [
+      "flat, hazy light with little contrast",
+      "thin, featureless cloud band",
+      "no strong structure or focal point"
+    ]
+  },
+  "latency_seconds": 4.0100569000005635,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 398,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "altostratus",
+      "contrail"
+    ],
+    "confidence": 0.65,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "pale gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A plain blue sky with a thin cloud band and a faint contrail, pleasant but unremarkable and lacking drama or structure.",
+    "quality_flags": [],
+    "score": 3.5,
+    "strengths": [
+      "clean blue gradient",
+      "contrail adds a faint diagonal line",
+      "soft layered haze at bottom"
+    ],
+    "weaknesses": [
+      "flat, hazy light with little contrast",
+      "thin, featureless cloud band",
+      "no strong structure or focal point"
+    ]
+  },
+  "stop_reason": "stop"
+}

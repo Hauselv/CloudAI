@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T13:12:22.475551+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "d883bd042c2e8fc6",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent daytime sky with some nice cloud texture but nothing particularly striking or memorable.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "distinct cloud shapes",
+      "good blue sky contrast",
+      "natural lighting"
+    ],
+    "weaknesses": [
+      "flat light",
+      "lacks dramatic structure",
+      "no special color or mood"
+    ]
+  },
+  "latency_seconds": 1.6025265000007494,
+  "model": "qwen3.6-35b",
+  "output_tokens": 200,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent daytime sky with some nice cloud texture but nothing particularly striking or memorable.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "distinct cloud shapes",
+      "good blue sky contrast",
+      "natural lighting"
+    ],
+    "weaknesses": [
+      "flat light",
+      "lacks dramatic structure",
+      "no special color or mood"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,62 @@
+{
+  "created_at": "2026-10-24T13:11:31.321159+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "410a7e4f1edf6c5c",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "stratus"
+    ],
+    "confidence": 0.95,
+    "dominant_colors": [
+      "gray",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A completely flat, gray sky with no clouds, light, or composition to recommend it.",
+    "primary_cloud_type": "stratus",
+    "quality_flags": [],
+    "score": 1.5,
+    "strengths": [
+      "uniform flat texture"
+    ],
+    "weaknesses": [
+      "no structure or interest",
+      "dull and featureless"
+    ]
+  },
+  "latency_seconds": 1.2085979000003135,
+  "model": "qwen3.6-35b",
+  "output_tokens": 134,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "stratus"
+    ],
+    "confidence": 0.95,
+    "dominant_colors": [
+      "gray",
+      "white"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A completely flat, gray sky with no clouds, light, or composition to recommend it.",
+    "quality_flags": [],
+    "score": 1.5,
+    "strengths": [
+      "uniform flat texture"
+    ],
+    "weaknesses": [
+      "no structure or interest",
+      "dull and featureless"
+    ]
+  },
+  "stop_reason": "stop"
+}

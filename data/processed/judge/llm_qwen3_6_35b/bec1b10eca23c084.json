@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-10-24T13:12:27.113999+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "bec1b10eca23c084",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A crisp, well-lit cumulus sky with pleasing texture but nothing particularly striking or memorable.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 7.0,
+    "strengths": [
+      "strong contrast between bright clouds and blue sky",
+      "good cloud texture and depth",
+      "clean, well-exposed image"
+    ],
+    "weaknesses": [
+      "no dramatic or unusual cloud formation",
+      "lacks color variation or special lighting",
+      "fairly generic midday sky"
+    ]
+  },
+  "latency_seconds": 1.6154652999994141,
+  "model": "qwen3.6-35b",
+  "output_tokens": 213,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A crisp, well-lit cumulus sky with pleasing texture but nothing particularly striking or memorable.",
+    "quality_flags": [],
+    "score": 7.0,
+    "strengths": [
+      "strong contrast between bright clouds and blue sky",
+      "good cloud texture and depth",
+      "clean, well-exposed image"
+    ],
+    "weaknesses": [
+      "no dramatic or unusual cloud formation",
+      "lacks color variation or special lighting",
+      "fairly generic midday sky"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T12:54:13.126008+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "3615ddfe0798c6bb",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altostratus",
+      "stratocumulus",
+      "nimbostratus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "blue-gray",
+      "slate",
+      "pale peach",
+      "dark silhouette"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A muted, layered twilight sky with a faint warm horizon, but mostly too flat and soft to be striking.",
+    "primary_cloud_type": "altostratus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 4.5,
+    "strengths": [
+      "subtle warm glow at the horizon",
+      "layered cloud depth",
+      "silhouette adds context"
+    ],
+    "weaknesses": [
+      "large flat gray expanse",
+      "soft, low-detail rendering",
+      "little dramatic structure"
+    ]
+  },
+  "latency_seconds": 5.826535700000022,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 611,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altostratus",
+      "stratocumulus",
+      "nimbostratus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "blue-gray",
+      "slate",
+      "pale peach",
+      "dark silhouette"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A muted, layered twilight sky with a faint warm horizon, but mostly too flat and soft to be striking.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 4.5,
+    "strengths": [
+      "subtle warm glow at the horizon",
+      "layered cloud depth",
+      "silhouette adds context"
+    ],
+    "weaknesses": [
+      "large flat gray expanse",
+      "soft, low-detail rendering",
+      "little dramatic structure"
+    ]
+  },
+  "stop_reason": "stop"
+}

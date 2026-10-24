@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-24T13:06:29.818027+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "2bdd962fdb9cb2b4",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "teal",
+      "green"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, well-structured sky over a scenic fjord, but the light is fairly flat and the clouds lack real drama.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "expansive layered cloud bands",
+      "pleasing blue gaps and contrast",
+      "scenic landscape context"
+    ],
+    "weaknesses": [
+      "flat, soft cloud lighting",
+      "dark cluttered foreground foliage",
+      "limited dramatic depth"
+    ]
+  },
+  "latency_seconds": 6.017704800000502,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 548,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "teal",
+      "green"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, well-structured sky over a scenic fjord, but the light is fairly flat and the clouds lack real drama.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "expansive layered cloud bands",
+      "pleasing blue gaps and contrast",
+      "scenic landscape context"
+    ],
+    "weaknesses": [
+      "flat, soft cloud lighting",
+      "dark cluttered foreground foliage",
+      "limited dramatic depth"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T12:49:55.824796+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "3049baad9ba4268f",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "altostratus",
+      "cirrostratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "pale blue",
+      "cream",
+      "gold",
+      "black"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "The sky has soft, streaky golden-hour appeal, but the prominent chimney and awkward framing keep it from being a strong cloud photograph.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [
+      "people_or_objects_dominant"
+    ],
+    "score": 5.0,
+    "strengths": [
+      "delicate streaked cloud texture",
+      "soft warm color gradient",
+      "pleasant low-sun light"
+    ],
+    "weaknesses": [
+      "chimney dominates the foreground",
+      "awkward composition and crop",
+      "sky is partly obscured"
+    ]
+  },
+  "latency_seconds": 5.8758348999999725,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 588,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "altostratus",
+      "cirrostratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "pale blue",
+      "cream",
+      "gold",
+      "black"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "The sky has soft, streaky golden-hour appeal, but the prominent chimney and awkward framing keep it from being a strong cloud photograph.",
+    "quality_flags": [
+      "people_or_objects_dominant"
+    ],
+    "score": 5.0,
+    "strengths": [
+      "delicate streaked cloud texture",
+      "soft warm color gradient",
+      "pleasant low-sun light"
+    ],
+    "weaknesses": [
+      "chimney dominates the foreground",
+      "awkward composition and crop",
+      "sky is partly obscured"
+    ]
+  },
+  "stop_reason": "stop"
+}

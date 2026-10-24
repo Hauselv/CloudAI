@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:12:57.711359+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "cb1487e0d335364c",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "grey",
+      "white",
+      "blue",
+      "pale yellow"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent sky photo with interesting cloud textures but lacking the dramatic light or composition to make it truly memorable.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "distinct cloud structure with good texture",
+      "pleasing contrast between bright and dark clouds",
+      "natural color palette"
+    ],
+    "weaknesses": [
+      "lighting is somewhat flat and overcast",
+      "composition lacks a strong focal point",
+      "overall mood is ordinary rather than striking"
+    ]
+  },
+  "latency_seconds": 1.522947399998884,
+  "model": "qwen3.6-35b",
+  "output_tokens": 189,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "cumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "grey",
+      "white",
+      "blue",
+      "pale yellow"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A decent sky photo with interesting cloud textures but lacking the dramatic light or composition to make it truly memorable.",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "distinct cloud structure with good texture",
+      "pleasing contrast between bright and dark clouds",
+      "natural color palette"
+    ],
+    "weaknesses": [
+      "lighting is somewhat flat and overcast",
+      "composition lacks a strong focal point",
+      "overall mood is ordinary rather than striking"
+    ]
+  },
+  "stop_reason": "stop"
+}

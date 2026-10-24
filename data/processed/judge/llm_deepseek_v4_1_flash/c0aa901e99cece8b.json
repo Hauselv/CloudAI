@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-24T12:56:56.613151+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "c0aa901e99cece8b",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "altocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "blue",
+      "pink",
+      "orange",
+      "dark green",
+      "black"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A pleasant twilight scene with a nice pink horizon band, but the dark landscape and plain upper sky keep it from being a standout cloud photograph.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "soft twilight color gradient",
+      "layered clouds along the horizon",
+      "strong cypress silhouette"
+    ],
+    "weaknesses": [
+      "foreground is heavily underexposed",
+      "landscape dominates over the sky",
+      "upper sky is fairly plain"
+    ]
+  },
+  "latency_seconds": 4.155713199999809,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 405,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "altocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "blue",
+      "pink",
+      "orange",
+      "dark green",
+      "black"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "twilight",
+    "one_sentence_verdict": "A pleasant twilight scene with a nice pink horizon band, but the dark landscape and plain upper sky keep it from being a standout cloud photograph.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "soft twilight color gradient",
+      "layered clouds along the horizon",
+      "strong cypress silhouette"
+    ],
+    "weaknesses": [
+      "foreground is heavily underexposed",
+      "landscape dominates over the sky",
+      "upper sky is fairly plain"
+    ]
+  },
+  "stop_reason": "stop"
+}

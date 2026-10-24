@@ -155,9 +155,10 @@ def run_judge(
         if limit is not None and done >= limit:
             break
         image_id = str(row["image_id"])
-        if cached_result(rater_id, image_id, root) is not None:
+        cached = cached_result(rater_id, image_id, root)
+        if cached is not None and not cached.get("error"):
             skipped += 1
-            continue
+            continue  # failed attempts are retried, successful ones never paid for twice
         result = judge.judge(image_id, row["relative_path"])
         save_result(result, rater_id, root)
         tokens_in += result.input_tokens

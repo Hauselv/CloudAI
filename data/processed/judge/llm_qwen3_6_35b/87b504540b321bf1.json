@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:12:59.490130+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "87b504540b321bf1",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey",
+      "cream"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but unremarkable sky photo with decent cloud texture and color contrast, though lacking the drama or composition to be truly memorable.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "pleasant contrast between blue sky and white clouds",
+      "soft, natural lighting",
+      "good cloud texture and depth"
+    ],
+    "weaknesses": [
+      "composition feels slightly unbalanced",
+      "lacks dramatic or striking light",
+      "clouds are somewhat scattered without strong formation"
+    ]
+  },
+  "latency_seconds": 1.7584874000003765,
+  "model": "qwen3.6-35b",
+  "output_tokens": 233,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "grey",
+      "cream"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but unremarkable sky photo with decent cloud texture and color contrast, though lacking the drama or composition to be truly memorable.",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "pleasant contrast between blue sky and white clouds",
+      "soft, natural lighting",
+      "good cloud texture and depth"
+    ],
+    "weaknesses": [
+      "composition feels slightly unbalanced",
+      "lacks dramatic or striking light",
+      "clouds are somewhat scattered without strong formation"
+    ]
+  },
+  "stop_reason": "stop"
+}

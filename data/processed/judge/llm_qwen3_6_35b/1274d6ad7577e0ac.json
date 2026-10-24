@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:11:51.073372+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "1274d6ad7577e0ac",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "cirrostratus",
+      "stratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "white",
+      "pale blue",
+      "grey",
+      "silver"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A quiet, softly textured sky with a faint iridescent glow, but overall too muted and undramatic to be striking.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "subtle iridescent light effect near the sun",
+      "soft layered cloud textures",
+      "gentle color gradient"
+    ],
+    "weaknesses": [
+      "low contrast and flat lighting",
+      "lacks strong structure or drama",
+      "no clear focal point"
+    ]
+  },
+  "latency_seconds": 1.4505437000007078,
+  "model": "qwen3.6-35b",
+  "output_tokens": 186,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "cirrostratus",
+      "stratus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "white",
+      "pale blue",
+      "grey",
+      "silver"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A quiet, softly textured sky with a faint iridescent glow, but overall too muted and undramatic to be striking.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "subtle iridescent light effect near the sun",
+      "soft layered cloud textures",
+      "gentle color gradient"
+    ],
+    "weaknesses": [
+      "low contrast and flat lighting",
+      "lacks strong structure or drama",
+      "no clear focal point"
+    ]
+  },
+  "stop_reason": "stop"
+}

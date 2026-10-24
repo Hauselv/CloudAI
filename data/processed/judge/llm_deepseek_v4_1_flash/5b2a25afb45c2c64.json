@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T13:11:03.809355+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "5b2a25afb45c2c64",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "white",
+      "blue",
+      "gray",
+      "silver"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasing aerial cloudscape with strong texture and depth, but the window glare and ordinary light keep it from being more striking.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [
+      "airplane_window"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "expansive textured cloud field",
+      "good sense of depth and scale",
+      "clear layered sky above the cloud deck"
+    ],
+    "weaknesses": [
+      "window glare/reflection in lower right",
+      "somewhat flat daylight",
+      "hazy distant horizon"
+    ]
+  },
+  "latency_seconds": 4.606838299998344,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 396,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "white",
+      "blue",
+      "gray",
+      "silver"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasing aerial cloudscape with strong texture and depth, but the window glare and ordinary light keep it from being more striking.",
+    "quality_flags": [
+      "airplane_window"
+    ],
+    "score": 6.5,
+    "strengths": [
+      "expansive textured cloud field",
+      "good sense of depth and scale",
+      "clear layered sky above the cloud deck"
+    ],
+    "weaknesses": [
+      "window glare/reflection in lower right",
+      "somewhat flat daylight",
+      "hazy distant horizon"
+    ]
+  },
+  "stop_reason": "stop"
+}

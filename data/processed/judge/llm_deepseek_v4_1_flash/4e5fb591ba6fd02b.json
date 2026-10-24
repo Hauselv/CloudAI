@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T13:08:00.736889+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "4e5fb591ba6fd02b",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "cirrus",
+      "stratocumulus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "light blue",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, textured blue-sky scene with varied clouds, but the flat daylight and lack of drama keep it from being especially striking.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "varied cloud texture",
+      "vivid blue sky",
+      "layered cloud patterns"
+    ],
+    "weaknesses": [
+      "flat lighting",
+      "no strong focal point",
+      "fairly ordinary sky"
+    ]
+  },
+  "latency_seconds": 4.168976900000416,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 419,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "cirrus",
+      "stratocumulus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "light blue",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, textured blue-sky scene with varied clouds, but the flat daylight and lack of drama keep it from being especially striking.",
+    "quality_flags": [],
+    "score": 6.0,
+    "strengths": [
+      "varied cloud texture",
+      "vivid blue sky",
+      "layered cloud patterns"
+    ],
+    "weaknesses": [
+      "flat lighting",
+      "no strong focal point",
+      "fairly ordinary sky"
+    ]
+  },
+  "stop_reason": "stop"
+}

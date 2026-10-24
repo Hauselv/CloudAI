@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:52:33.806335+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 786,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 768
+  },
+  "image_id": "9936b4b721cde731",
+  "input_tokens": 1020,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, well-textured daytime sky with layered clouds, but it lacks the light or composition to make it truly striking.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 6.5,
+    "strengths": [
+      "layered cloud textures",
+      "vivid blue contrast",
+      "varied cloud shapes"
+    ],
+    "weaknesses": [
+      "no horizon or context",
+      "flat midday light",
+      "lower clouds feel cropped and cluttered"
+    ]
+  },
+  "latency_seconds": 4.588392899999235,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 465,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, well-textured daytime sky with layered clouds, but it lacks the light or composition to make it truly striking.",
+    "quality_flags": [],
+    "score": 6.5,
+    "strengths": [
+      "layered cloud textures",
+      "vivid blue contrast",
+      "varied cloud shapes"
+    ],
+    "weaknesses": [
+      "no horizon or context",
+      "flat midday light",
+      "lower clouds feel cropped and cluttered"
+    ]
+  },
+  "stop_reason": "stop"
+}

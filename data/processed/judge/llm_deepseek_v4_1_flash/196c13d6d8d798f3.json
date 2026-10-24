@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-10-24T12:49:32.916689+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "196c13d6d8d798f3",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "white",
+      "gray",
+      "blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "An ordinary but pleasant patch of cumulus-filled sky with blue gaps, lacking dramatic light or composition.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 4.5,
+    "strengths": [
+      "pleasant blue gaps",
+      "soft cloud texture",
+      "natural contrast"
+    ],
+    "weaknesses": [
+      "flat light",
+      "no strong focal structure",
+      "ordinary composition"
+    ]
+  },
+  "latency_seconds": 4.981275800000731,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 486,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "white",
+      "gray",
+      "blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "An ordinary but pleasant patch of cumulus-filled sky with blue gaps, lacking dramatic light or composition.",
+    "quality_flags": [],
+    "score": 4.5,
+    "strengths": [
+      "pleasant blue gaps",
+      "soft cloud texture",
+      "natural contrast"
+    ],
+    "weaknesses": [
+      "flat light",
+      "no strong focal structure",
+      "ordinary composition"
+    ]
+  },
+  "stop_reason": "stop"
+}

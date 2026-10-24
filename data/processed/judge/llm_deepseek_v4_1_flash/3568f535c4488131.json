@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:55:09.614788+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "3568f535c4488131",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "cirrocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant patch of rippled altocumulus against blue sky, but the flat light and lack of context keep it from being especially striking.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "rippled cloud texture",
+      "pleasant blue-and-white contrast",
+      "clouds fill the frame"
+    ],
+    "weaknesses": [
+      "flat lighting",
+      "no focal point or horizon",
+      "somewhat repetitive pattern"
+    ]
+  },
+  "latency_seconds": 4.1962708000010025,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 418,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "cirrocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant patch of rippled altocumulus against blue sky, but the flat light and lack of context keep it from being especially striking.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "rippled cloud texture",
+      "pleasant blue-and-white contrast",
+      "clouds fill the frame"
+    ],
+    "weaknesses": [
+      "flat lighting",
+      "no focal point or horizon",
+      "somewhat repetitive pattern"
+    ]
+  },
+  "stop_reason": "stop"
+}

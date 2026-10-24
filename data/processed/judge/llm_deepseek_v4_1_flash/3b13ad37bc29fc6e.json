@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-24T12:44:46.662412+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 235,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 420,
+    "image_width": 420
+  },
+  "image_id": "3b13ad37bc29fc6e",
+  "input_tokens": 822,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "cirrocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, textured sky with layered altocumulus, but the flat daylight and lack of composition keep it from being especially striking.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "varied mottled cloud texture",
+      "layered depth from streaky lower clouds",
+      "pleasant blue sky background"
+    ],
+    "weaknesses": [
+      "flat daylight with no dramatic light",
+      "no focal point or composition anchor",
+      "patch-of-sky crop lacks context"
+    ]
+  },
+  "latency_seconds": 5.326568099999349,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 520,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "cirrocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.72,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, textured sky with layered altocumulus, but the flat daylight and lack of composition keep it from being especially striking.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "varied mottled cloud texture",
+      "layered depth from streaky lower clouds",
+      "pleasant blue sky background"
+    ],
+    "weaknesses": [
+      "flat daylight with no dramatic light",
+      "no focal point or composition anchor",
+      "patch-of-sky crop lacks context"
+    ]
+  },
+  "stop_reason": "stop"
+}

@@ -2,6 +2,19 @@ title: Cloud Aesthetics Research Workbench
 default_rater_id: friend_a
 show_scientific_caveat: true
 max_gallery_images: 24
+judge:
+  # anthropic (Claude SDK, ANTHROPIC_API_KEY) or gateway (OpenAI-compatible server)
+  backend: gateway
+  anthropic_model: claude-opus-5-5
+  gateway_base_url: https://ki-chat.uni-mainz.de/api
+  gateway_model: deepseek-v4.1-flash
+  # The key is read from this environment variable or, if unset, from the secrets file; it is never stored here.
+  gateway_api_key_env: CLOUD_JUDGE_GATEWAY_API_KEY
+  gateway_secrets_file: C:/Dev/spider-science-crawler/spider.secrets.json
+  gateway_secrets_key: gateway_api_key
+  gateway_max_tokens: 1500
+  gateway_disable_thinking: true
+  gateway_json_mode: true
 interpretation:
   llm_provider: ollama
   ollama_model: llama3.2:3b-instruct

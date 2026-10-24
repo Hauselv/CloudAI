@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T12:51:49.196312+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "a3cd4c3f69d77550",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "altostratus"
+    ],
+    "confidence": 0.65,
+    "dominant_colors": [
+      "peach",
+      "gray",
+      "lavender",
+      "gold",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A gentle pastel sunset sky with pleasant layered clouds, but too muted and unstructured to be more than a decent snapshot.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "warm pastel glow along the lower sky",
+      "layered, rippled cloud texture",
+      "tree silhouette adds a bit of foreground interest"
+    ],
+    "weaknesses": [
+      "upper sky is flat and muted gray",
+      "low contrast, no dramatic structure",
+      "slightly soft and grainy"
+    ]
+  },
+  "latency_seconds": 4.201629800001683,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 408,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "altostratus"
+    ],
+    "confidence": 0.65,
+    "dominant_colors": [
+      "peach",
+      "gray",
+      "lavender",
+      "gold",
+      "pale blue"
+    ],
+    "is_sunset_or_sunrise": true,
+    "light": "golden_hour",
+    "one_sentence_verdict": "A gentle pastel sunset sky with pleasant layered clouds, but too muted and unstructured to be more than a decent snapshot.",
+    "quality_flags": [],
+    "score": 5.5,
+    "strengths": [
+      "warm pastel glow along the lower sky",
+      "layered, rippled cloud texture",
+      "tree silhouette adds a bit of foreground interest"
+    ],
+    "weaknesses": [
+      "upper sky is flat and muted gray",
+      "low contrast, no dramatic structure",
+      "slightly soft and grainy"
+    ]
+  },
+  "stop_reason": "stop"
+}

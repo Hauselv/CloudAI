@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T12:51:35.288935+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "193f894958aac4d4",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cirrus",
+      "altostratus",
+      "cumulus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "pale gray",
+      "green",
+      "dark green"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but fairly ordinary sky with thin cirrus and distant cumulus, lacking the light or drama to make it stand out.",
+    "primary_cloud_type": "cirrus",
+    "quality_flags": [],
+    "score": 5.0,
+    "strengths": [
+      "expansive blue sky",
+      "delicate cirrus streaks",
+      "layered clouds along the horizon"
+    ],
+    "weaknesses": [
+      "flat hazy light",
+      "washed-out lower cloud band",
+      "landscape feels incidental and dark"
+    ]
+  },
+  "latency_seconds": 5.292246400000295,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 500,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cirrus",
+      "altostratus",
+      "cumulus"
+    ],
+    "confidence": 0.75,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "pale gray",
+      "green",
+      "dark green"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant but fairly ordinary sky with thin cirrus and distant cumulus, lacking the light or drama to make it stand out.",
+    "quality_flags": [],
+    "score": 5.0,
+    "strengths": [
+      "expansive blue sky",
+      "delicate cirrus streaks",
+      "layered clouds along the horizon"
+    ],
+    "weaknesses": [
+      "flat hazy light",
+      "washed-out lower cloud band",
+      "landscape feels incidental and dark"
+    ]
+  },
+  "stop_reason": "stop"
+}

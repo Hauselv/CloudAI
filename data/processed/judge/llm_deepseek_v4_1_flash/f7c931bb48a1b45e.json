@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-24T12:45:35.501239+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "f7c931bb48a1b45e",
+  "input_tokens": 1290,
+  "judgement": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, vividly colored cumulus sky with good texture, but the soft light and lack of a striking focal point keep it from being exceptional.",
+    "primary_cloud_type": "cumulus",
+    "quality_flags": [],
+    "score": 6.5,
+    "strengths": [
+      "vivid blue contrast",
+      "billowing cloud texture",
+      "layered depth"
+    ],
+    "weaknesses": [
+      "soft, hazy detail",
+      "flat lighting",
+      "no strong focal point"
+    ]
+  },
+  "latency_seconds": 5.892486299999291,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 532,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "cumulus",
+      "stratocumulus",
+      "altocumulus"
+    ],
+    "confidence": 0.8,
+    "dominant_colors": [
+      "blue",
+      "white",
+      "gray"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A pleasant, vividly colored cumulus sky with good texture, but the soft light and lack of a striking focal point keep it from being exceptional.",
+    "quality_flags": [],
+    "score": 6.5,
+    "strengths": [
+      "vivid blue contrast",
+      "billowing cloud texture",
+      "layered depth"
+    ],
+    "weaknesses": [
+      "soft, hazy detail",
+      "flat lighting",
+      "no strong focal point"
+    ]
+  },
+  "stop_reason": "stop"
+}

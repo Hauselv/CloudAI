@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-24T13:12:08.146016+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1398,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 1024,
+    "image_width": 1024
+  },
+  "image_id": "93b860287199d00a",
+  "input_tokens": 1653,
+  "judgement": {
+    "cloud_types": [
+      "stratocumulus",
+      "nimbostratus",
+      "stratus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "grey",
+      "blue-grey",
+      "white",
+      "dark grey",
+      "muted green"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A moody, layered sky with impressive depth but held back by dull colors and a cluttered foreground.",
+    "primary_cloud_type": "stratocumulus",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "strong sense of depth and layering",
+      "dramatic dark cloud base suggests storm",
+      "good tonal range from bright to dark"
+    ],
+    "weaknesses": [
+      "lacks vibrant color or striking light",
+      "composition is somewhat cluttered at the bottom",
+      "overall mood is gloomy rather than beautiful"
+    ]
+  },
+  "latency_seconds": 1.5576290999997582,
+  "model": "qwen3.6-35b",
+  "output_tokens": 208,
+  "rater_id": "llm_qwen3_6_35b",
+  "raw": {
+    "cloud_types": [
+      "stratocumulus",
+      "nimbostratus",
+      "stratus"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "grey",
+      "blue-grey",
+      "white",
+      "dark grey",
+      "muted green"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A moody, layered sky with impressive depth but held back by dull colors and a cluttered foreground.",
+    "quality_flags": [
+      "landscape_dominant"
+    ],
+    "score": 6.0,
+    "strengths": [
+      "strong sense of depth and layering",
+      "dramatic dark cloud base suggests storm",
+      "good tonal range from bright to dark"
+    ],
+    "weaknesses": [
+      "lacks vibrant color or striking light",
+      "composition is somewhat cluttered at the bottom",
+      "overall mood is gloomy rather than beautiful"
+    ]
+  },
+  "stop_reason": "stop"
+}

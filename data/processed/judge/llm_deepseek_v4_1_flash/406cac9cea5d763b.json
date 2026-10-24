@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-24T13:02:58.534118+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "406cac9cea5d763b",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "dark blue",
+      "gray",
+      "warm brown",
+      "black"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "night",
+    "one_sentence_verdict": "A moody night sky with softly lit patchy clouds and stars, but the grainy exposure and foreground clutter keep it from being more striking.",
+    "primary_cloud_type": "altocumulus",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "moonlit cloud texture",
+      "stars add depth",
+      "silhouette contrast"
+    ],
+    "weaknesses": [
+      "grainy low-light image",
+      "underexposed sky",
+      "rooftop and trees distract"
+    ]
+  },
+  "latency_seconds": 5.687812500000291,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 592,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "altocumulus",
+      "stratocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.7,
+    "dominant_colors": [
+      "dark blue",
+      "gray",
+      "warm brown",
+      "black"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "night",
+    "one_sentence_verdict": "A moody night sky with softly lit patchy clouds and stars, but the grainy exposure and foreground clutter keep it from being more striking.",
+    "quality_flags": [
+      "blurry_or_noisy"
+    ],
+    "score": 5.5,
+    "strengths": [
+      "moonlit cloud texture",
+      "stars add depth",
+      "silhouette contrast"
+    ],
+    "weaknesses": [
+      "grainy low-light image",
+      "underexposed sky",
+      "rooftop and trees distract"
+    ]
+  },
+  "stop_reason": "stop"
+}

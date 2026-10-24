@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-10-24T12:49:43.576681+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 235,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 420,
+    "image_width": 420
+  },
+  "image_id": "64a51ddbb721d91b",
+  "input_tokens": 822,
+  "judgement": {
+    "cloud_types": [
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "pale blue",
+      "white",
+      "cream"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A nearly cloudless pale gradient sky with no structure or focal interest, barely qualifying as a sky photograph.",
+    "primary_cloud_type": "clear_sky",
+    "quality_flags": [
+      "not_a_cloud_photo"
+    ],
+    "score": 2.0,
+    "strengths": [
+      "smooth gentle gradient",
+      "clean uncluttered simplicity"
+    ],
+    "weaknesses": [
+      "no cloud structure at all",
+      "flat featureless expanse",
+      "little visual interest"
+    ]
+  },
+  "latency_seconds": 2.2445637000000715,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 182,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "clear_sky"
+    ],
+    "confidence": 0.85,
+    "dominant_colors": [
+      "pale blue",
+      "white",
+      "cream"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A nearly cloudless pale gradient sky with no structure or focal interest, barely qualifying as a sky photograph.",
+    "quality_flags": [
+      "not_a_cloud_photo"
+    ],
+    "score": 2.0,
+    "strengths": [
+      "smooth gentle gradient",
+      "clean uncluttered simplicity"
+    ],
+    "weaknesses": [
+      "no cloud structure at all",
+      "flat featureless expanse",
+      "little visual interest"
+    ]
+  },
+  "stop_reason": "stop"
+}

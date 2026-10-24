@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-10-24T13:08:18.220119+00:00",
+  "error": "",
+  "extra": {
+    "estimated_image_tokens": 1049,
+    "gateway": "https://ki-chat.uni-mainz.de/api",
+    "image_height": 768,
+    "image_width": 1024
+  },
+  "image_id": "52e69c3e777593a4",
+  "input_tokens": 1134,
+  "judgement": {
+    "cloud_types": [
+      "lenticular",
+      "altocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "blue",
+      "dark green",
+      "brown"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A worthwhile sky photo with interesting lenticular and banded cloud structure, though the flat light and very dark foreground keep it from being more striking.",
+    "primary_cloud_type": "lenticular",
+    "quality_flags": [],
+    "score": 6.5,
+    "strengths": [
+      "distinctive lenticular cloud shapes",
+      "sweeping layered cloud bands",
+      "expansive sky composition"
+    ],
+    "weaknesses": [
+      "flat gray light",
+      "dark underexposed foreground",
+      "lacks warm color or strong contrast"
+    ]
+  },
+  "latency_seconds": 6.435932200000025,
+  "model": "deepseek-v4.1-flash",
+  "output_tokens": 688,
+  "rater_id": "llm_deepseek_v4_1_flash",
+  "raw": {
+    "cloud_types": [
+      "lenticular",
+      "altocumulus",
+      "cirrus"
+    ],
+    "confidence": 0.78,
+    "dominant_colors": [
+      "gray",
+      "white",
+      "blue",
+      "dark green",
+      "brown"
+    ],
+    "is_sunset_or_sunrise": false,
+    "light": "daylight",
+    "one_sentence_verdict": "A worthwhile sky photo with interesting lenticular and banded cloud structure, though the flat light and very dark foreground keep it from being more striking.",
+    "quality_flags": [],
+    "score": 6.5,
+    "strengths": [
+      "distinctive lenticular cloud shapes",
+      "sweeping layered cloud bands",
+      "expansive sky composition"
+    ],
+    "weaknesses": [
+      "flat gray light",
+      "dark underexposed foreground",
+      "lacks warm color or strong contrast"
+    ]
+  },
+  "stop_reason": "stop"
+}
