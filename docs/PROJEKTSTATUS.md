@@ -223,7 +223,42 @@ Zwei Backends: der **Uni-LLM-Server** (OpenAI-kompatibles Gateway `ki-chat.uni-m
 Spider-Projekts) und die **Anthropic-API** (Claude Opus 5.5 mit strukturierter Ausgabe, braucht
 `ANTHROPIC_API_KEY`). Der Uni-Server ist der Standard, weil er kostenfrei ist und bereits genutzt wird.
 
-Validierungsläufe gegen Michels 312 Labels: siehe Abschnitt „Judge-Validierung“ unten.
+### Judge-Validierung gegen Michels 312 Labels (24.10.2026)
+
+Beide Uni-Modelle haben alle gelabelten Bilder bewertet (ca. 3 s pro Bild; Gateway-Limit 100 Anfragen pro
+Fenster, der Judge wartet automatisch bis zum Reset). Ergebnis gegen Michels Mittelwert pro Bild:
+
+| Rater | n | ρ gesamt | MAE | Bias | ±1 Punkt | ρ Originale | ρ bei Mensch ≥ 7,5 | ρ Originale ≥ 7,5 |
+|---|---|---|---|---|---|---|---|---|
+| DeepSeek V4.1 Flash | 311 | 0,70 | 1,57 | −0,66 | 44 % | 0,39 | 0,42 (n=139) | 0,28 (n=100) |
+| Qwen3.6 35B | 312 | 0,69 | 1,46 | −0,14 | 48 % | 0,35 | 0,41 | 0,29 |
+| Mittel beider Judges | 311 | 0,71 | 1,49 | | | 0,40 | 0,42 | 0,29 |
+| zum Vergleich: CLIP-Ridge (OOF, Dev) | 265 | 0,72 | 1,34 | | | 0,47 | | |
+| CLIP-Ridge + Judge-Mittel | 265 | 0,75 | | | | 0,50 | | |
+
+Lesart:
+- **Grob ja, fein nein.** Die Judges trennen gute von schlechten Bildern sauber (Mensch < 5 → Judge ≈ 4,0–4,5;
+  Mensch ≥ 9 → Judge ≈ 7,0–7,4), komprimieren aber die Skala (Std 1,6 statt 2,6) und erreichen innerhalb der
+  Originale nur ρ ≈ 0,35–0,40, am oberen Ende 0,28. Für die 10-vs-8-Frage ersetzen sie Michels Labels nicht.
+- **Die Judges sind sich einig (ρ = 0,90 untereinander, 0,81 innerhalb der Originale), aber nicht mit Michel.**
+  Das ist das eigentlich interessante Ergebnis: Der Unterschied ist Geschmack, nicht Rauschen.
+- **Woran sich der Geschmack unterscheidet** (größte Abweichungen): Michel gibt 9,5–10 für klare, saubere Himmel
+  mit verstreuten Cumulus und Kondensstreifen oder für pastellfarbene Strand-Dämmerungen, die beide Judges als
+  „ordinary“ einstufen (5,5–6). Umgekehrt werten die Judges düstere, landschaftslastige Szenen mit Wolkenschelf
+  oder Glühen hinter Bergen auf (6,5–7), die Michel mit 2,5–3 abtut. Bei Michels 9+-Originalen monieren die
+  Judges systematisch „ausgefressene Sonne“, „überprozessierte Farben“ und „unruhiger Vordergrund“ – Kriterien,
+  die für Michels Rating offenbar keine Rolle spielen. Hypothese: Michels Skala belohnt Helligkeit, Klarheit,
+  Pastell und Lichtstimmung; die Modelle belohnen Struktur, Drama und fotografische Technik.
+- **Als Attribut-Layer taugen die Judges sofort.** Mittlerer Michel-Score nach DeepSeek-Wolkentyp: Lenticular 8,2,
+  Cumulus 7,3, Cumulonimbus 7,2, Cirrus 7,0, Altocumulus 6,9, Stratocumulus 6,7, Altostratus 3,2, Stratus 0,8.
+  Nach Licht: goldene Stunde 7,4 (n=51) vs. Tageslicht 6,0 (n=221); Sonnenuntergangs-Flag 6,9 vs. 6,0.
+  Qualitätsflags (52× unscharf/verrauscht, 41× landschaftsdominant, 13× Flugzeugfenster) sind brauchbare
+  Kandidaten für Exclusions.
+- **Konsequenz für die Skalierung:** Judge-Labels eignen sich als günstiges Vortraining/Vorfilter für die
+  ~630 ungelabelten Bilder (Grobsortierung, Attribute, Exclusion-Vorschläge), nicht als Ersatz für menschliche
+  Labels am oberen Ende. Die Kombination CLIP-Ridge + Judges hebt die Originale-Korrelation leicht (0,47 → 0,50).
+
+Reports: `data/artifacts/judge_reports/<rater>_vs_human.{md,json}` plus Paar-Tabelle; UI: Seite „Rater Comparison“.
 
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 

@@ -32,6 +32,8 @@ vorhersagen und vor allem **erklären**, welche Bildeigenschaften das Rating tre
   und `anthropic` (SDK `client.messages.parse`, `ANTHROPIC_API_KEY`). Urteile werden gecacht (`data/processed/judge/`),
   Scores landen als eigener Rater `llm_<modell>` in den Ratings-CSVs; `raters.csv` markiert sie als `llm`, die
   Aggregation ignoriert sie (`include_llm_raters: false`). Key-Werte nie ausgeben, auch nicht in Logs.
+- Das Uni-Gateway limitiert auf ca. 100 Anfragen pro Fenster; `GatewayJudge` wartet bis zum angegebenen Reset.
+  Für ~300 Bilder mit zwei Modellen rund eine Stunde einplanen. Judge-Cache (`data/processed/judge/`) ist git-ignoriert.
 
 ## Bekannte Stolpersteine
 - `data/processed/aggregated_labels.parquet` kann leer sein, obwohl Rohlabels existieren → `aggregate-labels` ausführen.
