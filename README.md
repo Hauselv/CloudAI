@@ -116,6 +116,10 @@ Recommended sequence:
 
 Use `configs/models/baseline.yaml` first. It is fast and gives useful signal with fewer labels. Baseline models provide feature diagnostics and fallback/diagnostic maps, but not true Grad-CAM.
 
+Baseline runs also store global SHAP importance per model (`shap_importance_<model>.parquet`, top features in `summary.json`) and explanations use exact SHAP contributions for tree and linear models. The Train page shows a calibration view per run (actual vs predicted with bin means, residuals, spread ratio, expected calibration error, conformal interval coverage) and the SHAP importance chart.
+
+Ranking runs (`kind: ranking`, `configs/models/ranking.yaml` on features or `ranking_clip.yaml` on CLIP embeddings) train a pairwise logistic regression on dev pairs (explicit duels plus pseudo-pairs) and report pairwise accuracy on test pairs plus the Spearman agreement of the induced image scores with `mean_score` and `bt_score`. `configs/models/embedding_clip_bt.yaml` regresses the Bradley-Terry strength instead of the absolute score once at least 40 images have duels.
+
 Baseline runs evaluate with grouped k-fold cross-validation: every dev fold is held out once, `metrics.val` is computed on the pooled out-of-fold predictions, `cv` holds the per-fold mean and standard deviation, and the final model is refit on all dev images before the held-out test evaluation. Out-of-fold and test predictions are written to `<run>/predictions.parquet`.
 
 ### Image kind, crop class and dataset columns

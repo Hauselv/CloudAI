@@ -116,7 +116,13 @@ Wiederholungen) und aktive Auswahl nach Modell-Unsicherheit.
 - Test-Retest einbauen: 5 % der Bilder zufällig erneut vorlegen → persönliche Rauschgrenze
   (kein Modell kann konsistenter sein als der Rater selbst).
 
-### S2 · Modell- und Evaluations-Infrastruktur (Aufwand M)
+### S2 · Modell- und Evaluations-Infrastruktur (Aufwand M) — Kern erledigt 24.10.2026
+Umgesetzt: SHAP (TreeExplainer/LinearExplainer) für lokale Beiträge im Explain und globale Wichtigkeit pro
+Baseline-Run (Train-Seite), Kalibrierungsdiagnostik (Ist-vs-Vorhersage mit Bin-Mitteln, Residuen, Streuungs-
+verhältnis, ECE, Intervall-Abdeckung), eigenständige Ranking-Suite auf Paaren (explizite Duelle + Pseudo-Paare,
+Dev/Test-Trennung, Bildscores, Vergleich mit mean_score und bt_score; Configs `ranking.yaml`, `ranking_clip.yaml`),
+BT-Ziel vorbereitet (`embedding_clip_bt.yaml`, startet erst ab 40 Bildern mit Duellen). 5-fach-CV und Leaderboard
+waren schon in P1/P3. Offen: Deep-Fine-Tuning bei mehr Labels und GPU.
 - 5-fach-CV als Standard; Run-Vergleichsseite (Leaderboard über alle Runs, nach `kind`, Rater, Datensatz).
 - Unsicherheit: Konformal über alle Folds poolen oder GP/Quantil-Regression; Kalibrierungsplot.
 - Mehrere Zielgrößen: `mean_score`, Rang (Spearman-Ziel), Top-Band-Klassifikation (≥ 9 ja/nein).

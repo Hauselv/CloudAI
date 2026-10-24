@@ -364,6 +364,27 @@ Bradley-Terry-Fit (`data/pairwise.py`, MM-Algorithmus mit kleinem Prior) liefert
 `aggregated_labels.parquet`. Die Rangfolge aus Duellen ist das geeignete Zielmaß für die Feinunterscheidung am
 oberen Ende; sobald genug Duelle vorliegen, sollten die Embedding-Modelle auch darauf trainiert werden.
 
+### Modell-Diagnostik: SHAP, Kalibrierung, Ranking (24.10.2026, S2)
+
+- **SHAP** (`explain/shap_values.py`): exakte TreeExplainer-Beiträge für RandomForest/HistGB, LinearExplainer für
+  ElasticNet; im Explain ersetzen sie die Ein-Feature-Sensitivität (Attributions-Art `tree_shap`/`linear_shap`),
+  pro Baseline-Run liegt die globale Wichtigkeit (mittlerer |SHAP| und Richtung) als Parquet und auf der Train-Seite.
+  Befund: `dog_mean_abs` (Feinstruktur-Energie) dominiert den RandomForest mit 0,83 Score-Punkten mittlerem |SHAP|,
+  alle anderen Features liegen unter 0,1 – das Modell lebt vom Schärfe-/Crop-Signal. Danach folgen Entropie,
+  Kantenorientierung, Lab-a, Blob-Größe (negativ) und die neue Paletten-Helligkeit (negativ: hellere Palette →
+  niedrigerer Score im Gesamtbild, weil helle flache Himmel oft Crops sind).
+- **Kalibrierung** (`eval/calibration.py`, Train-Seite): Ist-vs-Vorhersage mit Bin-Mitteln, Residuen-Histogramm,
+  Bias, Streuungsverhältnis Vorhersage/Ist, ECE und empirische Abdeckung des Konformal-Intervalls, wählbar pro
+  Modell und Partition (OOF/Test).
+- **Ranking-Suite** (`models/ranking.py`, CLI `train` mit `kind: ranking`): logistische Regression auf
+  Eingabedifferenzen, trainiert auf Dev-Paaren (explizite Duelle + Pseudo-Paare aus Scores, max. 20.000),
+  evaluiert auf Test-Paaren; jedes Bild bekommt einen latenten Rang-Score. Ergebnis mit CLIP-Embeddings:
+  Paar-Genauigkeit auf 598 Test-Paaren 0,85, AUC 0,94, Spearman der Bildscores zum menschlichen Mittel 0,68 (Test);
+  mit handgebauten Features 0,77 / 0,84 / 0,42. Sobald Duelle vorliegen, kann `pair_sources: [explicit]` die
+  Rangordnung ausschließlich aus Michels Duellen lernen.
+- **BT-Ziel**: `embedding_clip_bt.yaml` regressiert `bt_score` statt `mean_score`; Zeilen ohne Duelle werden
+  übersprungen, der Run startet erst ab 40 Bildern mit Duellen (`min_rows`). Derzeit gibt es noch keine Duelle.
+
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
 Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.

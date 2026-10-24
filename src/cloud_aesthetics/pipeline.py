@@ -342,6 +342,30 @@ def run_leaderboard(artifacts_root: str | Path = "data/artifacts") -> pd.DataFra
             continue
         kind = str(summary.get("kind", ""))
         models = summary.get("models")
+        if kind == "ranking" and isinstance(models, dict):
+            for model_name, info in models.items():
+                agreement = info.get("agreement", {})
+                rows.append(
+                    {
+                        "run_id": run_dir.name,
+                        "kind": kind,
+                        "model": model_name,
+                        "inputs": " + ".join(summary.get("embedding_models", [])) or "features",
+                        "subset": "/".join(summary.get("pair_sources", [])),
+                        "val_mae": None,
+                        "val_spearman": agreement.get("dev", {}).get("spearman_vs_mean_score"),
+                        "val_spearman_std": None,
+                        "test_mae": None,
+                        "test_spearman": agreement.get("test", {}).get("spearman_vs_mean_score"),
+                        "val_spearman_originals": None,
+                        "val_spearman_crops": None,
+                        "test_spearman_originals": None,
+                        "conformal_half_width": None,
+                        "pairwise_accuracy_test": info.get("metrics", {}).get("test", {}).get("pairwise_accuracy"),
+                        "updated_at": datetime.fromtimestamp(summary_path.stat().st_mtime, tz=timezone.utc).strftime("%Y-%m-%d %H:%M"),
+                    }
+                )
+            continue
         if isinstance(models, dict):
             for model_name, info in models.items():
                 val = info.get("metrics", {}).get("val", {})

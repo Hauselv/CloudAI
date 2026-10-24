@@ -257,19 +257,23 @@ def train_impl(model_config_path: str | Path, dataset_config_path: str | Path = 
         embeddings = _derive_embedding_table(features)
         return train_hybrid_model(features, embeddings, labels, splits, config)
     if kind == "ranking":
-        features = load_features(config["features_path"])
-        _require_non_empty(features, "feature table", "Run `extract-features --config configs/features/v1.yaml` first.")
-        merged = train_pairwise_feature_model(features, pairwise_train=pairwise, pairwise_eval=pairwise)
-        from cloud_aesthetics.models.base import create_run_context, save_run_json
+        from cloud_aesthetics.models.ranking import train_ranking_suite
 
-        run = create_run_context(config["output_dir"], str(config["run_name"]), config)
-        if merged.get("available"):
-            with (run.run_dir / "ranking_model.pkl").open("wb") as handle:
-                pickle.dump(merged["model"], handle)
-            merged.pop("model", None)
-        summary = {"run_id": run.run_id, "kind": "ranking", "metrics": merged.get("metrics", {}), "details": merged}
-        save_run_json(summary, run.run_dir / "summary.json")
-        return summary
+        _require_non_empty(pairwise, "pairwise table", "Run `aggregate-labels` (pseudo pairs) or collect duels first.")
+        extra: dict[str, object] = {}
+        if config.get("embedding_models"):
+            from cloud_aesthetics.embeddings.zero_shot_store import load_zero_shot
+            from cloud_aesthetics.models.embedding import build_embedding_input_table
+
+            features = load_features(config.get("features_path", "data/processed/features/features_v1.parquet"))
+            zero_shot = load_zero_shot(config.get("embeddings_dir", "data/processed/embeddings"))
+            table = build_embedding_input_table(config, features=features, zero_shot=zero_shot)
+            extra = {"embedding_models": [str(key) for key in config["embedding_models"]], "include_features": bool(config.get("include_features", False))}
+        else:
+            table = load_features(config["features_path"])
+            _require_non_empty(table, "feature table", "Run `extract-features --config configs/features/v1.yaml` first.")
+        table = table[table["image_id"].astype(str).isin(set(manifest["image_id"].astype(str)))]
+        return train_ranking_suite(table, labels, splits, pairwise, config, extra_summary=extra)
     raise ValueError(f"Unsupported model kind: {kind}")
 
 
@@ -543,9 +547,19 @@ def explain_impl(
             numeric_row = numeric_row.reindex(list(expected), fill_value=0.0)
         predicted_score = float(model.predict(pd.DataFrame([numeric_row]))[0])
         uncertainty = float(model_info.get("conformal_half_width", 0.0))
-        feature_contributions = approximate_local_contributions(model, feature_row, features)
-        if not feature_contributions.empty:
-            feature_contributions = feature_contributions.assign(attribution_kind="prediction_delta")
+        feature_contributions = pd.DataFrame()
+        try:
+            from cloud_aesthetics.explain.shap_values import shap_contributions
+
+            input_columns = list(expected) if expected is not None else [column for column in features.columns if column != "image_id" and pd.api.types.is_numeric_dtype(features[column])]
+            background = features[input_columns].dropna(how="all")
+            feature_contributions, _, _ = shap_contributions(model, pd.DataFrame([numeric_row.reindex(input_columns, fill_value=0.0)]), background)
+        except (ImportError, ValueError, RuntimeError):
+            feature_contributions = pd.DataFrame()
+        if feature_contributions.empty:
+            feature_contributions = approximate_local_contributions(model, feature_row, features)
+            if not feature_contributions.empty:
+                feature_contributions = feature_contributions.assign(attribution_kind="prediction_delta")
         heatmap = fallback_heatmap_from_edges(image_row["relative_path"])
         heatmap_source = "edge_fallback"
     elif summary["kind"] == "deep":

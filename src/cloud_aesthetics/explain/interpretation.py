@@ -93,7 +93,7 @@ def _confidence_band(uncertainty: float) -> dict[str, object]:
 def _driver_rows(top_features: list[dict[str, object]], limit: int = 6) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for item in top_features[:limit]:
-        has_delta = "delta_prediction" in item
+        has_delta = "delta_prediction" in item and item.get("delta_prediction") is not None
         effect = _as_float(item.get("delta_prediction") if has_delta else item.get("distance_from_typical"))
         z_score = _as_float(item.get("z_score"))
         direction = "raises" if effect >= 0 else "lowers"
@@ -166,6 +166,8 @@ def build_interpretation(explanation: dict[str, object]) -> dict[str, object]:
     attribution_kind = drivers[0]["attribution_kind"] if drivers else "unknown"
     signal_phrase = {
         "prediction_delta": "model contribution",
+        "tree_shap": "SHAP contribution",
+        "linear_shap": "SHAP contribution",
         "zero_shot_concept": "CLIP concept signal",
     }.get(attribution_kind, "unusual feature signal")
     summary = (

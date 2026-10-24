@@ -1,0 +1,17 @@
+run_name: embed_clip_bt_v1
+kind: embedding
+seed: 42
+manifest_path: data/processed/image_manifest.parquet
+labels_path: data/processed/aggregated_labels.parquet
+features_path: data/processed/features/features_v1.parquet
+output_dir: data/artifacts
+# Regress the Bradley-Terry strength from duels instead of the absolute score.
+# Only images with a bt_score (i.e. with duels) are used; min_rows guards against tiny runs.
+target_column: bt_score
+min_rows: 40
+cross_validate: true
+embedding_models:
+  - clip_vit_b32
+regressors:
+  - ridge
+  - svr

@@ -44,6 +44,8 @@ def merge_training_frame(table: pd.DataFrame, labels: pd.DataFrame, splits: pd.D
         .sort_values("image_id")
         .reset_index(drop=True)
     )
+    # Targets such as bt_score exist only for images with duels; rows without a target are skipped.
+    merged = merged[merged[target_column].notna()].reset_index(drop=True)
     return merged, numeric_input_columns(inputs)
 
 
@@ -103,7 +105,10 @@ def train_tabular_suite(
     dev = merged[merged["partition"] == "dev"].reset_index(drop=True)
     test = merged[merged["partition"] == "test"].reset_index(drop=True)
     if dev.empty:
-        raise ValueError("Training needs labeled dev images. Run `aggregate-labels` first.")
+        raise ValueError(f"Training needs labeled dev images with a {target_column!r} value. Run `aggregate-labels` first or collect duels for bt_score.")
+    min_rows = int(config.get("min_rows", 0) or 0)
+    if min_rows and len(dev) < min_rows:
+        raise ValueError(f"Only {len(dev)} dev images have a {target_column!r} value; min_rows is {min_rows}.")
     folds = sorted(int(fold) for fold in dev["fold"].dropna().unique())
     cross_validate = bool(config.get("cross_validate", True)) and len(folds) >= 2
     y_dev = dev[target_column].to_numpy(dtype=np.float32)
