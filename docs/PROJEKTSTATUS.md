@@ -260,6 +260,22 @@ Lesart:
 
 Reports: `data/artifacts/judge_reports/<rater>_vs_human.{md,json}` plus Paar-Tabelle; UI: Seite „Rater Comparison“.
 
+**Qualitätsflags vs. Michels Geschmack** (Kalibrierung der Exclusion-Vorschläge an den gelabelten Bildern):
+`not_a_cloud_photo` traf 3 Bilder, alle von Michel ≤ 1 bewertet – das einzige Flag, das seinen bisherigen
+Ausschlüssen (10× `not_cloud_training_data`) entspricht. `landscape_dominant` (69 Bilder, Michel im Mittel 6,9,
+43 davon ≥ 7, drei 10er) und `airplane_window` (13 Bilder, Mittel 7,2) markieren dagegen *Lieblingsbilder*:
+Sonnenuntergänge mit Landschaft und Fensterblicke gehören für Michel zum Genre. Deshalb sind diese Flags in der
+Triage nur Hinweise; Vorschläge gibt es für „kein Wolkenfoto“, einstimmige Satelliten-/Objekt-Flags bei
+Judge-Score ≤ 4 und einstimmig „unscharf“ bei Judge-Score ≤ 3 (9 von 11 solcher Bilder hatte Michel ≤ 3).
+
+### Triage der ungelabelten Bilder (P4, Schritt 2/3)
+
+`judge-triage` kombiniert alle Modell-Rater pro Bild (Mittel, Spannweite, Mehrheits-Wolkentyp und -Licht, Flags)
+zu einer Label-Warteschlange (ungelabelte Originale zuerst, hoher Judge-Score zuerst, Uneinigkeit als
+Tie-Breaker) und zu Exclusion-Vorschlägen. Die Seite „Triage“ zeigt Warteschlange, unsichere Bilder (Judges
+≥ 2 Punkte auseinander) und Vorschläge mit Häkchen; die Rate-Seite kennt die Reihenfolge als „Judge-Vorschlag“.
+Nichts wird automatisch ausgeschlossen oder gelabelt.
+
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
 Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.

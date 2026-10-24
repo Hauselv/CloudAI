@@ -50,9 +50,10 @@ unlabeled = triage[~triage["labeled"] & (triage["proposed_exclusion"] == "")]
 
 def _caption(row: pd.Series) -> str:
     spread = f" ±{float(row['judge_spread']):.1f}" if pd.notna(row.get("judge_spread")) else ""
+    hints = f"\n\nHinweise: {row['judge_hints']}" if isinstance(row.get("judge_hints"), str) and row["judge_hints"] else ""
     return (
         f"Judge {float(row['judge_mean']):.1f}{spread} | {row.get('crop_class', '')} | {row.get('judge_cloud_type', '')}, {row.get('judge_light', '')}\n\n"
-        f"{row.get('judge_verdict', '') or ''}\n\n{row['image_id']}"
+        f"{row.get('judge_verdict', '') or ''}{hints}\n\n{row['image_id']}"
     )
 
 
@@ -75,6 +76,10 @@ with tab_uncertain:
 with tab_exclude:
     proposals = triage[(triage["proposed_exclusion"] != "")].copy()
     st.write("Vorschläge aus den Qualitätsflags der Judges. Haken setzen und bestätigen; Ausschlüsse lassen sich auf der Seite Exclusions wieder aufheben.")
+    st.caption(
+        "Bewusst konservativ: Nur „kein Wolkenfoto“, einstimmige Satelliten-/Objekt-Flags bei niedrigem Judge-Score und einstimmig "
+        "„unscharf“ bei Score ≤ 3 werden vorgeschlagen. Landschaft und Flugzeugfenster sind nur Hinweise, weil du solche Bilder oft hoch bewertest."
+    )
     reasons = ["Alle"] + sorted(proposals["proposed_exclusion"].unique().tolist())
     reason_choice = st.selectbox("Grund", reasons, key="triage_reason")
     include_labeled = st.checkbox("Auch bereits gelabelte Bilder zeigen", value=False)

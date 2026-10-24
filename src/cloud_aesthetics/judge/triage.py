@@ -18,17 +18,22 @@ from cloud_aesthetics.settings import ensure_parent, resolve_path
 
 TRIAGE_PATH = "data/processed/judge/triage.parquet"
 
-# Judge quality flag -> skip reason used by the Rate page / exclusions.csv. Flags that need
-# both judges to agree are marked; the rest propose on a single vote.
-FLAG_TO_REASON: dict[str, tuple[str, bool]] = {
-    "not_a_cloud_photo": ("not_cloud_training_data", False),
-    "satellite_or_map": ("satellite", False),
-    "airplane_window": ("airplane_window", True),
-    "landscape_dominant": ("too_much_landscape", True),
-    "people_or_objects_dominant": ("not_cloud_training_data", True),
+# Judge quality flag -> (skip reason, all judges must agree, max mean judge score or None).
+# Calibrated on the human labels: only `not_a_cloud_photo` matched the human's own
+# exclusions (3/3 rated <= 1). `landscape_dominant` and `airplane_window` images were rated
+# 6.9 / 7.2 on average by the human, so they are hints, never proposals.
+FLAG_TO_REASON: dict[str, tuple[str, bool, float | None]] = {
+    "not_a_cloud_photo": ("not_cloud_training_data", False, None),
+    "people_or_objects_dominant": ("not_cloud_training_data", True, 4.0),
+    "satellite_or_map": ("satellite", True, 4.0),
 }
 
-LOW_SCORE_EXCLUSION = 1.0  # all judges at or below this score and a "blurry_or_noisy" flag -> bad_crop proposal
+# Flags worth showing next to an image without proposing anything.
+HINT_FLAGS = ("landscape_dominant", "airplane_window", "over_processed", "tiny_detail_crop", "blurry_or_noisy")
+
+# All judges flag "blurry_or_noisy" and the mean judge score is at or below this -> bad_crop
+# proposal (9 of 11 such labeled images were rated <= 3 by the human).
+LOW_SCORE_EXCLUSION = 3.0
 
 
 def _split_flags(value: object) -> list[str]:
@@ -105,24 +110,30 @@ def build_triage(
 
     proposals: list[str] = []
     proposal_detail: list[str] = []
+    hints: list[str] = []
     for _, row in frame.iterrows():
         votes = flag_votes.get(row["image_id"], {})
+        mean = row["judge_mean"]
         reason = ""
         detail = ""
-        for flag, (mapped, needs_all) in FLAG_TO_REASON.items():
+        for flag, (mapped, needs_all, max_mean) in FLAG_TO_REASON.items():
             count = votes.get(flag, 0)
             if count == 0:
                 continue
             if needs_all and n_judges > 1 and count < n_judges:
                 continue
+            if max_mean is not None and (pd.isna(mean) or mean > max_mean):
+                continue
             reason, detail = mapped, f"{flag} ({count}/{max(n_judges, 1)} judges)"
             break
-        if not reason and votes.get("blurry_or_noisy", 0) >= max(n_judges, 1) and pd.notna(row["judge_mean"]) and row["judge_mean"] <= LOW_SCORE_EXCLUSION:
-            reason, detail = "bad_crop", f"blurry_or_noisy by all judges, mean score {row['judge_mean']:.1f}"
+        if not reason and votes.get("blurry_or_noisy", 0) >= max(n_judges, 1) and pd.notna(mean) and mean <= LOW_SCORE_EXCLUSION:
+            reason, detail = "bad_crop", f"blurry_or_noisy by all judges, mean score {mean:.1f}"
         proposals.append(reason)
         proposal_detail.append(detail)
+        hints.append("|".join(f"{flag} ({votes[flag]}/{max(n_judges, 1)})" for flag in HINT_FLAGS if votes.get(flag)))
     frame["proposed_exclusion"] = proposals
     frame["proposal_detail"] = proposal_detail
+    frame["judge_hints"] = hints
 
     # Labeling priority for the 10-vs-8 question: unlabeled originals first, high judge scores
     # first, judge disagreement as a tie-breaker (those images carry the most information).
