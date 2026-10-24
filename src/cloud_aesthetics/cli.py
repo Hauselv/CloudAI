@@ -982,6 +982,41 @@ def judge_triage(
     typer.echo(frame[~frame["labeled"]][columns].head(10).to_string(index=False))
 
 
+@app.command("extract-context")
+def extract_context(
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+    app_config: str = typer.Option("configs/app/default.yaml"),
+    weather: bool | None = typer.Option(None, help="Override the config's weather lookup switch"),
+    refresh: bool = typer.Option(False, help="Recompute all originals instead of reusing the existing table"),
+) -> None:
+    """Capture time, location, sun position and (optional) weather for every image."""
+    from cloud_aesthetics.features.context import build_context_table, load_context, save_context
+
+    dataset_cfg = _load_dataset_config(dataset_config)
+    settings = dict(load_yaml(app_config).get("context", {}) or {})
+    manifest = _filter_active_manifest(read_table(dataset_cfg["manifest_path"]))
+    _require_non_empty(manifest, "image manifest", "Run `ingest-images` first.")
+    use_weather = bool(settings.get("weather", True)) if weather is None else weather
+    existing = None if refresh else load_context()
+    table = build_context_table(
+        manifest,
+        default_latitude=settings.get("default_latitude"),
+        default_longitude=settings.get("default_longitude"),
+        weather=use_weather,
+        existing=existing,
+        progress=typer.echo,
+    )
+    path = save_context(table)
+    originals = table[table["context_source"] == "self"]
+    typer.echo(
+        f"Context for {len(table)} images ({len(originals)} originals) -> {path}\n"
+        f"time quality: {originals['time_quality'].value_counts().to_dict()}\n"
+        f"location: {originals['location_source'].value_counts().to_dict()}\n"
+        f"sun phase: {originals['sun_phase'].value_counts().to_dict()}\n"
+        f"weather available: {int(originals['weather_available'].astype(bool).sum())}"
+    )
+
+
 @app.command("contrast")
 def contrast(
     band_a: str = typer.Option("9.5-10", help="Score band A as low-high, e.g. 9.5-10"),

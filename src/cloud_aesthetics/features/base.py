@@ -7,6 +7,7 @@ import pandas as pd
 from cloud_aesthetics.features.color import extract_color_features
 from cloud_aesthetics.features.composition import extract_composition_features
 from cloud_aesthetics.features.concept_bootstrap import infer_concepts_from_features
+from cloud_aesthetics.features.palette import extract_palette_features
 from cloud_aesthetics.features.scientific import classify_cloud_type_for_original, unknown_scientific_result
 from cloud_aesthetics.features.store import save_features
 from cloud_aesthetics.features.texture import extract_texture_features
@@ -54,6 +55,7 @@ def extract_feature_row(
     features.update(extract_color_features(image))
     features.update(extract_texture_features(image))
     features.update(extract_composition_features(image))
+    features.update(extract_palette_features(image))
     if is_full_original:
         features.update(classify_cloud_type_for_original(image))
         features["scientific_source_image_id"] = image_id

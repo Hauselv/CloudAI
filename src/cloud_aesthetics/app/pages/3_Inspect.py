@@ -15,11 +15,25 @@ if str(SRC_ROOT) not in sys.path:
 from cloud_aesthetics.app.common import active_manifest, app_config, dataset_config, explain_impl, list_runs
 from cloud_aesthetics.app.ui import render_image_grid
 from cloud_aesthetics.data.derivatives import crop_context, render_crop_context
+from cloud_aesthetics.features.context import load_context
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
 from cloud_aesthetics.explain.heatmaps import feature_diagnostic_map, heatmap_to_rgb, overlay_heatmap_on_image
 from cloud_aesthetics.explain.interpretation import generate_local_llm_interpretation
 from cloud_aesthetics.preprocessing.image_ops import read_rgb_image
 from cloud_aesthetics.settings import resolve_path
+
+
+@st.cache_data(show_spinner=False)
+def _context_table() -> pd.DataFrame:
+    return load_context()
+
+
+def _context_row(image_id: str) -> pd.Series | None:
+    table = _context_table()
+    if table.empty:
+        return None
+    matches = table[table["image_id"] == image_id]
+    return matches.iloc[0] if not matches.empty else None
 
 
 def _image_kind(relative_path: object) -> str:
@@ -257,6 +271,25 @@ with tab_overview:
             )
         if scientific.get("scientific_caveat"):
             st.caption(str(scientific["scientific_caveat"]))
+    context_row = _context_row(str(image_row["image_id"]))
+    if context_row is not None:
+        st.write("Aufnahmekontext")
+        ctx_cols = st.columns(4)
+        when = str(context_row.get("datetime_utc") or context_row.get("date") or "unbekannt")
+        ctx_cols[0].metric("Zeit (UTC)", when[:16].replace("T", " "), help=f"Qualität: {context_row.get('time_quality')} ({context_row.get('time_source')})")
+        elevation = context_row.get("sun_elevation_deg")
+        ctx_cols[1].metric("Sonnenhöhe", f"{float(elevation):.1f}°" if pd.notna(elevation) else "–", help=str(context_row.get("sun_phase", "")))
+        hfs = context_row.get("hours_from_sunset")
+        ctx_cols[2].metric("Std. bis Sonnenuntergang", f"{-float(hfs):+.1f} h" if pd.notna(hfs) else "–", help="negativ = vor Sonnenuntergang")
+        cover = context_row.get("wx_cloud_cover")
+        ctx_cols[3].metric("Bewölkung (Reanalyse)", f"{float(cover):.0f} %" if pd.notna(cover) else "–", help=f"Ort: {context_row.get('location_source')}")
+        if pd.notna(context_row.get("wx_cloud_cover_low")):
+            st.caption(
+                f"Wolken tief/mittel/hoch: {float(context_row['wx_cloud_cover_low']):.0f} / {float(context_row['wx_cloud_cover_mid']):.0f} / "
+                f"{float(context_row['wx_cloud_cover_high']):.0f} % · Feuchte {float(context_row['wx_relative_humidity_2m']):.0f} % · "
+                f"Druck {float(context_row['wx_surface_pressure']):.0f} hPa · Niederschlag {float(context_row['wx_precipitation']):.1f} mm · "
+                f"Temperatur {float(context_row['wx_temperature_2m']):.0f} °C"
+            )
     zero_shot = explanation.get("zero_shot") or {}
     if zero_shot:
         st.write("CLIP zero-shot attributes")

@@ -324,6 +324,35 @@ Kontrollrechnung über **alle Bildarten** (36 vs. 86): Dort werden Dynamikumfang
 Judge-Score hochsignifikant (q < 0,01) – das ist wieder der Crop-Confound (die 8er enthalten viele Crops), nicht
 die Feinunterscheidung. Die Seite hat deshalb den Bildart-Filter standardmäßig auf Originale.
 
+### Wissenschaftlicher Layer: Aufnahmekontext, Sonnenstand, Wetter, Farbpalette (24.10.2026, S3)
+
+- **Aufnahmekontext** (`features/capture.py`): EXIF DateTimeOriginal/OffsetTime, GPS-Position und GPS-UTC-Zeitstempel;
+  Fallback auf Dateinamen (`PXL_…` = UTC, `IMG_…` = Ortszeit, `IMG-…-WA…` = nur Datum). Jede Zeile trägt
+  `time_quality` (exact_utc, local_with_offset, local_estimated_offset, date_only, unknown) und `location_source`
+  (exif, default = Mainz, none). Datenlage der 229 Originale: 67 exakt UTC, 7 Ortszeit, 19 nur Datum, 136 unbekannt
+  (alle Web-Bilder); 70 mit GPS.
+- **Sonnenstand** (`features/solar.py`, NOAA-Näherung ohne Fremdbibliothek, getestet gegen Sonnenuntergang Mainz):
+  Elevation, Azimut, Stunden bis/seit Sonnenuntergang, Phase (night … blue_hour, golden_hour, low_sun, day).
+  Unter den privaten Originalen mit Zeit: 43 Tag, 18 goldene Stunde, 5 tiefe Sonne, 4 blaue Stunde, 3 nautische Dämmerung.
+- **Wetter** (`features/weather.py`): Open-Meteo-Archiv (kostenlos, ohne Key), pro Ort/Tag gecacht; nächste Stunde
+  für Bewölkung gesamt/tief/mittel/hoch, Feuchte, Druck, Niederschlag, Temperatur, Wind, plus Tagesaggregate für
+  Nur-Datum-Bilder. 93 Originale mit Wetter.
+- **Farbpalette** (`features/palette.py`, jetzt Teil von `features_v1`): k-Means (k=5) in CIELAB → Warm-/Blau-/
+  Neutralanteil, Farbton-Konzentration (zirkulär), Paletten-Kontrast (ΔE), Chroma, Helligkeit und -spanne,
+  dominante Farbe, Hasler-Süsstrunk-Colorfulness. 13 Spalten.
+- Crops erben den Kontext ihres Originals; Tabelle `data/processed/context/capture_context.parquet`, CLI `extract-context`.
+
+**Palette in der 10-vs-8-Analyse (Originale, 34 vs. 51):** Neutralanteil der Palette höher bei den 10ern
+(0,37 vs. 0,24, d = +0,44), Helligkeitsspanne höher (d = +0,39), Blauanteil niedriger (d = −0,30); im Trend
+ab Score 7 (n=112) Neutralanteil +0,23, Colorfulness −0,18, Chroma-Maximum −0,17. Das deckt sich mit „luftig-hell
+statt bunt“: Michels Spitzenbilder haben mehr Weiß/Grau/Pastell und weniger satte Farbe als die 8er. Für die
+Baseline-Modelle ändert die Palette fast nichts (RandomForest OOF ρ 0,642 → 0,644, Originale 0,37 → 0,37).
+
+**Ehrliche Grenze:** Von den 151 gelabelten Originalen haben nur 14 eine Aufnahmezeit, weil 133 davon Web-Bilder
+ohne EXIF sind. Damit ist jede Aussage zu Sonnenstand oder Wetter und Rating derzeit anekdotisch (z. B. Temperatur
+ρ 0,49 bei n=14). Der Layer wird in dem Moment aussagekräftig, in dem die 78 ungelabelten privaten Originale –
+fast alle mit EXIF und GPS – gelabelt sind. Das ist dieselbe Warteschlange wie für die 10-vs-8-Frage.
+
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
 Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.

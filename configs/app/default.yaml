@@ -15,6 +15,12 @@ judge:
   gateway_max_tokens: 1500
   gateway_disable_thinking: true
   gateway_json_mode: true
+context:
+  # Fallback location for photos without GPS (Mainz); used for sun position and weather lookup.
+  default_latitude: 49.99
+  default_longitude: 8.27
+  # Open-Meteo archive lookups (free, cached under data/processed/context/weather_cache/)
+  weather: true
 interpretation:
   llm_provider: ollama
   ollama_model: llama3.2:3b-instruct

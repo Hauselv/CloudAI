@@ -29,6 +29,9 @@ FAMILY_LABELS = {
     "clip_type": "CLIP-Wolkentyp",
     "clip_light": "CLIP-Licht",
     "judge": "Judge-Attribut",
+    "palette": "Farbpalette",
+    "sun": "Sonnenstand / Zeit",
+    "weather": "Wetter (Reanalyse)",
 }
 
 _COLOR = {"mean_brightness", "contrast", "dynamic_range", "saturation_mean", "lab_a_mean", "lab_b_mean", "blue_orange_balance", "color_temperature_proxy", "cloud_area_fraction", "sky_area_fraction"}
@@ -38,6 +41,12 @@ _TEXTURE = {"edge_density", "lbp_mean", "lbp_std", "glcm_contrast", "glcm_homoge
 def feature_family(column: str) -> str:
     if column.startswith("clip_concept_z_"):
         return "skip"
+    if column.startswith("palette_") or column == "colorfulness":
+        return "palette"
+    if column.startswith("sun_") or column in {"hours_from_sunset", "month", "hour_local_estimate"}:
+        return "sun"
+    if column.startswith("wx_"):
+        return "weather"
     if column.startswith("clip_concept_"):
         return "clip_concept"
     if column.startswith("clip_type_"):
@@ -110,6 +119,7 @@ def assemble_analysis_table(
     features: pd.DataFrame | None = None,
     zero_shot: pd.DataFrame | None = None,
     judge_tables: dict[str, pd.DataFrame] | None = None,
+    context: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """One row per labeled image with the human score, grouping columns and every numeric signal."""
     base = labels.copy()
@@ -134,6 +144,14 @@ def assemble_analysis_table(
         judged = judge_feature_table(judge_tables)
         if not judged.empty:
             table = table.merge(judged, on="image_id", how="left")
+    if context is not None and not context.empty:
+        part = context.copy()
+        part["image_id"] = part["image_id"].astype(str)
+        numeric = [column for column in _numeric(part, {"image_id", "latitude", "longitude", "weather_available"}) if column != "wx_hour_offset"]
+        table = table.merge(part[["image_id"] + numeric].drop_duplicates("image_id"), on="image_id", how="left")
+        for column in ("sun_phase", "time_quality"):
+            if column in part.columns:
+                table = table.merge(part[["image_id", column]].drop_duplicates("image_id"), on="image_id", how="left")
     return table
 
 
@@ -279,4 +297,6 @@ def load_analysis_table(
     if root.exists():
         for path in sorted(root.glob("*_attributes.parquet")):
             judge_tables[path.stem.replace("_attributes", "")] = pd.read_parquet(path)
-    return assemble_analysis_table(labels, manifest, features, zero_shot, judge_tables)
+    from cloud_aesthetics.features.context import load_context
+
+    return assemble_analysis_table(labels, manifest, features, zero_shot, judge_tables, context=load_context())

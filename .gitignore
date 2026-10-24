@@ -38,3 +38,4 @@ data/processed/judge/*
 !data/processed/judge/.gitkeep
 
 data/artifacts/contrast/*
+data/processed/context/*

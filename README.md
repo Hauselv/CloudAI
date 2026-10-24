@@ -45,6 +45,7 @@ This avoids PowerShell execution-policy issues because it does not require `Acti
 - `python -m cloud_aesthetics.cli judge-report --rater llm_deepseek_v4_1_flash`
 - `python -m cloud_aesthetics.cli judge-triage`
 - `python -m cloud_aesthetics.cli contrast [--band-a 9.5-10] [--band-b 7.5-8.5] [--crop-class original]`
+- `python -m cloud_aesthetics.cli extract-context [--no-weather] [--refresh]`
 - `python -m cloud_aesthetics.cli train --config configs/models/embedding_clip.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/baseline.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/deep_cnn_gradcam.yaml`
@@ -161,6 +162,18 @@ D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli judge-report --rater
 ### Triage: labeling queue and exclusion proposals
 
 Once the judges have seen the unlabeled images (`judge-images --no-only-labeled`), `judge-triage` combines all model raters into `data/processed/judge/triage.parquet`: mean judge score, spread between judges, majority cloud type and light, raised quality flags, a labeling priority (unlabeled originals first, high judge scores first, disagreement as tie-breaker) and a proposed exclusion reason derived from the flags (`landscape_dominant` and `airplane_window` need all judges to agree; `satellite_or_map` and `not_a_cloud_photo` propose on one vote; unanimous `blurry_or_noisy` with a mean score of 1 or less proposes `bad_crop`). Nothing is excluded automatically: the `Triage` page shows the queue, the uncertain images and the proposals with checkboxes, and the Rate page offers the queue as label order `Judge-Vorschlag`.
+
+## Capture Context: Sun, Weather, Palette
+
+```powershell
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli extract-context
+```
+
+- Reads EXIF (DateTimeOriginal, OffsetTime, GPS position and GPS UTC stamp) and falls back to file-name patterns (`PXL_…` UTC, `IMG_…` local, `IMG-…-WA…` date only). Every row records `time_quality` and `location_source`; photos without GPS use the default location from `configs/app/default.yaml` (`context`).
+- Sun elevation, azimuth, hours from sunset and a light phase (night, twilight, blue hour, golden hour, low sun, day) are computed offline (NOAA approximation).
+- Weather comes from the free Open-Meteo archive (cloud cover total/low/mid/high, humidity, pressure, precipitation, temperature, wind) at the nearest hour plus daily aggregates; responses are cached under `data/processed/context/weather_cache/`. Disable with `weather: false` or `--no-weather`.
+- Crops inherit the context of their source original. The table lives in `data/processed/context/capture_context.parquet` and feeds the `10 vs 8` page (families "Sonnenstand / Zeit", "Wetter") and the Inspect page.
+- Color palette features (k-means in CIELAB: warm/blue/neutral share, hue concentration, palette contrast, chroma, lightness, colorfulness) are part of `features_v1` since this version; run `extract-features` to refresh older tables.
 
 ## Grad-CAM Analysis
 

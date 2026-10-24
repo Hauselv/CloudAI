@@ -118,7 +118,14 @@ Sättigung) stützen die Hypothese „luftig-hell statt bunt-dramatisch“. Mehr
 - Deep-Pfad erst wieder anfassen, wenn Labels ≥ 500 und ein GPU-Weg steht; dann Fine-Tuning statt
   eingefrorenem Backbone, ggf. ConvNeXt-Tiny/EfficientNet.
 
-### S3 · Wissenschaftlicher Layer, der den Namen verdient (Aufwand M–L)
+### S3 · Wissenschaftlicher Layer, der den Namen verdient (Aufwand M–L) — Kern erledigt 24.10.2026
+Umgesetzt: Aufnahmekontext aus EXIF/Dateinamen (`features/capture.py`), Sonnenstand und Lichtphase ohne
+Fremdbibliothek (`features/solar.py`), Open-Meteo-Reanalyse mit Cache (`features/weather.py`), Kontexttabelle mit
+Vererbung auf Crops (`features/context.py`, CLI `extract-context`), 13 Farbpaletten-Features in `features_v1`
+(`features/palette.py`); alles in der 10-vs-8-Analyse als Familien „Farbpalette“, „Sonnenstand / Zeit“, „Wetter“
+und im Inspect als Kontextblock. Grenze: Nur 14 gelabelte Originale haben EXIF-Zeit, weil die gelabelten Originale
+überwiegend Web-Bilder sind; der Layer wird erst mit Labels für die privaten Originale aussagekräftig. Offen aus S3:
+bessere Himmelssegmentierung (SegFormer/CLIPSeg).
 - Wolkentyp: CLIP-Zero-Shot (P3) oder LLM-Judge-Attribute (P4) statt Regeln; Konfidenz ehrlich ausweisen.
 - **Sonnenstand aus Zeit und Ort**: EXIF-Datum/GPS (bzw. Datum aus dem Dateinamen bei WhatsApp-Bildern)
   → Sonnenhöhe/Azimut (`astral`/`pysolar`) → Phasen „Tag / goldene Stunde / bürgerliche Dämmerung /
