@@ -56,7 +56,10 @@ Auf CPU dauert das für ~1.000 Bilder Minuten, nicht Stunden. Darauf:
 - Das `hybrid`-Modell wird damit zum echten Hybrid: Features + Embedding.
 - Nachbarschaft/Prototypen („ähnlichste 10er“) werden semantisch statt feature-basiert.
 
-### P4 · LLM-Judge als zusätzlicher Rater (Aufwand M)
+### P4 · LLM-Judge als zusätzlicher Rater (Aufwand M) — gebaut 24.10.2026, Validierungslauf offen
+Umgesetzt: `cloud_aesthetics/judge/` (Rubrik-Prompt, strukturiertes JSON-Urteil, Cache, Rater-Registry,
+Vergleichsreport), CLI `judge-images` / `judge-report`, Seite „Rater Comparison“. LLM-Rater sind aus dem
+menschlichen Konsens ausgeschlossen. Der echte Lauf gegen die 312 Labels braucht einen `ANTHROPIC_API_KEY`.
 Michels Idee, mit einem Vision-Modell schnell einen großen Mock-Datensatz zu labeln, passt sauber
 ins bestehende Schema: **jedes Modell ist ein eigener `rater_id`** (z. B. `llm_claude_sonnet_5_5`),
 mit zusätzlicher Spalte `rater_kind = human | llm` in den Rohlabels, damit Mensch und Modell nie

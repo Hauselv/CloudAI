@@ -45,6 +45,9 @@ deep = [
 explain = [
   "shap>=0.45.0",
 ]
+judge = [
+  "anthropic>=2.0.0",
+]
 dev = [
   "pytest>=8.0.0",
   "pytest-cov>=4.1.0",

@@ -16,6 +16,9 @@ allowed_extensions:
   - .tiff
   - .webp
 capture_session_strategy: parent_dir
+# Model raters (LLM judges) are registered in raters_path and excluded from the human consensus.
+raters_path: data/raw/metadata/raters.csv
+include_llm_raters: false
 split:
   n_splits: 5
   score_bins: 5

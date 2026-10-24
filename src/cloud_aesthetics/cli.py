@@ -172,6 +172,12 @@ def import_images_impl(
 def aggregate_labels_impl(dataset_config_path: str | Path = "configs/dataset/default.yaml") -> dict[str, pd.DataFrame]:
     config = _load_dataset_config(dataset_config_path)
     ratings = load_raw_scalar_ratings(config["ratings_dir"])
+    if not ratings.empty and not bool(config.get("include_llm_raters", False)):
+        # Model raters (LLM judges) are kept out of the human consensus unless asked for.
+        from cloud_aesthetics.judge.store import human_rater_ids
+
+        humans = human_rater_ids(ratings["rater_id"].astype(str).unique(), config.get("raters_path", "data/raw/metadata/raters.csv"))
+        ratings = ratings[ratings["rater_id"].astype(str).isin(humans)].reset_index(drop=True)
     explicit_pairwise = load_raw_pairwise_preferences(config["pairwise_dir"])
     pseudo_pairwise = generate_pseudo_pairs(ratings, min_score_gap=2.0)
     pairwise = merge_pairwise_tables(explicit_pairwise, pseudo_pairwise)
@@ -839,6 +845,71 @@ def zero_shot(
     table = compute_zero_shot_table(manifest, config_path=config, model_key=model, progress=typer.echo)
     counts = table["clip_cloud_type"].value_counts().to_dict() if not table.empty else {}
     typer.echo(f"Zero-shot table has {len(table)} rows. Cloud types: {json.dumps(counts)}")
+
+
+@app.command("judge-images")
+def judge_images(
+    model: str = typer.Option("claude-opus-5-5", help="Claude model id used as the vision judge"),
+    only_labeled: bool = typer.Option(True, help="Judge only images that already have human labels (validation mode)"),
+    limit: int | None = typer.Option(None, help="Stop after this many newly judged images"),
+    effort: str = typer.Option("medium", help="output_config.effort for the judge"),
+    max_edge: int = typer.Option(1024, help="Images are downscaled to this long edge before upload"),
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+    report: bool = typer.Option(True, help="Write the comparison report against human labels afterwards"),
+) -> None:
+    """Rate images with a Claude vision judge and store the scores as a separate rater."""
+    from cloud_aesthetics.judge.client import ClaudeJudge
+    from cloud_aesthetics.judge.store import run_judge
+
+    dataset_cfg = _load_dataset_config(dataset_config)
+    manifest = _filter_active_manifest(read_table(dataset_cfg["manifest_path"]))
+    _require_non_empty(manifest, "image manifest", "Run `ingest-images` first.")
+    image_ids = None
+    if only_labeled:
+        labels = read_table(dataset_cfg["aggregated_labels_path"])
+        _require_non_empty(labels, "aggregated labels", "Run `aggregate-labels` first or pass --no-only-labeled.")
+        image_ids = labels["image_id"].astype(str).tolist()
+    judge = ClaudeJudge(model=model, effort=effort, max_edge=max_edge)
+    summary = run_judge(
+        judge,
+        manifest,
+        image_ids=image_ids,
+        limit=limit,
+        ratings_dir=dataset_cfg["ratings_dir"],
+        raters_path=dataset_cfg.get("raters_path", "data/raw/metadata/raters.csv"),
+        progress=typer.echo,
+    )
+    typer.echo(json.dumps(summary, indent=2))
+    if report and summary["judged"] + summary["cached"] > 0:
+        judge_report_impl(summary["rater_id"], dataset_config)
+
+
+def judge_report_impl(rater_id: str, dataset_config_path: str | Path = "configs/dataset/default.yaml", output_dir: str | Path = "data/artifacts/judge_reports") -> dict[str, object]:
+    from cloud_aesthetics.judge.store import human_rater_ids
+    from cloud_aesthetics.judge.validation import compare_raters, save_report
+
+    dataset_cfg = _load_dataset_config(dataset_config_path)
+    ratings = load_raw_scalar_ratings(dataset_cfg["ratings_dir"])
+    _require_non_empty(ratings, "ratings", "No ratings found.")
+    humans = sorted(human_rater_ids(ratings["rater_id"].astype(str).unique(), dataset_cfg.get("raters_path", "data/raw/metadata/raters.csv")))
+    manifest = _filter_active_manifest(read_table(dataset_cfg["manifest_path"]))
+    result = compare_raters(ratings, model_rater=rater_id, human_raters=humans, manifest=manifest)
+    paths = save_report(result, output_dir)
+    result["paths"] = paths
+    return result
+
+
+@app.command("judge-report")
+def judge_report(
+    rater: str = typer.Option(..., help="Model rater id, e.g. llm_claude_opus_5_5"),
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+) -> None:
+    """Compare a model rater with the human labels and write a report."""
+    from cloud_aesthetics.judge.validation import report_markdown
+
+    result = judge_report_impl(rater, dataset_config)
+    typer.echo(report_markdown(result))
+    typer.echo(json.dumps(result["paths"], indent=2))
 
 
 @app.command("status")

@@ -26,6 +26,12 @@ vorhersagen und vor allem **erklären**, welche Bildeigenschaften das Rating tre
   auf CPU; Embedding-Modelle (`configs/models/embedding_*.yaml`) trainieren in Sekunden. Bevorzugter Weg vor Deep-Training.
 - Streamlit cached importierte Paketmodule: nach Änderungen an `pipeline.py` o. ä. den Server neu starten.
 
+## LLM-Judge
+- `judge-images` nutzt die Anthropic-SDK (`client.messages.parse` mit `output_format`), Standardmodell `claude-opus-5-5`.
+  Key nur über `ANTHROPIC_API_KEY`/`ant auth login`, nie in Dateien. Urteile werden gecacht (`data/processed/judge/`),
+  Scores landen als eigener Rater `llm_<modell>` in den Ratings-CSVs; `raters.csv` markiert sie als `llm`, die
+  Aggregation ignoriert sie (`include_llm_raters: false`).
+
 ## Bekannte Stolpersteine
 - `data/processed/aggregated_labels.parquet` kann leer sein, obwohl Rohlabels existieren → `aggregate-labels` ausführen.
 - Nach neuem Labeln immer: `aggregate-labels` → `extract-features` → `train`, sonst passen Splits und Runs nicht zusammen.
