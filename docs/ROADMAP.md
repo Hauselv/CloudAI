@@ -81,7 +81,12 @@ unbemerkt gemischt werden.
 - Wichtig für die Feinanalyse: LLM-Labels dienen für Vortraining/Skalierung; Michels und Freundes-
   Labels bleiben die Referenz für 10-vs-8.
 
-### P5 · „10 vs 8“-Analyseseite (Aufwand S–M)
+### P5 · „10 vs 8“-Analyseseite (Aufwand S–M) — erledigt 24.10.2026
+Umgesetzt: `eval/contrast.py`, CLI `contrast`, Seite „10 vs 8“ (Bänder, Bildart-/Datensatzfilter, Merkmalsfamilien,
+Effekt-Balken mit Cohen's d und FDR-q, Merkmal-Explorer mit Strip-/Scatter-Plot und Beispielbildern, Trend am
+oberen Ende, Beispielkacheln). Befund: Bei 34 vs. 51 Originalen überlebt kein Signal die FDR-Korrektur; die größten
+Effekte (weniger Judge-Flags, weniger Cumulus, mehr Lenticular/Cirrus, weniger Wolkenmasse in der Mitte, geringere
+Sättigung) stützen die Hypothese „luftig-hell statt bunt-dramatisch“. Mehr Labels am oberen Ende sind der Hebel.
 `eval/analysis.compare_groups` existiert bereits (Welch-t, Cohen's d), wird aber nirgends in der UI genutzt.
 - Zwei frei wählbare Score-Bänder (z. B. 9,5–10 vs. 7,5–8,5), optional nur Originale, optional ein Rater.
 - Tabelle der Features/Konzepte/Embedding-Konzepte nach Effektstärke, mit Verteilungs-Violinplots.

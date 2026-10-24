@@ -982,6 +982,43 @@ def judge_triage(
     typer.echo(frame[~frame["labeled"]][columns].head(10).to_string(index=False))
 
 
+@app.command("contrast")
+def contrast(
+    band_a: str = typer.Option("9.5-10", help="Score band A as low-high, e.g. 9.5-10"),
+    band_b: str = typer.Option("7.5-8.5", help="Score band B as low-high, e.g. 7.5-8.5"),
+    crop_class: str = typer.Option("original", help="original | large_crop | small_crop | all"),
+    top: int = typer.Option(25, help="Rows to print"),
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+    output_dir: str = typer.Option("data/artifacts/contrast", help="Where the CSV results go"),
+) -> None:
+    """Compare two human score bands across all signals (the 10-vs-8 question)."""
+    from cloud_aesthetics.eval.contrast import Band, contrast_bands, load_analysis_table, top_end_trends
+
+    def _band(text: str, label: str) -> Band:
+        low, high = (float(value) for value in text.split("-"))
+        return Band(low, high, label)
+
+    dataset_cfg = _load_dataset_config(dataset_config)
+    table = load_analysis_table(dataset_cfg)
+    if crop_class != "all" and "crop_class" in table.columns:
+        table = table[table["crop_class"].astype(str) == crop_class]
+    result = contrast_bands(table, _band(band_a, f"Band A {band_a}"), _band(band_b, f"Band B {band_b}"))
+    typer.echo(f"Band A {band_a}: n={result['n_a']} | Band B {band_b}: n={result['n_b']} | subset: {crop_class}")
+    frame: pd.DataFrame = result["table"]
+    if frame.empty:
+        typer.echo("Not enough images in one of the bands.")
+        raise typer.Exit(code=1)
+    columns = ["feature", "family", "mean_a", "mean_b", "cohens_d", "rank_biserial", "p_mannwhitney", "q_mannwhitney"]
+    typer.echo(frame[columns].head(top).round(3).to_string(index=False))
+    trends = top_end_trends(table)
+    out = resolve_path(output_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    stem = f"{crop_class}_{band_a}_vs_{band_b}".replace(".", "p")
+    frame.to_csv(out / f"{stem}.csv", index=False)
+    trends.to_csv(out / f"{crop_class}_top_end_trends.csv", index=False)
+    typer.echo(f"Wrote {out / f'{stem}.csv'} and {out / f'{crop_class}_top_end_trends.csv'}")
+
+
 @app.command("judge-report")
 def judge_report(
     rater: str = typer.Option(..., help="Model rater id, e.g. llm_claude_opus_5_5"),

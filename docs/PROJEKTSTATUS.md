@@ -290,6 +290,40 @@ Stand 24.10.2026 nach dem Lauf beider Judges über alle 939 Bilder (627 ungelabe
   90× Detailcrop, 47× überprozessiert, 9× Flugzeugfenster.
 - 14 ungelabelte Bilder, bei denen die Judges ≥ 2 Punkte auseinanderliegen (Tab „Unsicher“).
 
+### „10 vs 8“-Analyse (24.10.2026, P5)
+
+`eval/contrast.py`, CLI `contrast`, Seite „10 vs 8“: Zwei Bänder von Michels Score werden über alle Signale
+verglichen – 90 handgebaute Features, 52 CLIP-Zero-Shot-Spalten, Judge-Attribute (Mittel, Konfidenz, Typ- und
+Licht-Anteile, Flags) – mit Cohen's d, Mann-Whitney-Test, Benjamini-Hochberg-q-Werten, dazu Spearman-Trends
+innerhalb der guten Bilder (≥ 7) und Beispielkacheln beider Bänder.
+
+Ergebnis für **Originale, 9,5–10 (n=34) vs. 7,5–8,5 (n=51)**: Kein einziges der 149 Signale überlebt die
+FDR-Korrektur (bestes q = 0,19); 6 Signale haben |d| ≥ 0,5. Die größten Effekte:
+
+| Signal | Ø Band A (10er) | Ø Band B (8er) | d |
+|---|---|---|---|
+| Anzahl Judge-Flags | 0,31 | 0,58 | −0,70 |
+| Judge-Typ Cumulus | 0,22 | 0,48 | −0,62 |
+| Judge-Typ Lenticular | 0,10 | 0,00 | +0,61 |
+| Judge-Konfidenz | 0,84 | 0,82 | +0,60 |
+| vertikale Wolkenmasse Mitte | 0,54 | 0,68 | −0,52 |
+| Judge-Score | 7,3 | 6,9 | +0,45 |
+| Helligkeit unten | 0,38 | 0,32 | +0,44 |
+| Sättigung | 70 | 83 | −0,33 |
+
+Trend innerhalb der Originale ≥ 7 (n=112): Dynamikumfang +0,29, CLIP-Cirrocumulus +0,28, CLIP-Cirrus +0,26,
+CLIP „towering structure“ −0,28, CLIP-Cumulonimbus −0,26, Judge-Score +0,25, LBP-Mittel −0,24 (keines unter q 0,14).
+
+Lesart: Die 10er sind für die Judges „saubere“ Bilder (weniger Qualitätsflags, höhere Konfidenz), eher
+Lenticularis/Cirrus-artig als Cumulus, mit weniger Wolkenmasse in der Bildmitte, hellerem unterem Bilddrittel
+und *geringerer* Sättigung – also eher luftig-hell als bunt-dramatisch. Das passt zur Geschmacks-Hypothese aus
+der Judge-Validierung. Statistisch ist das bei 34 gegen 51 Bildern aber alles noch Hypothese: Mit ~100 weiteren
+gelabelten Originalen am oberen Ende (die Triage-Warteschlange) werden Effekte dieser Größe signifikant.
+
+Kontrollrechnung über **alle Bildarten** (36 vs. 86): Dort werden Dynamikumfang, Kontrast, Entropie und
+Judge-Score hochsignifikant (q < 0,01) – das ist wieder der Crop-Confound (die 8er enthalten viele Crops), nicht
+die Feinunterscheidung. Die Seite hat deshalb den Bildart-Filter standardmäßig auf Originale.
+
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
 Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.

@@ -44,6 +44,7 @@ This avoids PowerShell execution-policy issues because it does not require `Acti
 - `python -m cloud_aesthetics.cli judge-images [--model claude-opus-5-5] [--limit N] [--no-only-labeled]`
 - `python -m cloud_aesthetics.cli judge-report --rater llm_deepseek_v4_1_flash`
 - `python -m cloud_aesthetics.cli judge-triage`
+- `python -m cloud_aesthetics.cli contrast [--band-a 9.5-10] [--band-b 7.5-8.5] [--crop-class original]`
 - `python -m cloud_aesthetics.cli train --config configs/models/embedding_clip.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/baseline.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/deep_cnn_gradcam.yaml`
@@ -74,6 +75,7 @@ Pages:
 - `Batch Report`: analyze import batches or legacy capture sessions with a local model and review top/low/uncertain/review-first predictions.
 - `Rater Comparison`: human raters versus model raters (LLM judges), agreement per group and largest disagreements.
 - `Triage`: judge-based labeling queue, uncertain images and exclusion proposals to accept or ignore.
+- `10 vs 8`: compare two human score bands across hand-crafted features, CLIP zero-shot attributes and judge attributes (effect sizes, FDR-corrected q-values, top-end trends, example tiles). CLI equivalent: `contrast --band-a 9.5-10 --band-b 7.5-8.5 --crop-class original`.
 
 ## Private Image Import And Cropping
 
