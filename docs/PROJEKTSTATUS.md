@@ -1,0 +1,193 @@
+# CloudAI / cloud-aesthetics – Architektur und Status
+
+Stand: 24.10.2026 (Bestandsaufnahme nach Projektübernahme). Letzter Commit: 22.05.2026.
+
+## 1. Worum es geht
+
+Fotos von Wolken und Sonnenuntergängen werden von Michel (und Freunden) auf einer
+0–10-Skala in 0,5er-Schritten bewertet. Auf diesen Labels werden Modelle trainiert, die
+das Rating ungesehener Bilder vorhersagen. Das eigentliche Forschungsziel ist aber nicht
+die Vorhersage, sondern die **Erklärung**: Von welchen Bildeigenschaften hängt das Rating
+ab – Kontrast, Wolkentyp, Farbe, Komposition, Kombinationen davon? Und speziell: Was
+unterscheidet eine 10/10 von einer „nur“ guten 8/10?
+
+## 2. Technischer Überblick
+
+| Bereich | Umsetzung |
+|---|---|
+| Sprache / Umgebung | Python 3.12, venv unter `D:\CloudAI\.venv`, Windows 11 |
+| Paket | `src/cloud_aesthetics` (ca. 6.200 Zeilen), installierbar via `pip install -e .[dev,deep,explain]` |
+| CLI | `python -m cloud_aesthetics.cli` (Typer): import-images, ingest-images, aggregate-labels, extract-features, train, evaluate, explain, analyze-batch, export-friend-package, import-friend-labels, download-web-dataset |
+| UI | Streamlit-Multipage-App (`src/cloud_aesthetics/app/Home.py` + 9 Seiten) |
+| ML-Stack | scikit-learn 1.8, torch 2.11 (**CPU-only**), torchvision, timm, captum, grad-cam, shap |
+| GPU | AMD Radeon RX 6700 XT; kein CUDA. ROCm-unter-WSL ist vorbereitet (`docs/ROCM_WSL.md`), aber nicht installiert und für diese GPU offiziell nicht unterstützt |
+| Tests | 22 pytest-Tests, alle grün (ca. 16 s) |
+| Friend-Labeling | Standalone-HTML-Paket (`standalone.py`) und native Android-APK (`android/friend-labeler`, Java, ohne Android Studio baubar) |
+
+### Datenfluss
+
+```
+G:\Wolken (90 Originale)  --import-images-->  data/raw/images/private_wolken/{originals,crops}
+Openverse/Wikimedia       --download-web-dataset-->  data/raw/images/web_sample/
+                                       |
+                                 ingest-images  -->  data/processed/image_manifest.parquet
+                                       |             (image_id = sha256[:16], phash, split_group_id)
+Streamlit "Rate" / Friend-Apps -->  data/raw/metadata/ratings/<rater>.csv   (Rohlabels, append-only)
+                                       |
+                                 aggregate-labels -->  processed/ratings.parquet, aggregated_labels.parquet,
+                                       |               pairwise_preferences.parquet, splits/default_splits.parquet
+                                 extract-features -->  processed/features/features_v1.parquet (96 Spalten)
+                                       |
+                                     train  -->  data/artifacts/<run_name>_<timestamp>/{summary.json, *.pkl | model.pt}
+                                       |
+                                    explain / analyze-batch -->  <run>/explanations/*.json, *_overlay.png, *_gradcam.npy
+```
+
+Wichtige Designentscheidungen, die bereits gut gelöst sind:
+
+- **Leakage-sichere Splits**: Original und seine Crops teilen eine `split_group_id`; Test-Split
+  (20 %) und 5 Dev-Folds werden gruppiert und nach Score-Bins stratifiziert gezogen.
+- **Append-only Rohlabels** pro Rater als CSV; mehrere Rater und Mehrfachbewertungen sind im
+  Schema vorgesehen (`n_raters`, `std_score`, `agreement_index`, Rater-z-Normalisierung).
+- **Exclusions** statt Löschen: `exclusions.csv` wird beim Lesen gefiltert, Bilder bleiben erhalten.
+- **Import-Batches** verbinden Import und spätere Batch-Analyse mit einem Modell.
+
+## 3. Module im Detail
+
+### `data/`
+- `manifest.py`: Bild-Inventar (sha256, pHash, Größe, Session, Split-Gruppe).
+- `ratings.py`, `pairwise.py`: Schreiben/Lesen von Skalar- und Paarvergleichen; Pseudo-Paare aus
+  Skalarlabels (Score-Abstand ≥ 2) für Ranking-Modelle.
+- `aggregation.py`: Mittel, Median, getrimmtes Mittel, Std, SEM, Agreement, normalisierter Score.
+- `splits.py`: GroupShuffleSplit + StratifiedGroupKFold.
+- `web_dataset.py`: Download lizenzfreier Vergleichsbilder (Openverse-API, Lizenzfilter).
+
+### `preprocessing/`
+- `importer.py`: Kopiert Originale, erzeugt bis zu 8 quadratische „Sky-Crops“ pro Bild per
+  HSV-Heuristik (Himmel-/Wolkenanteil), schreibt `image_derivatives.parquet`.
+- `image_ops.py`: HSV-Wolkenmaske (`V>110 & S<120`), einfache Saliency.
+- `transforms.py`, `datasets.py`: Albumentations-Pipelines und Torch-Dataset.
+
+### `features/` (96 handgebaute Spalten)
+- `color.py`: Helligkeit, Kontrast, Dynamikumfang, Sättigung, Lab-a/b, Blau-Orange-Balance,
+  Farbtemperatur-Proxy, Wolken-/Himmelanteil, 8 Hue-Bins.
+- `texture.py`: Kantendichte, LBP, GLCM, Entropie, Blobs, Komponenten, DoG-Energie,
+  Fraktaldimension, 8 Kantenorientierungs-Bins.
+- `composition.py`: Horizontlage, vertikale Massenverteilung, Helligkeit oben/unten, Symmetrie,
+  Negativraum, Saliency-Schwerpunkt, Drittel-Regel-Abstand, dominante Wolkenmasse.
+- `scientific.py`: 14 „meteo_*“-Features und ein **regelbasierter** Wolkentyp-Klassifikator
+  (10 Typen, handgewichtete Sigmoiden). Für Crops wird das Ergebnis des Originals übernommen.
+- `concept_bootstrap.py`: 10 „Konzepte“ (towering, dramatic edges, rim lighting, …) als
+  handgewichtete Sigmoiden **über andere Features** – also keine gelernten oder unabhängigen Signale.
+
+### `models/`
+- `baseline.py`: ElasticNet, RandomForest, HistGradientBoosting auf den Features; plus
+  Pairwise-LogReg auf Feature-Differenzen; Konformal-Intervall aus Val-Residuen.
+- `deep.py`: `CloudRatingNet` = torchvision-Backbone (ResNet18, **eingefroren**) + Dropout + Linear,
+  optional sigmoid-begrenzt auf 0–10; MSE + Pairwise-Hilfsloss innerhalb des Batches; Early Stopping,
+  Checkpoints, Geräteauswahl (CUDA/ROCm/DirectML/CPU).
+- `hybrid.py`: Features + PCA-„Embeddings“ der Features (kein echtes Bild-Embedding) → HistGB.
+- `ranking.py`: Pairwise-LogReg.
+
+### `explain/`
+- `feature_importance.py`: Permutation Importance; lokale Beiträge per „Median-Baseline, ein Feature
+  austauschen“ (Ein-Feature-Sensitivität, keine SHAP-Werte, obwohl shap installiert ist).
+- `heatmaps.py`: Input-Gradient, Grad-CAM pro ResNet-Layer (eigene Hook-Implementierung),
+  Feature-Diagnosekarten (Maske, Kanten, Helligkeit …), Kanten-Fallback.
+- `regions.py`: SLIC-Superpixel × Heatmap → Regionentabelle.
+- `interpretation.py`: Deterministische „Interpretationskarte“ (Score-Band, Konfidenzband,
+  Treiber, Konzepte, Wolkentyp, Cautions, Empfehlung) + optionaler Ollama-Textgenerator.
+
+### `app/` (Streamlit)
+Import · Rate (Skalar + Paarvergleich, Hotkeys, Reihenfolge-Modi, Skip) · Train · Inspect
+(Heatmaps, Signale, Nachbarn) · Compare · Gallery · Batch Report · Exclusions · Source Groups.
+
+## 4. Datenlage (24.10.2026)
+
+| Kennzahl | Wert |
+|---|---|
+| Bilder im Manifest | 952 (240 Originale: 90 privat + 150 Web; 712 Crops) |
+| Rohbewertungen | 321 von einem Rater (`friend_a`), alle am 26.04.2026 |
+| Bewertete Bilder | 312 (161 private Crops, 18 private Originale, 135 Web-Originale), 8 doppelt bewertet |
+| Split | 266 Dev (5 Folds à ~53) / 48 Test |
+| Noch unbewertet | ~640 Bilder, davon 72 Originale |
+| Quelle der privaten Fotos | `G:\Wolken`, 90 Dateien (alle bereits importiert) |
+
+Score-Verteilung: Mittel 6,3, linksschief (Häufungen bei 8–9,5; Spitze 8,5). Die 8 Doppelbewertungen
+liegen meist 0–1 Punkt auseinander (zwei Fälle 1,5 und 2,5) – ein erster Hinweis auf die
+Test-Retest-Zuverlässigkeit, aber viel zu wenig für eine belastbare Rauschgrenze.
+
+### Zentraler Befund: Crop-vs-Original-Confound
+
+| Gruppe | n | Mittelwert | Std |
+|---|---|---|---|
+| private Originale | 18 | 8,7 | 1,8 |
+| Web-Originale | 135 | 7,5 | 2,0 |
+| private Crops | 161 | 5,0 | 2,5 |
+
+Ob ein Bild ein Crop ist, korreliert mit dem Score mit Spearman ρ = −0,51. Die am stärksten
+korrelierten Features (DoG-Energie 0,62; Entropie 0,56; Kantendichte 0,55; LBP −0,54) messen
+im Kern **Detailreichtum/Schärfe** – genau das, was kleinen, hochskalierten Crops fehlt.
+Innerhalb der Crops bleiben diese Korrelationen stark (ρ ≈ 0,6–0,68), innerhalb der Web-Originale
+sind sie deutlich schwächer (ρ ≈ 0,3–0,37). Das aktuelle Modell lernt also zu einem erheblichen Teil
+„Crop oder nicht“ bzw. „scharf oder matschig“, nicht die ästhetische Feinunterscheidung.
+Für die 10-vs-8-Frage ist das der wichtigste zu klärende Punkt (siehe Roadmap, P1).
+
+## 5. Modellstand
+
+Beide vorhandenen Runs stammen vom 26.04.2026 (mit damaligem Labelstand):
+
+| Run | Val (Fold 0, n=21) | Test (n=48) |
+|---|---|---|
+| baseline RandomForest | MAE 1,83 · ρ 0,52 | MAE 1,39 · ρ 0,67 · R² 0,54 |
+| baseline HistGB | MAE 1,76 · ρ 0,53 | MAE 1,50 · ρ 0,69 · R² 0,51 |
+| baseline ElasticNet | MAE 2,08 · ρ 0,48 | MAE 2,81 · R² −0,55 (kollabiert) |
+| deep ResNet18 (frozen, 5 Ep., CPU) | MAE 1,70 · ρ 0,54 | MAE 1,62 · ρ 0,50 · R² 0,30 |
+| pairwise LogReg | – | Paar-Genauigkeit 0,70 · AUC 0,75 |
+
+Einordnung:
+- Baumbasierte Baselines schlagen das Deep-Modell. Das eingefrorene ResNet18 mit linearem Kopf ist
+  faktisch eine lineare Sonde auf ImageNet-Features, mit Batchgröße 4 trainiert – kein Wunder.
+- Die Konformal-Intervalle (90 %) haben Halbbreiten von 3,0–3,6 Punkten, sind also praktisch
+  nicht informativ. Ursache: nur eine Val-Fold mit 21 Bildern, hohes Label-Rauschen.
+- Metriken beruhen auf einem einzelnen Fold statt 5-fach-CV; die Streuung zwischen Folds ist unbekannt.
+- Grad-CAM funktioniert technisch (4 Layer wählbar), liefert bei einem eingefrorenen Backbone aber
+  nur ImageNet-Aufmerksamkeit, nicht Rating-spezifische Evidenz.
+
+## 6. Qualität der Erklärungsschicht (ehrliche Einschätzung)
+
+- **Wolkentyp-Klassifikator**: 218 von 314 Originalen werden als *cumulonimbus* klassifiziert –
+  das regelbasierte System ist stark verzerrt und aktuell nicht verwertbar. Das Feld
+  `vision_model_vote` steht überall auf `not_configured`.
+- **Konzepte** sind deterministische Funktionen der übrigen Features; ihre „Erklärkraft“ ist zirkulär.
+- **Lokale Feature-Beiträge** sind Ein-Feature-Sensitivitäten um den Median, keine additive
+  Zerlegung (SHAP wäre installiert, wird aber nicht genutzt).
+- **Interpretationskarte** ist sauber strukturiert und ehrlich beschriftet (Cautions, Caveats) –
+  gutes Gerüst, das mit besseren Signalen sofort wertvoller wird.
+- Der **Ollama-Textlayer** ist optional und korrekt als Paraphrase (nicht als Quelle) implementiert.
+
+## 7. Gefundene Probleme / technische Schulden
+
+1. **Verarbeitete Label-Tabellen sind leer.** `aggregated_labels.parquet` und `ratings.parquet`
+   enthalten 0 Zeilen (geschrieben am 26.04. 17:33), obwohl 321 Rohlabels vorliegen. Home-Seite,
+   Compare und Train zeigen deshalb „0 Labels“. Ein Lauf von `aggregate-labels` behebt das
+   (Trockenlauf ergibt 312 Labels), verändert aber die Split-Tabelle gegenüber den alten Runs.
+2. **Unkommittierte Arbeit vom Mai**: Exclusion-Filter-Refactoring (`active_manifest`,
+   `_filter_active_manifest`), Umbenennung der Seiten 6/7 → 7/8, neue `ui.py`, Android-Ordner,
+   Build-Skript, Doku. Tests grün → sollte committed werden. `android/friend-labeler/build/`,
+   `debug.keystore` und `data/artifacts/*.apk` sind per .gitignore ausgeschlossen.
+3. **QWK-Metrik** clippt auf 1–10, Skala ist aber 0–10 (`eval/metrics.py`).
+4. **Kein Pipeline-Zustand sichtbar**: Nichts zeigt an, ob Features/Labels/Splits älter sind als die
+   Rohdaten oder ob ein Run zu den aktuellen Splits passt.
+5. **`hybrid`-Modell** nutzt PCA der handgebauten Features als „Embedding“ – kein Bild-Embedding.
+6. **Trainingsmetriken** nur auf einer Fold; keine Varianzschätzung.
+7. **pyproject** nennt als Autor „OpenAI Codex“; Lizenz MIT. Ggf. anpassen.
+8. Streamlit-Seiten lesen Manifest und Ratings-CSV bei jedem Rerun neu –
+   bei ~1.000 Bildern noch okay, skaliert aber nicht.
+9. Notebooks sind nur 2-Zellen-Platzhalter.
+
+## 8. Was gut ist und bleiben sollte
+
+Datenmodell (Rater-CSV, Manifest, Gruppen-Splits, Exclusions), die Import-/Crop-Pipeline, die
+CLI-Struktur mit `*_impl`-Funktionen (UI und CLI teilen Code), die Interpretationskarte als
+deterministisches Rückgrat, das Friend-Labeling (Web + Android), die Testbasis.
