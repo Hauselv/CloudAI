@@ -21,7 +21,13 @@ Aufwand grob: S = Stunden, M = 1–2 Tage, L = mehrere Tage.
 - `kind` (original/crop) und `dataset` (privat/web) als Spalten in Labels und Features mitführen.
 - QWK auf 0–10 korrigieren; Metriken als 5-fach-CV mit Mittelwert ± Std statt einer Fold.
 
-### P2 · Crop-Confound auflösen (Aufwand S–M, aber entscheidend)
+### P2 · Crop-Confound auflösen (Aufwand S–M, aber entscheidend) — erledigt 24.10.2026
+Umgesetzt: `crop_scale`/`crop_class` (original · large_crop · small_crop) in Manifest, Labels, Features und
+allen Modell-Metriken; Quellbild mit Ausschnittsrahmen in Rate und Inspect; Bildart-Filter beim Labeln;
+Import-Defaults auf Szenen-Crops (50/70/90 % der kurzen Kante, min. 768 px, nie vergrößern);
+`include_kinds`-Filter in Modell-Configs und ein Originale-only-Run. Kernbefund: Crops wurden nicht wegen
+Unschärfe schlechter bewertet, sondern weil 527 von 710 nur 35 % der kurzen Kante zeigen (Details ohne
+Komposition). Details in `PROJEKTSTATUS.md`.
 Der stärkste Prädiktor ist derzeit „Crop oder Original“ (ρ = −0,51). Optionen, die sich nicht
 ausschließen:
 1. **Metriken und Erklärungen getrennt nach `kind`** ausweisen (Minimum).

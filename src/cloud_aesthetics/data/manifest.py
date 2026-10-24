@@ -73,7 +73,7 @@ def dataset_name_from_path(relative_path: object, image_root: Path) -> str | Non
 
 
 def ensure_kind_columns(manifest: pd.DataFrame, image_root: str | Path = "data/raw/images") -> pd.DataFrame:
-    """Add ``kind`` and ``dataset_name`` to older manifests that lack them."""
+    """Add ``kind``, ``dataset_name`` and ``crop_class`` to older manifests that lack them."""
     if manifest.empty:
         return manifest
     frame = manifest.copy()
@@ -84,6 +84,16 @@ def ensure_kind_columns(manifest: pd.DataFrame, image_root: str | Path = "data/r
         root = resolve_path(image_root)
         names = frame["relative_path"].map(lambda value: dataset_name_from_path(value, root))
         frame["dataset_name"] = frame["dataset_name"].fillna(names) if "dataset_name" in frame.columns else names
+    if "crop_class" not in frame.columns or frame["crop_class"].isna().any():
+        from cloud_aesthetics.data.derivatives import classify_crop
+
+        scales = frame["crop_scale"] if "crop_scale" in frame.columns else pd.Series([None] * len(frame), index=frame.index)
+        short_edges = frame[["width", "height"]].min(axis=1) if {"width", "height"}.issubset(frame.columns) else pd.Series([None] * len(frame), index=frame.index)
+        classes = pd.Series(
+            [classify_crop(kind, scale, edge) for kind, scale, edge in zip(frame["kind"], scales, short_edges, strict=True)],
+            index=frame.index,
+        )
+        frame["crop_class"] = frame["crop_class"].fillna(classes) if "crop_class" in frame.columns else classes
     return frame
 
 
@@ -121,6 +131,15 @@ def build_manifest(
             str(row["relative_path"]): str(row["dataset_name"])
             for _, row in derivative_metadata.dropna(subset=["relative_path", "dataset_name"]).iterrows()
         }
+    from cloud_aesthetics.data.derivatives import classify_crop, crop_scale_table
+
+    crop_scales: dict[str, float] = {}
+    if not derivative_metadata.empty:
+        scale_table = crop_scale_table(derivative_metadata)
+        crop_scales = {
+            str(row["relative_path"]).replace("\\", "/"): float(row["crop_scale"])
+            for _, row in scale_table.dropna(subset=["crop_scale"]).iterrows()
+        }
     rows: list[dict[str, object]] = []
     for path in sorted(root.rglob("*")):
         if not path.is_file() or path.suffix.lower() not in extensions:
@@ -135,6 +154,8 @@ def build_manifest(
         capture_session_id = infer_capture_session(path, root, capture_session_strategy)
         image_id = sha256[:16]
         split_group_id = derivative_groups.get(relative_path, f"{capture_session_id}_{phash[:12]}")
+        kind = image_kind_from_path(relative_path, derivative_kinds.get(relative_path))
+        crop_scale = crop_scales.get(relative_path.replace("\\", "/"))
         rows.append(
             {
                 "image_id": image_id,
@@ -147,8 +168,10 @@ def build_manifest(
                 "capture_session_id": capture_session_id,
                 "phash": phash,
                 "split_group_id": split_group_id,
-                "kind": image_kind_from_path(relative_path, derivative_kinds.get(relative_path)),
+                "kind": kind,
                 "dataset_name": derivative_datasets.get(relative_path) or dataset_name_from_path(relative_path, root),
+                "crop_scale": crop_scale,
+                "crop_class": classify_crop(kind, crop_scale, min(width, height)),
             }
         )
     frame = pd.DataFrame(rows, columns=SCHEMA_COLUMNS["manifest"])

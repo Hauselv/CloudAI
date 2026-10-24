@@ -82,6 +82,7 @@ def extract_features_from_manifest(manifest: pd.DataFrame, config_path: str | Pa
         # Carry the grouping columns along so analyses can split by crop/original and dataset.
         feature_row["kind"] = str(row["kind"]) if "kind" in row and pd.notna(row["kind"]) else ("original" if is_full_original else "crop")
         feature_row["dataset_name"] = str(row["dataset_name"]) if "dataset_name" in row and pd.notna(row["dataset_name"]) else None
+        feature_row["crop_class"] = str(row["crop_class"]) if "crop_class" in row and pd.notna(row["crop_class"]) else None
         rows.append(feature_row)
     frame = pd.DataFrame(rows)
     if frame.empty or "scientific_source_image_id" not in frame.columns:

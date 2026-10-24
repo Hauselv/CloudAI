@@ -29,6 +29,8 @@ def test_import_private_images_creates_crops_and_groups_derivatives(tmp_path):
         output_root=image_root,
         derivative_metadata_path=metadata_path,
         max_crops_per_image=3,
+        min_crop_size=320,
+        crop_scales=(0.5, 0.7, 0.9, 1.0),
         min_sky_fraction=0.6,
         min_cloud_fraction=0.02,
     )
@@ -61,6 +63,8 @@ def test_import_private_images_skips_duplicate_source_crops(tmp_path):
         output_root=tmp_path / "images",
         derivative_metadata_path=tmp_path / "image_derivatives.parquet",
         max_crops_per_image=3,
+        min_crop_size=320,
+        crop_scales=(0.5, 0.7, 0.9, 1.0),
         min_sky_fraction=0.6,
         min_cloud_fraction=0.02,
     )

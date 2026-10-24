@@ -180,6 +180,35 @@ CLIP allein nichts – bei 265 Trainingsbildern dominiert Regularisierung (Ridge
 MAE bleibt bei ~1,35 Punkten; die Konformal-Halbbreiten (~3) sind weiterhin breit, weil Michels
 Labels selbst eine Test-Retest-Streuung von etwa ±1 Punkt haben (siehe Doppelbewertungen).
 
+### Crop-Confound aufgelöst (24.10.2026, P2)
+
+Die Crops sind nicht „matschig“: Median der kurzen Kante 1058 px, nur 136 von 710 unter 768 px, und die
+kleinen Crops wurden sogar *besser* bewertet (6,1) als die großen (4,8). Entscheidend ist der **Szenenanteil**:
+527 Crops zeigen nur 35 % der kurzen Kante (≈ 12 % der Fläche), also Detailausschnitte ohne Komposition,
+Horizont und Lichtverlauf. Deshalb gibt es jetzt `crop_scale` und `crop_class`:
+
+| crop_class | Definition | Bilder | gelabelt | Ø Score |
+|---|---|---|---|---|
+| original | Vollbild | 229 | 151 | 7,60 |
+| large_crop | Crop ≥ 50 % der kurzen Kante und ≥ 768 px | 139 | 34 | 5,41 |
+| small_crop | Crop < 50 % der kurzen Kante oder < 768 px | 571 | 127 | 4,88 |
+
+Was sich geändert hat:
+- Rate- und Inspect-Seite zeigen bei Crops das Quellbild mit markiertem Ausschnitt und dem Szenenanteil;
+  beim Labeln lässt sich nach Bildart filtern (für die 10-vs-8-Frage: „Nur Originale“).
+- Import-Defaults: Crop-Skalen 0,5 / 0,7 / 0,9 statt 0,35–1,0, Mindestkante 768 px, Kandidaten unter der
+  Mindestgröße werden übersprungen statt vergrößert. Bestehende Crops bleiben, sind aber klassifiziert.
+- Alle Modell-Summaries berichten Metriken pro `crop_class`; Modell-Configs können per `include_kinds`,
+  `include_crop_classes`, `include_datasets` auf Teilmengen trainieren.
+
+Kontrollexperiment „nur Originale“ (`embedding_clip_originals.yaml`, 116 Dev / 35 Test):
+CLIP-Ridge OOF ρ 0,43 (Test 0,60), SVR 0,47 (Test 0,44). Das entspricht der Originale-Teilmetrik des
+Modells, das auf *allen* Bildern trainiert wurde (ρ 0,47, Test 0,68). Die Crops schaden dem Modell für
+Originale also nicht, sie helfen eher leicht; der Confound saß in der Bewertung des Gesamtergebnisses,
+nicht im Training. Konsequenz: weiter auf allem trainieren, aber **immer nach `crop_class` berichten**, und
+für die Feinanalyse Originale labeln. Innerhalb der Crops erreicht CLIP-Ridge ρ 0,74–0,79, innerhalb der
+Originale 0,47: Der schwierige Teil ist das Ranking unter echten Fotos.
+
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
 Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.

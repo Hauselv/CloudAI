@@ -355,6 +355,12 @@ def run_leaderboard(artifacts_root: str | Path = "data/artifacts") -> pd.DataFra
                         "kind": kind,
                         "model": model_name,
                         "inputs": " + ".join(summary.get("embedding_models", [])) if kind == "embedding" else ("features" if kind == "baseline" else kind),
+                        "subset": ", ".join(
+                            f"{key.removeprefix('include_')}={'/'.join(str(v) for v in summary.get('config', {}).get(key, []))}"
+                            for key in ("include_kinds", "include_crop_classes", "include_datasets")
+                            if summary.get("config", {}).get(key)
+                        )
+                        or "all",
                         "val_mae": val.get("mae"),
                         "val_spearman": val.get("spearman"),
                         "val_spearman_std": cv_std.get("spearman"),

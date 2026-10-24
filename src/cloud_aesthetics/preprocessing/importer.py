@@ -30,7 +30,13 @@ DERIVATIVE_COLUMNS = [
     "crop_height",
     "sky_fraction",
     "cloud_fraction",
+    "crop_scale",
 ]
+
+# Crops below this fraction of the source short edge are detail cutouts without scene
+# context and were rated very differently from full photos; defaults now favour scene crops.
+DEFAULT_CROP_SCALES: tuple[float, ...] = (0.5, 0.7, 0.9)
+DEFAULT_MIN_CROP_SIZE = 768
 
 
 @dataclass(frozen=True)
@@ -95,8 +101,9 @@ def _crop_candidates(
     short_edge = min(width, height)
     for scale in scales:
         crop_size = int(round(short_edge * scale))
-        crop_size = max(min_size, crop_size)
-        if crop_size > width or crop_size > height:
+        # Never enlarge a crop beyond the requested scale to reach min_size: that would
+        # silently change the scene fraction. Small sources simply get fewer crops.
+        if crop_size < min_size or crop_size > width or crop_size > height:
             continue
         step = max(1, int(round(crop_size * stride_fraction)))
         x_positions = sorted(set(list(range(0, width - crop_size + 1, step)) + [width - crop_size]))
@@ -135,7 +142,8 @@ def import_private_images(
     copy_originals: bool = True,
     make_crops: bool = True,
     max_crops_per_image: int = 8,
-    min_crop_size: int = 384,
+    min_crop_size: int = DEFAULT_MIN_CROP_SIZE,
+    crop_scales: tuple[float, ...] = DEFAULT_CROP_SCALES,
     min_sky_fraction: float = 0.72,
     min_cloud_fraction: float = 0.08,
     batch_id: str | None = None,
@@ -181,6 +189,7 @@ def import_private_images(
                     "crop_height": image_rgb.shape[0],
                     "sky_fraction": None,
                     "cloud_fraction": None,
+                    "crop_scale": None,
                 }
             )
         if not make_crops or source_sha256 in seen_crop_sources:
@@ -189,7 +198,7 @@ def import_private_images(
         candidates = _crop_candidates(
             image_rgb,
             min_size=min_crop_size,
-            scales=(0.35, 0.5, 0.7, 0.9, 1.0),
+            scales=tuple(crop_scales),
             stride_fraction=0.5,
             min_sky_fraction=min_sky_fraction,
             min_cloud_fraction=min_cloud_fraction,
@@ -215,6 +224,7 @@ def import_private_images(
                     "crop_height": crop.height,
                     "sky_fraction": crop.sky_fraction,
                     "cloud_fraction": crop.cloud_fraction,
+                    "crop_scale": float(crop.width) / float(min(image_rgb.shape[0], image_rgb.shape[1])),
                 }
             )
 

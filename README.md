@@ -108,9 +108,13 @@ Use `configs/models/baseline.yaml` first. It is fast and gives useful signal wit
 
 Baseline runs evaluate with grouped k-fold cross-validation: every dev fold is held out once, `metrics.val` is computed on the pooled out-of-fold predictions, `cv` holds the per-fold mean and standard deviation, and the final model is refit on all dev images before the held-out test evaluation. Out-of-fold and test predictions are written to `<run>/predictions.parquet`.
 
-### Image kind and dataset columns
+### Image kind, crop class and dataset columns
 
-The manifest, aggregated labels and feature table carry `kind` (`original` or `crop`) and `dataset_name` (first folder under `data/raw/images`). Crops are rated systematically lower than originals, so baseline summaries report metrics per kind and dataset under `by_group`, and the Train page shows them. Compare models within a group, not only overall.
+The manifest, aggregated labels and feature table carry `kind` (`original` or `crop`), `crop_class` (`original`, `large_crop`, `small_crop`), `crop_scale` (crop edge as fraction of the source short edge) and `dataset_name` (first folder under `data/raw/images`). Crops are rated systematically lower than originals, mostly because small crops show a detail without scene context. All tabular model summaries report metrics per group under `by_group`, and the Train page shows them. Compare models within a group, not only overall.
+
+Model configs can restrict training to subsets with `include_kinds`, `include_crop_classes` or `include_datasets` (see `configs/models/embedding_clip_originals.yaml`).
+
+Crop import defaults are scene crops: scales `0.5,0.7,0.9` of the short edge, minimum edge 768 px, and candidates below the minimum are skipped rather than enlarged (`--crop-scales`, `--min-crop-size`). The Rate and Inspect pages show the source photo with the crop rectangle for every crop.
 
 ## Image Embeddings And Zero-Shot Attributes
 

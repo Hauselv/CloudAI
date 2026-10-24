@@ -14,6 +14,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from cloud_aesthetics.app.common import active_manifest, app_config, dataset_config, explain_impl, list_runs
 from cloud_aesthetics.app.ui import render_image_grid
+from cloud_aesthetics.data.derivatives import crop_context, render_crop_context
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
 from cloud_aesthetics.explain.heatmaps import feature_diagnostic_map, heatmap_to_rgb, overlay_heatmap_on_image
 from cloud_aesthetics.explain.interpretation import generate_local_llm_interpretation
@@ -220,7 +221,13 @@ image_row = manifest.loc[manifest["image_id"] == st.session_state.inspect_image_
 with detail_col:
     image_path = resolve_path(image_row["relative_path"])
     if image_path.exists():
-        st.image(str(image_path), caption=f"{image_row['kind']} | {image_row['image_id']}", use_container_width=True)
+        st.image(str(image_path), caption=f"{image_row['kind']} | {image_row.get('crop_class', '')} | {image_row['image_id']}", use_container_width=True)
+        if str(image_row["kind"]) == "crop":
+            context = crop_context(str(image_row["relative_path"]))
+            source_view = render_crop_context(context) if context is not None else None
+            if source_view is not None:
+                scale_text = f" | {context.crop_scale:.0%} of the short edge" if context.crop_scale else ""
+                st.image(source_view, caption=f"Source image with crop region{scale_text}", use_container_width=True)
     else:
         st.warning("Selected image is missing on disk.")
 

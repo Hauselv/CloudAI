@@ -18,7 +18,7 @@ from cloud_aesthetics.eval.metrics import compute_regression_metrics
 from cloud_aesthetics.models.base import create_run_context, save_run_json
 from cloud_aesthetics.models.uncertainty import conformal_interval
 
-GROUP_COLUMNS = ("kind", "dataset_name")
+GROUP_COLUMNS = ("kind", "crop_class", "dataset_name")
 MIN_GROUP_SIZE = 5
 
 
@@ -120,6 +120,7 @@ def train_tabular_suite(
         },
         "input_columns": numeric_columns,
         "train_image_ids": dev["image_id"].astype(str).tolist(),
+        "config": {key: value for key, value in config.items() if isinstance(value, (str, int, float, bool, list))},
         "models": {},
     }
     if extra_summary:

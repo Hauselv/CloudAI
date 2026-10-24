@@ -43,7 +43,7 @@ from cloud_aesthetics.models.baseline import train_baseline_suite
 from cloud_aesthetics.models.deep import CloudRatingNet, train_deep_model
 from cloud_aesthetics.models.hybrid import train_hybrid_model
 from cloud_aesthetics.models.ranking import train_pairwise_feature_model
-from cloud_aesthetics.preprocessing.importer import import_private_images
+from cloud_aesthetics.preprocessing.importer import DEFAULT_CROP_SCALES, DEFAULT_MIN_CROP_SIZE, import_private_images
 from cloud_aesthetics.preprocessing.image_ops import read_rgb_image
 from cloud_aesthetics.preprocessing.transforms import apply_transform, build_eval_transform
 from cloud_aesthetics.settings import PATHS, load_yaml, resolve_path
@@ -72,15 +72,32 @@ def _filter_active_manifest(manifest: pd.DataFrame) -> pd.DataFrame:
     return manifest[~manifest["image_id"].astype(str).isin(excluded_ids)].reset_index(drop=True)
 
 
+GROUP_FILTER_KEYS = {"include_kinds": "kind", "include_crop_classes": "crop_class", "include_datasets": "dataset_name"}
+
+
+def _apply_group_filters(labels: pd.DataFrame, manifest: pd.DataFrame, config: dict[str, object]) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Restrict training to image groups named in the model config (e.g. originals only)."""
+    active = {GROUP_FILTER_KEYS[key]: {str(value) for value in config[key]} for key in GROUP_FILTER_KEYS if config.get(key)}
+    if not active:
+        return labels, manifest
+    manifest = ensure_kind_columns(manifest)
+    labels = attach_manifest_groups(labels, manifest)
+    for column, allowed in active.items():
+        manifest = manifest[manifest[column].astype(str).isin(allowed)]
+        labels = labels[labels[column].astype(str).isin(allowed)]
+    return labels.reset_index(drop=True), manifest.reset_index(drop=True)
+
+
 def attach_manifest_groups(table: pd.DataFrame, manifest: pd.DataFrame) -> pd.DataFrame:
     """Attach ``kind`` and ``dataset_name`` from the manifest to a per-image table."""
     if table.empty or manifest.empty or "image_id" not in table.columns:
         return table
     manifest = ensure_kind_columns(manifest)
-    groups = manifest[["image_id", "kind", "dataset_name"]].copy()
+    group_columns = ["kind", "crop_class", "dataset_name"]
+    groups = manifest[["image_id"] + group_columns].copy()
     groups["image_id"] = groups["image_id"].astype(str)
     groups = groups.drop_duplicates(subset=["image_id"], keep="first")
-    result = table.drop(columns=[column for column in ("kind", "dataset_name") if column in table.columns]).copy()
+    result = table.drop(columns=[column for column in group_columns if column in table.columns]).copy()
     result["image_id"] = result["image_id"].astype(str)
     return result.merge(groups, on="image_id", how="left")
 
@@ -123,6 +140,8 @@ def import_images_impl(
     min_sky_fraction: float = 0.72,
     min_cloud_fraction: float = 0.08,
     batch_id: str | None = None,
+    min_crop_size: int = DEFAULT_MIN_CROP_SIZE,
+    crop_scales: tuple[float, ...] = DEFAULT_CROP_SCALES,
 ) -> dict[str, object]:
     config = _load_dataset_config(dataset_config_path)
     imported = import_private_images(
@@ -131,6 +150,8 @@ def import_images_impl(
         output_root=config["image_root"],
         make_crops=make_crops,
         max_crops_per_image=max_crops_per_image,
+        min_crop_size=min_crop_size,
+        crop_scales=crop_scales,
         min_sky_fraction=min_sky_fraction,
         min_cloud_fraction=min_cloud_fraction,
         batch_id=batch_id,
@@ -206,6 +227,8 @@ def train_impl(model_config_path: str | Path, dataset_config_path: str | Path = 
     _require_non_empty(manifest, "image manifest", "Run `ingest-images` after placing images under `data/raw/images`.")
     _require_non_empty(labels, "aggregated labels", "Record ratings, then run `aggregate-labels`.")
     _require_non_empty(splits, "split table", "Run `aggregate-labels` to generate grouped splits.")
+    labels, manifest = _apply_group_filters(labels, manifest, config)
+    _require_non_empty(labels, "filtered labels", "The include_kinds / include_crop_classes / include_datasets filters left no labeled images.")
     if kind == "baseline":
         features = load_features(config["features_path"])
         _require_non_empty(features, "feature table", "Run `extract-features --config configs/features/v1.yaml` first.")
@@ -706,7 +729,10 @@ def import_images(
     max_crops_per_image: int = typer.Option(8, min=0, help="Maximum crops to create per source image"),
     min_sky_fraction: float = typer.Option(0.72, min=0.0, max=1.0, help="Minimum sky-like fraction required for each crop"),
     min_cloud_fraction: float = typer.Option(0.08, min=0.0, max=1.0, help="Minimum cloud-like fraction required for each crop"),
+    min_crop_size: int = typer.Option(DEFAULT_MIN_CROP_SIZE, min=64, help="Minimum crop edge in pixels; smaller candidates are skipped, never enlarged"),
+    crop_scales: str = typer.Option(",".join(str(value) for value in DEFAULT_CROP_SCALES), help="Comma-separated crop sizes as fraction of the source short edge"),
 ) -> None:
+    scales = tuple(float(value) for value in crop_scales.split(",") if value.strip())
     summary = import_images_impl(
         source,
         dataset_name,
@@ -716,6 +742,8 @@ def import_images(
         min_sky_fraction=min_sky_fraction,
         min_cloud_fraction=min_cloud_fraction,
         batch_id=batch_id,
+        min_crop_size=min_crop_size,
+        crop_scales=scales,
     )
     typer.echo(
         "Imported "

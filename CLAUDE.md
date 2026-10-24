@@ -29,4 +29,5 @@ vorhersagen und vor allem **erklären**, welche Bildeigenschaften das Rating tre
 ## Bekannte Stolpersteine
 - `data/processed/aggregated_labels.parquet` kann leer sein, obwohl Rohlabels existieren → `aggregate-labels` ausführen.
 - Nach neuem Labeln immer: `aggregate-labels` → `extract-features` → `train`, sonst passen Splits und Runs nicht zusammen.
-- Crops sind systematisch schlechter bewertet als Originale (Confound); Auswertungen nach `kind` trennen.
+- Crops sind systematisch schlechter bewertet als Originale (Confound); Auswertungen nach `kind` und `crop_class`
+  trennen. Ursache ist der Szenenanteil (`crop_scale`), nicht die Pixelgröße. Für die 10-vs-8-Frage zählen Originale.

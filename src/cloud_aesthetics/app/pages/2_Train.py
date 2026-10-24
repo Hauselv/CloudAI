@@ -80,6 +80,7 @@ model_config = st.selectbox(
     [
         "configs/models/baseline.yaml",
         "configs/models/embedding_clip.yaml",
+        "configs/models/embedding_clip_originals.yaml",
         "configs/models/embedding_dinov2.yaml",
         "configs/models/embedding_hybrid.yaml",
         "configs/models/deep_cnn.yaml",

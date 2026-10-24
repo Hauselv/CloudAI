@@ -83,6 +83,26 @@ col3.metric("Aggregated Labels", len(aggregated))
 col4.metric("Pairwise Examples", len(pairwise))
 col5.metric("Feature Rows", len(features))
 
+if not manifest.empty and "crop_class" in manifest.columns:
+    st.subheader("Bildarten und Labelstand")
+    overview = manifest.copy()
+    overview["image_id"] = overview["image_id"].astype(str)
+    labeled_ids = set(aggregated["image_id"].astype(str)) if not aggregated.empty else set()
+    overview["labeled"] = overview["image_id"].isin(labeled_ids)
+    kind_table = (
+        overview.groupby(["dataset_name", "crop_class"], dropna=False)
+        .agg(images=("image_id", "count"), labeled=("labeled", "sum"))
+        .reset_index()
+    )
+    kind_table["open"] = kind_table["images"] - kind_table["labeled"]
+    if not aggregated.empty and "crop_class" in aggregated.columns:
+        means = aggregated.groupby(["dataset_name", "crop_class"], dropna=False)["mean_score"].mean().round(2).rename("mean_score")
+        kind_table = kind_table.merge(means.reset_index(), on=["dataset_name", "crop_class"], how="left")
+    st.caption(
+        "small_crop = Ausschnitt unter 50 % der kurzen Kante oder unter 768 px. Für die 10-vs-8-Frage zählen vor allem Originale."
+    )
+    st.dataframe(kind_table, use_container_width=True, hide_index=True)
+
 if not aggregated.empty:
     st.subheader("Rating Distribution")
     if "kind" in aggregated.columns:

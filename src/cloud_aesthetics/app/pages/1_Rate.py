@@ -13,6 +13,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from cloud_aesthetics.app.common import active_manifest, app_config, dataset_config
+from cloud_aesthetics.data.derivatives import crop_context, load_derivatives, render_crop_context
 from cloud_aesthetics.data.exclusions import active_excluded_ids, set_exclusion
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings, record_pairwise_preference, record_rating
 from cloud_aesthetics.settings import resolve_path
@@ -23,6 +24,7 @@ st.title("Rate Cloud Images")
 
 dataset_cfg = dataset_config()
 manifest = active_manifest(dataset_cfg["manifest_path"])
+derivatives = load_derivatives()
 
 if manifest.empty:
     st.warning("No images found yet. Run the ingest command first and place images in data/raw/images.")
@@ -165,6 +167,24 @@ with tab_scalar:
 
     if excluded_ids:
         manifest = manifest[~manifest["image_id"].astype(str).isin(excluded_ids)].reset_index(drop=True)
+    kind_options = ["Alle", "Nur Originale", "Nur große Crops", "Nur kleine Crops", "Alle Crops"]
+    kind_filter = st.selectbox("Bildart", kind_options, help="Originale und Crops werden sehr unterschiedlich bewertet; für die 10-vs-8-Frage zählen vor allem Originale.")
+    if "crop_class" in manifest.columns:
+        if kind_filter == "Nur Originale":
+            manifest = manifest[manifest["kind"] == "original"]
+        elif kind_filter == "Nur große Crops":
+            manifest = manifest[manifest["crop_class"] == "large_crop"]
+        elif kind_filter == "Nur kleine Crops":
+            manifest = manifest[manifest["crop_class"] == "small_crop"]
+        elif kind_filter == "Alle Crops":
+            manifest = manifest[manifest["kind"] == "crop"]
+        manifest = manifest.reset_index(drop=True)
+    if st.session_state.get("rate_kind_filter") != kind_filter:
+        st.session_state.rate_kind_filter = kind_filter
+        st.session_state.rate_index = 0
+    if manifest.empty:
+        st.warning("Keine Bilder in dieser Auswahl.")
+        st.stop()
     ordered_manifest = _build_ordered_manifest(manifest, order_mode, order_seed)
     image_ids = ordered_manifest["image_id"].astype(str).tolist()
     if not image_ids:
@@ -194,8 +214,21 @@ with tab_scalar:
     image_id = selected_id
     row = ordered_manifest.loc[ordered_manifest["image_id"] == image_id].iloc[0]
     image_path = resolve_path(row["relative_path"])
-    st.image(str(image_path), use_container_width=True)
-    st.caption(str(row["relative_path"]))
+    context = crop_context(str(row["relative_path"]), derivatives) if str(row.get("kind", "")) == "crop" else None
+    if context is not None:
+        col_crop, col_source = st.columns([1, 1])
+        col_crop.image(str(image_path), use_container_width=True)
+        col_crop.caption(f"Crop | {row.get('crop_class', 'crop')} | {row['relative_path']}")
+        source_view = render_crop_context(context)
+        if source_view is not None:
+            col_source.image(source_view, use_container_width=True)
+            scale_text = f"{context.crop_scale:.0%} der kurzen Kante" if context.crop_scale else ""
+            col_source.caption(f"Quellbild mit Ausschnitt | {context.width}x{context.height} px | {scale_text}")
+        else:
+            col_source.info("Quellbild nicht gefunden.")
+    else:
+        st.image(str(image_path), use_container_width=True)
+        st.caption(f"{row.get('kind', 'original')} | {row['relative_path']}")
 
     score = st.slider("Score", min_value=0.0, max_value=10.0, value=8.0, step=0.5)
     note = st.text_area("Optional notes")

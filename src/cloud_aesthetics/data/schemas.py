@@ -20,6 +20,8 @@ class ImageRecord(BaseModel):
     split_group_id: str
     kind: str = "original"
     dataset_name: str | None = None
+    crop_scale: float | None = None
+    crop_class: str = "original"
 
 
 class RatingRecord(BaseModel):
@@ -56,6 +58,7 @@ class AggregatedLabelRecord(BaseModel):
     pairwise_win_rate: float
     kind: str | None = None
     dataset_name: str | None = None
+    crop_class: str | None = None
 
 
 SCHEMA_COLUMNS: dict[str, list[str]] = {
