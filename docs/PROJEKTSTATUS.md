@@ -276,6 +276,20 @@ Tie-Breaker) und zu Exclusion-Vorschlägen. Die Seite „Triage“ zeigt Wartesc
 ≥ 2 Punkte auseinander) und Vorschläge mit Häkchen; die Rate-Seite kennt die Reihenfolge als „Judge-Vorschlag“.
 Nichts wird automatisch ausgeschlossen oder gelabelt.
 
+Stand 24.10.2026 nach dem Lauf beider Judges über alle 939 Bilder (627 ungelabelt):
+- Die Judges stimmen auf den ungelabelten Bildern untereinander mit ρ = 0,87 überein.
+- **Label-Warteschlange:** 78 ungelabelte Originale, davon 30 mit Judge-Mittel ≥ 7 (keines ≥ 8). Die Spitze ist fast
+  durchweg „goldene Stunde“ mit Altocumulus/Stratocumulus über Landschaft, dazu ein Lenticularis über einem See –
+  genau der Bildtyp, bei dem Michels Rating und das der Judges am weitesten auseinanderliegen. Diese 30 Bilder zu
+  labeln ist der schnellste Weg zu mehr Signal am oberen Ende.
+- Ungelabelte Crops: 105 große (Judge-Mittel 5,2), 444 kleine (5,0); die kleinen Crops sind zu gut 60 % Cumulus,
+  Altocumulus und Cirrus, mit 83 Altostratus- und 14 Stratus-Fällen (Judge-Mittel 4,1 bzw. 1,8) als Kandidaten für
+  das untere Ende.
+- **Exclusion-Vorschläge:** 9 ungelabelte (8× „kein Wolkenfoto“/Objekte, 1× unscharfer Crop) plus 4 gelabelte,
+  die Michel ohnehin mit 0–1 bewertet hat. Hinweise ohne Vorschlag: 141× unscharf, 109× landschaftsdominant,
+  90× Detailcrop, 47× überprozessiert, 9× Flugzeugfenster.
+- 14 ungelabelte Bilder, bei denen die Judges ≥ 2 Punkte auseinanderliegen (Tab „Unsicher“).
+
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
 Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.
