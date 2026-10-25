@@ -48,8 +48,16 @@ def build_triage(
     labels: pd.DataFrame | None = None,
     *,
     disagreement_threshold: float = 2.0,
+    predictions: pd.DataFrame | None = None,
+    retest_ids: list[str] | None = None,
 ) -> pd.DataFrame:
-    """One row per manifest image with judge consensus, flags, priority and exclusion proposal."""
+    """One row per manifest image with judge consensus, model predictions, flags, priority and exclusion proposal.
+
+    ``predictions`` (from ``models.predict.predict_all``) adds ``model_score`` / ``model_spread``;
+    the priority then rewards expected information: images near the top end, images where
+    models and judges disagree, and ``retest_ids`` (already labeled images to rate again
+    without seeing the old score).
+    """
     frame = manifest.copy()
     frame["image_id"] = frame["image_id"].astype(str)
     keep = [column for column in ("image_id", "relative_path", "kind", "crop_class", "dataset_name", "split_group_id") if column in frame.columns]
@@ -135,15 +143,53 @@ def build_triage(
     frame["proposal_detail"] = proposal_detail
     frame["judge_hints"] = hints
 
-    # Labeling priority for the 10-vs-8 question: unlabeled originals first, high judge scores
-    # first, judge disagreement as a tie-breaker (those images carry the most information).
+    # Model predictions (optional) and the combined estimate used for the queue.
+    frame["model_score"] = np.nan
+    frame["model_spread"] = np.nan
+    if predictions is not None and not predictions.empty and "pred_mean" in predictions.columns:
+        preds = predictions.copy()
+        preds["image_id"] = preds["image_id"].astype(str)
+        frame = frame.merge(preds[["image_id", "pred_mean", "pred_spread"]].drop_duplicates("image_id"), on="image_id", how="left")
+        frame["model_score"] = frame.pop("pred_mean")
+        frame["model_spread"] = frame.pop("pred_spread")
+    estimates = frame[["judge_mean", "model_score"]]
+    frame["estimate"] = estimates.mean(axis=1)
+    frame["model_judge_gap"] = (frame["model_score"] - frame["judge_mean"]).abs()
+
+    # Labeling priority: expected information for the 10-vs-8 question.
+    # originals first; estimate near the top end; disagreement between judges, between models,
+    # and between models and judges; proposals and already labeled images last; retests in between.
     kind_rank = frame["crop_class"].map({"original": 0, "large_crop": 1, "small_crop": 2}).fillna(3) if "crop_class" in frame.columns else pd.Series(3, index=frame.index)
-    mean_fill = frame["judge_mean"].fillna(-1.0)
-    spread_fill = frame["judge_spread"].fillna(0.0)
-    frame["uncertain"] = spread_fill >= disagreement_threshold
-    frame["priority_score"] = (-kind_rank * 100.0) + mean_fill * 5.0 + spread_fill * 2.0
+    estimate_fill = frame["estimate"].fillna(frame["judge_mean"]).fillna(-1.0)
+    judge_spread = frame["judge_spread"].fillna(0.0)
+    model_spread = frame["model_spread"].fillna(0.0)
+    gap = frame["model_judge_gap"].fillna(0.0)
+    top_end_bonus = np.clip(estimate_fill - 6.0, 0.0, 4.0) * 4.0  # 0 below 6, up to 16 at 10
+    disagreement = judge_spread * 2.0 + model_spread * 3.0 + gap * 2.0
+    frame["uncertain"] = (judge_spread >= disagreement_threshold) | (gap >= disagreement_threshold) | (model_spread >= 1.5)
+    frame["priority_score"] = (-kind_rank * 100.0) + estimate_fill * 3.0 + top_end_bonus + disagreement
+    reasons = []
+    for _, row in frame.iterrows():
+        parts = []
+        if pd.notna(row["estimate"]) and row["estimate"] >= 7.5:
+            parts.append(f"oberes Ende (Schätzung {row['estimate']:.1f})")
+        if pd.notna(row["model_judge_gap"]) and row["model_judge_gap"] >= disagreement_threshold:
+            parts.append(f"Modell {row['model_score']:.1f} vs Judges {row['judge_mean']:.1f}")
+        elif pd.notna(row["model_spread"]) and row["model_spread"] >= 1.5:
+            parts.append(f"Modelle uneinig (±{row['model_spread']:.1f})")
+        if judge_spread.loc[_] >= disagreement_threshold:
+            parts.append(f"Judges uneinig (±{row['judge_spread']:.1f})")
+        reasons.append("; ".join(parts))
+    frame["queue_reason"] = reasons
     frame.loc[frame["proposed_exclusion"] != "", "priority_score"] -= 1000.0
     frame.loc[frame["labeled"], "priority_score"] -= 10000.0
+    frame["retest"] = False
+    if retest_ids:
+        mask = frame["image_id"].isin({str(value) for value in retest_ids}) & frame["labeled"]
+        frame.loc[mask, "retest"] = True
+        # Spread retests through the queue: rank them like a mid-priority unlabeled original.
+        frame.loc[mask, "priority_score"] = 20.0 + np.arange(int(mask.sum()))[::-1] * 0.01
+        frame.loc[mask, "queue_reason"] = "Wiederholung (Zuverlässigkeit)"
     frame = frame.sort_values("priority_score", ascending=False).reset_index(drop=True)
     frame["label_rank"] = np.arange(1, len(frame) + 1)
     return frame
@@ -172,6 +218,8 @@ def triage_summary(frame: pd.DataFrame) -> dict[str, object]:
     return {
         "images": int(len(frame)),
         "unlabeled": int(len(unlabeled)),
+        "with_model_score": int(frame["model_score"].notna().sum()) if "model_score" in frame.columns else 0,
+        "retest_queued": int(frame["retest"].sum()) if "retest" in frame.columns else 0,
         "unlabeled_judged": int(len(judged)),
         "proposed_exclusions": int((frame["proposed_exclusion"] != "").sum()),
         "proposed_exclusions_unlabeled": int((unlabeled["proposed_exclusion"] != "").sum()),

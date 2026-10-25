@@ -15,6 +15,14 @@ judge:
   gateway_max_tokens: 1500
   gateway_disable_thinking: true
   gateway_json_mode: true
+queue:
+  # Labeling queue: share of the rater's own labeled images that are re-queued for a blind
+  # second rating (test-retest reliability), bounded by retest_min / retest_max.
+  retest_fraction: 0.05
+  retest_min: 5
+  retest_max: 20
+  retest_min_days: 1.0
+  retest_seed: 0
 context:
   # Fallback location for photos without GPS (Mainz); used for sun position and weather lookup.
   default_latitude: 49.99

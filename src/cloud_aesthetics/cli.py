@@ -975,9 +975,45 @@ def judge_triage_impl(dataset_config_path: str | Path = "configs/dataset/default
     tables = {rater: table for rater, table in tables.items() if not table.empty}
     if not tables:
         raise typer.BadParameter("No judge attributes found. Run `judge-images` first.")
-    frame = build_triage(tables, manifest, labels)
+    from cloud_aesthetics.eval.reliability import select_retest_candidates
+    from cloud_aesthetics.models.predict import load_latest_predictions
+
+    app_cfg = load_yaml("configs/app/default.yaml")
+    queue_cfg = dict(app_cfg.get("queue", {}) or {})
+    predictions = load_latest_predictions()
+    retest_ids: list[str] = []
+    rater_id = str(app_cfg.get("default_rater_id", "friend_a"))
+    fraction = float(queue_cfg.get("retest_fraction", 0.05))
+    if fraction > 0:
+        ratings = load_raw_scalar_ratings(dataset_cfg["ratings_dir"])
+        own_count = int((ratings["rater_id"].astype(str) == rater_id).sum()) if not ratings.empty else 0
+        count = min(int(queue_cfg.get("retest_max", 20)), max(int(round(own_count * fraction)), int(queue_cfg.get("retest_min", 5)) if own_count else 0))
+        retest_ids = select_retest_candidates(ratings, rater_id, count=count, seed=int(queue_cfg.get("retest_seed", 0)), min_days_since=float(queue_cfg.get("retest_min_days", 1.0)))
+    frame = build_triage(tables, manifest, labels, predictions=predictions, retest_ids=retest_ids)
     save_triage(frame)
     return frame, triage_summary(frame)
+
+
+@app.command("predict-all")
+def predict_all_command(
+    run: str = typer.Option(..., help="Run id or directory of a baseline or embedding run"),
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+) -> None:
+    """Score every active image with a trained run and store the table for the labeling queue."""
+    from cloud_aesthetics.models.predict import predict_all, save_predictions
+
+    dataset_cfg = _load_dataset_config(dataset_config)
+    manifest = _filter_active_manifest(read_table(dataset_cfg["manifest_path"]))
+    _require_non_empty(manifest, "image manifest", "Run `ingest-images` first.")
+    labels = read_table(dataset_cfg["aggregated_labels_path"])
+    frame = predict_all(run, manifest, labels=labels)
+    path = save_predictions(frame, str(frame["run_id"].iloc[0]))
+    unlabeled = frame[frame["human_score"].isna()] if "human_score" in frame.columns else frame
+    typer.echo(
+        f"Predicted {len(frame)} images with {frame['run_id'].iloc[0]} -> {path}\n"
+        f"unlabeled: n={len(unlabeled)}, mean {unlabeled['pred_mean'].mean():.2f}, >= 7.5: {int((unlabeled['pred_mean'] >= 7.5).sum())}, "
+        f"model spread >= 1.5: {int((unlabeled['pred_spread'] >= 1.5).sum())}"
+    )
 
 
 @app.command("judge-triage")

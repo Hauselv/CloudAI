@@ -165,9 +165,17 @@ D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli judge-report --rater
 - `--only-labeled` (default) restricts the run to images with human labels: validation first, scaling later (`--no-only-labeled`).
 - The report (`data/artifacts/judge_reports/`) and the `Rater Comparison` page show Spearman, MAE, bias, agreement within ±1 point, per crop class, agreement at the top of the scale, and the largest disagreements with the judge's verdict next to the photo.
 
+### Model predictions for every image
+
+```powershell
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli predict-all --run <embedding or baseline run id>
+```
+
+Scores all active images with every model of the run (`data/processed/predictions/<run>.parquet`, copied to `latest.parquet`), including the mean and the spread between the run's models. `judge-triage` picks up `latest.parquet` automatically.
+
 ### Triage: labeling queue and exclusion proposals
 
-Once the judges have seen the unlabeled images (`judge-images --no-only-labeled`), `judge-triage` combines all model raters into `data/processed/judge/triage.parquet`: mean judge score, spread between judges, majority cloud type and light, raised quality flags, a labeling priority (unlabeled originals first, high judge scores first, disagreement as tie-breaker) and a proposed exclusion reason derived from the flags (`landscape_dominant` and `airplane_window` need all judges to agree; `satellite_or_map` and `not_a_cloud_photo` propose on one vote; unanimous `blurry_or_noisy` with a mean score of 1 or less proposes `bad_crop`). Nothing is excluded automatically: the `Triage` page shows the queue, the uncertain images and the proposals with checkboxes, and the Rate page offers the queue as label order `Judge-Vorschlag`.
+Once the judges have seen the unlabeled images (`judge-images --no-only-labeled`), `judge-triage` combines all model raters into `data/processed/judge/triage.parquet`: mean judge score, spread between judges, majority cloud type and light, raised quality flags, the model prediction from `predict-all`, a labeling priority and a proposed exclusion reason derived from the flags. The priority rewards expected information: unlabeled originals first, estimates near the top end, disagreement between judges, between the run's models, and between models and judges (`queue_reason` says why). A small share of the rater's own labeled images is re-queued as blind retests (`queue` block in `configs/app/default.yaml`); the Rate page hides the earlier score for those and the Home page reports test-retest reliability and the resulting noise ceiling. Exclusion rules (`landscape_dominant` and `airplane_window` need all judges to agree; `satellite_or_map` and `not_a_cloud_photo` propose on one vote; unanimous `blurry_or_noisy` with a mean score of 1 or less proposes `bad_crop`). Nothing is excluded automatically: the `Triage` page shows the queue, the uncertain images and the proposals with checkboxes, and the Rate page offers the queue as label order `Judge-Vorschlag`.
 
 ## Capture Context: Sun, Weather, Palette
 

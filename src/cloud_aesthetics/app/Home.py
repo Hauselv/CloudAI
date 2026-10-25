@@ -11,6 +11,8 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from cloud_aesthetics.app.common import app_config, dataset_config, safe_read_table
+from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
+from cloud_aesthetics.eval.reliability import reliability_summary, repeat_pairs
 from cloud_aesthetics.pipeline import pipeline_status, refresh_pipeline
 
 cfg = app_config()
@@ -102,6 +104,26 @@ if not manifest.empty and "crop_class" in manifest.columns:
         "small_crop = Ausschnitt unter 50 % der kurzen Kante oder unter 768 px. Für die 10-vs-8-Frage zählen vor allem Originale."
     )
     st.dataframe(kind_table, use_container_width=True, hide_index=True)
+
+raw_ratings = load_raw_scalar_ratings(dataset_cfg["ratings_dir"])
+default_rater = str(cfg.get("default_rater_id", "friend_a"))
+pairs = repeat_pairs(raw_ratings, default_rater)
+reliability = reliability_summary(pairs)
+st.subheader(f"Zuverlässigkeit von {default_rater} (Test-Retest)")
+if reliability.get("n", 0) == 0:
+    st.caption("Noch keine Wiederholungen. Die Label-Warteschlange streut automatisch einige bereits bewertete Bilder blind wieder ein.")
+else:
+    rel_cols = st.columns(5)
+    rel_cols[0].metric("Wiederholte Bilder", reliability["n"])
+    rel_cols[1].metric("Ø |Differenz|", f"{reliability['mean_abs_difference']:.2f}")
+    rel_cols[2].metric("Innerhalb ±1", f"{reliability['within_one']:.0%}")
+    rel_cols[3].metric("Drift (neu − alt)", f"{reliability['drift']:+.2f}")
+    if "noise_ceiling_spearman" in reliability:
+        rel_cols[4].metric("Rausch-Obergrenze ρ", f"{reliability['noise_ceiling_spearman']:.2f}", help="Höher kann kein Modell mit Einzelbewertungen korrelieren (aus der Test-Retest-Reliabilität geschätzt).")
+    st.caption(
+        "Wie gut stimmst du mit dir selbst überein? Je mehr Wiederholungen, desto belastbarer die Obergrenze, an der sich alle Modelle messen lassen müssen. "
+        f"Bisher {reliability['n']} Paare; ab etwa 30 wird die Zahl stabil."
+    )
 
 if not aggregated.empty:
     st.subheader("Rating Distribution")

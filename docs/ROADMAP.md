@@ -103,8 +103,9 @@ Umgesetzt: Score-Buttons 0–10 mit Zifferntasten (`+` = 10, `.` = ±½), Schnel
 Undo per Tombstone-Datei (`ratings_void.csv`, Rohdateien bleiben append-only), bisherige Bewertungen pro Bild,
 Judge-Scores nur auf Wunsch sichtbar (Anker-Vermeidung), Duell-Modus am oberen Ende (Pool = eigene Bilder ab
 Schwelle, optional Triage-Kandidaten; Paare mit wenigen Duellen und ähnlichem Score zuerst; Hotkeys A/L/T/N) mit
-Bradley-Terry-Rangfolge; `aggregate-labels` schreibt `bt_score` und `duels`. Offen: Test-Retest-Einstreuung (5 %
-Wiederholungen) und aktive Auswahl nach Modell-Unsicherheit.
+Bradley-Terry-Rangfolge; `aggregate-labels` schreibt `bt_score` und `duels`. Nachtrag 25.10.2026: aktive Auswahl
+(`predict-all` + Warteschlange nach Informationsgewinn: oberes Ende, Modell-/Judge-Uneinigkeit) und blinde
+Test-Retest-Einstreuung mit Zuverlässigkeitsanzeige auf Home sind ebenfalls umgesetzt.
 - Zifferntasten 0–9 (+ `.` für ,5) setzen den Score direkt; Enter speichert. Vorherige Bewertung
   des aktuellen Raters einblenden; Undo für die letzte Bewertung.
 - Bei Crops das Quellbild mit Rahmen zeigen (siehe P2.4).

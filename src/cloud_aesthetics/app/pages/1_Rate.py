@@ -116,11 +116,14 @@ def _move(delta: int, length: int) -> None:
     st.session_state.rate_index = _clamp_index(int(st.session_state.get("rate_index", 0)) + delta, length)
 
 
-def _go_to_next_unrated(image_ids: list[str], rated_ids: set[str]) -> None:
+def _go_to_next_unrated(image_ids: list[str], rated_ids: set[str], also_open: set[str] | None = None) -> None:
+    """Next image without a rating from this rater; ``also_open`` (blind retests) count as open once."""
     start = int(st.session_state.get("rate_index", 0))
+    done_this_session = {item["image_id"] for item in st.session_state.get("rate_history", [])}
     for offset in range(1, len(image_ids) + 1):
         candidate = (start + offset) % len(image_ids)
-        if image_ids[candidate] not in rated_ids:
+        image = image_ids[candidate]
+        if image not in rated_ids or (also_open and image in also_open and image not in done_this_session):
             st.session_state.rate_index = candidate
             return
     _move(1, len(image_ids))
@@ -245,10 +248,20 @@ with tab_scalar:
     col_progress, col_position = st.columns([3, 1])
     col_progress.progress(rated_count / len(image_ids), text=f"Labeled {rated_count} / {len(image_ids)} | Open {unrated_count}")
     col_position.metric("Current", f"{st.session_state.rate_index + 1} / {len(image_ids)}")
+    last_retest = st.session_state.get("rate_last_retest")
+    if last_retest:
+        delta = last_retest["now"] - last_retest["earlier"]
+        st.caption(f"Letzte Wiederholung {last_retest['image_id']}: früher {last_retest['earlier']:g}, jetzt {last_retest['now']:g} ({delta:+g}).")
+
+    retest_set = set()
+    if order_mode == "Judge-Vorschlag":
+        queue_table = load_triage()
+        if not queue_table.empty and "retest" in queue_table.columns:
+            retest_set = set(queue_table.loc[queue_table["retest"].astype(bool), "image_id"].astype(str))
 
     def _image_label(item: str) -> str:
         row_for_label = ordered_manifest.loc[ordered_manifest["image_id"].astype(str) == item].iloc[0]
-        prefix = "[rated]" if item in rated_ids else "[open]"
+        prefix = "[retest]" if item in retest_set else ("[rated]" if item in rated_ids else "[open]")
         return f"{prefix} {item} - {row_for_label['relative_path']}"
 
     selected_id = st.selectbox("Image", image_ids, index=st.session_state.rate_index, format_func=_image_label)
@@ -272,13 +285,25 @@ with tab_scalar:
         st.image(str(image_path), use_container_width=True)
         st.caption(f"{row.get('kind', 'original')} | {row['relative_path']}")
 
-    # Previous ratings for this image (own first), model raters only on request
+    # Queue context: why this image is next, and whether it is a blind retest
+    triage_row = None
+    triage_table = load_triage()
+    if not triage_table.empty:
+        hits = triage_table[triage_table["image_id"] == image_id]
+        triage_row = hits.iloc[0] if not hits.empty else None
+    is_retest = bool(triage_row is not None and bool(triage_row.get("retest", False)) and image_id not in {item["image_id"] for item in st.session_state.rate_history})
+    if triage_row is not None and str(triage_row.get("queue_reason", "")):
+        st.info(("Wiederholung: Bitte neu bewerten, deine frühere Note bleibt verborgen." if is_retest else "Warum jetzt: " + str(triage_row["queue_reason"])), icon="🎯")
+
+    # Previous ratings for this image (own first), model raters only on request; hidden for blind retests
     previous = ratings[ratings["image_id"].astype(str) == image_id].copy() if not ratings.empty else pd.DataFrame()
     if not previous.empty:
         previous["rater_id"] = previous["rater_id"].astype(str)
         previous["kind"] = previous["rater_id"].map(lambda value: kinds.get(value, "human"))
         if not show_judges:
             previous = previous[previous["kind"] == "human"]
+        if is_retest:
+            previous = previous[previous["rater_id"] != rater_id]
         if not previous.empty:
             previous = previous.sort_values(["rater_id", "rating_timestamp"])
             parts = []
@@ -300,9 +325,13 @@ with tab_scalar:
         history = list(st.session_state.rate_history)
         history.append({"rating_id": saved["rating_id"], "image_id": image_id, "score": score, "index": st.session_state.rate_index})
         st.session_state.rate_history = history[-50:]
+        if is_retest and not ratings.empty:
+            earlier = ratings[(ratings["image_id"].astype(str) == image_id) & (ratings["rater_id"].astype(str) == rater_id)]["raw_score_1_to_10"].astype(float)
+            if not earlier.empty:
+                st.session_state.rate_last_retest = {"image_id": image_id, "earlier": float(earlier.iloc[-1]), "now": score}
         rated_ids.add(image_id)
         st.session_state.rate_note = ""
-        _go_to_next_unrated(image_ids, rated_ids)
+        _go_to_next_unrated(image_ids, rated_ids, also_open=retest_set)
         st.rerun()
 
     score_col, buttons_col = st.columns([1, 6])
@@ -334,7 +363,7 @@ with tab_scalar:
         _move(1, len(image_ids))
         st.rerun()
     if col_unrated.button("Next unrated", use_container_width=True):
-        _go_to_next_unrated(image_ids, rated_ids)
+        _go_to_next_unrated(image_ids, rated_ids, also_open=retest_set)
         st.rerun()
     if col_skip.button("Skip / exclude", use_container_width=True):
         set_exclusion(image_id, excluded=True, reason=skip_reason, relative_path=str(row["relative_path"]))

@@ -39,3 +39,4 @@ data/processed/judge/*
 
 data/artifacts/contrast/*
 data/processed/context/*
+data/processed/predictions/*

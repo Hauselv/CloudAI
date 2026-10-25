@@ -385,6 +385,22 @@ oberen Ende; sobald genug Duelle vorliegen, sollten die Embedding-Modelle auch d
 - **BT-Ziel**: `embedding_clip_bt.yaml` regressiert `bt_score` statt `mean_score`; Zeilen ohne Duelle werden
   übersprungen, der Run startet erst ab 40 Bildern mit Duellen (`min_rows`). Derzeit gibt es noch keine Duelle.
 
+### Aktive Label-Warteschlange und Zuverlässigkeit (25.10.2026)
+
+- `predict-all` bewertet alle 939 Bilder mit einem trainierten Run (Standard: CLIP-Ridge/kNN/SVR); unter den
+  627 ungelabelten Bildern liegen 86 bei Modell ≥ 7,5, bei 106 sind sich die drei Modelle um ≥ 1,5 Punkte uneinig.
+- Die Warteschlange (`judge-triage`) kombiniert jetzt Judge-Mittel und Modellvorhersage zu einer Schätzung und
+  ordnet nach erwartetem Informationsgewinn: Originale zuerst, Schätzung nahe dem oberen Ende, Uneinigkeit
+  zwischen Judges, zwischen den Modellen und zwischen Modell und Judges. Jede Zeile erklärt sich (`queue_reason`,
+  in der Rate-Seite als „Warum jetzt“). Ergebnis: 29 ungelabelte Originale mit Schätzung ≥ 7,5, 45 Bilder mit
+  Modell-Judge-Abstand ≥ 2 – die Spitze der Liste sind Originale, bei denen das CLIP-Modell 8,5–9 sieht, die Judges
+  aber nur 6–7 geben.
+- **Blinde Wiederholungen**: 5 % (mindestens 5, höchstens 20) der eigenen Bewertungen werden nach ≥ 1 Tag erneut
+  in die Warteschlange gelegt, über die Skala gestreut; die frühere Note bleibt verborgen, nach dem Speichern
+  zeigt die Seite die Differenz. Home zeigt daraus mittlere Abweichung, Anteil innerhalb ±1, Drift und die
+  geschätzte Rausch-Obergrenze für Spearman. Stand: 8 Paare aus April, Ø |Differenz| 0,9, 75 % innerhalb ±1,
+  Drift +0,3, geschätzte Obergrenze ρ ≈ 0,92 – bei n=8 noch nicht belastbar (wird ab ~30 Paaren stabil).
+
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
 Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.
