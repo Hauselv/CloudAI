@@ -203,7 +203,10 @@ automatisch, sobald weitere menschliche Rater Labels liefern (S4).
 Drift über Zeit (wird man im Laufe einer Session strenger?), Reihenfolge-Effekte (Anker durch das
 vorherige Bild), Unterschiede zwischen Freunden, „Streitbilder“ mit höchster Uneinigkeit.
 
-### T6 · Berichte und Teilen
+### T6 · Berichte und Teilen — erledigt 27.10.2026
+`reports/year_report.py`, CLI `year-report`, Seite „Bericht“: eigenständiges HTML mit Erklärkarten, Konzeptmodell,
+10-gegen-8, Atlas, Sweeps, Modellen und Verlässlichkeit; PDF über den Browser-Druck. Offen: Jahresfilter wird erst
+nützlich, wenn mehr private Originale mit `capture_date` gelabelt sind.
 Export eines Batch-Reports als HTML/PDF („Wolken des Jahres“), inklusive Erklärkarten.
 
 ### T7 · GPU-Weg

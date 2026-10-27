@@ -46,6 +46,7 @@ This avoids PowerShell execution-policy issues because it does not require `Acti
 - `python -m cloud_aesthetics.cli judge-triage`
 - `python -m cloud_aesthetics.cli contrast [--band-a 9.5-10] [--band-b 7.5-8.5] [--crop-class original]`
 - `python -m cloud_aesthetics.cli extract-context [--no-weather] [--refresh]`
+- `python -m cloud_aesthetics.cli year-report [--top 12] [--year 2026] [--all-kinds]` (self-contained HTML report)
 - `python -m cloud_aesthetics.cli semantic-map [--model clip_vit_b32|dinov2_small] [--method umap|pca] [--regions 12]`
 - `python -m cloud_aesthetics.cli counterfactual-sweep [--band 7.5-8.5] [--crop-class original] [--limit 60]`
 - `python -m cloud_aesthetics.cli train --config configs/models/embedding_clip.yaml`
@@ -80,6 +81,7 @@ Pages:
 - `Rater Comparison`: human raters versus model raters (LLM judges), agreement per group and largest disagreements.
 - `Triage`: judge-based labeling queue, uncertain images and exclusion proposals to accept or ignore.
 - `Was wäre wenn`: counterfactual explorer. Edit a photo with sliders (contrast, saturation, exposure, warmth, zoom, blur), see the CLIP model's score react live, read sensitivity curves per operator and the single edit with the largest gain. `counterfactual-sweep --band 7.5-8.5` averages the same curves over a human score band and the page shows the result.
+- `Bericht`: shareable HTML report "Wolken des Jahres" with the best photos and explanation cards (cloud type vote, concept contributions, judge verdicts), the concept model in one sentence, the 10-vs-8 table, the atlas, counterfactual sweeps, models and reliability; print to PDF from the browser. CLI: `year-report`.
 - `Wolkenatlas`: cloud atlas. Cloud type per image as a vote of CLIP zero-shot and the LLM judges with a reliability tier, per type the counts, label coverage, mean score, best examples and a short meteorology text, plus a type-by-light grid of mean scores.
 - `Rater-Analytik`: how a rater rates. Sessions from timestamps, drift within and between sessions, anchoring by the previous image (on residuals against judges or the out-of-fold model, same-source pairs excluded), scale usage, disputed images and a rater agreement matrix.
 - `Karte`: semantic map. UMAP of the cached embeddings, coloured by your score, model prediction, judge mean, cloud type or labeled/unlabeled; optional thumbnails on the map, lasso selection with tiles and CSV export, and k-means regions ranked by label gap with candidate originals to label next. `semantic-map` also writes the label order `Kartenlücke` that the Rate page offers.

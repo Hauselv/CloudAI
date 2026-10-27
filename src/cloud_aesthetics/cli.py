@@ -1205,6 +1205,28 @@ def counterfactual_sweep(
     typer.echo(json.dumps(paths, indent=2))
 
 
+@app.command("year-report")
+def year_report(
+    rater: str = typer.Option(None, help="Rater whose scores the report uses (default from the app config)"),
+    top: int = typer.Option(12, help="Number of best photos with explanation cards"),
+    year: int = typer.Option(None, help="Restrict to photos captured in this year (needs capture_date)"),
+    all_kinds: bool = typer.Option(False, "--all-kinds", help="Include crops, not only full photos"),
+    title: str = typer.Option(None, help="Report title"),
+    output_dir: str = typer.Option("data/artifacts/reports", help="Where the HTML goes"),
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+) -> None:
+    """Render the shareable HTML report "Wolken des Jahres" with explanation cards."""
+    from cloud_aesthetics.reports.year_report import build_year_report_impl, save_report
+
+    dataset_cfg = _load_dataset_config(dataset_config)
+    app_cfg = load_yaml("configs/app/default.yaml")
+    data, html = build_year_report_impl({**dataset_cfg, "default_rater_id": app_cfg.get("default_rater_id", "friend_a")}, rater_id=rater, top_n=top, year=year, originals_only=not all_kinds, title=title)
+    path = save_report(html, output_dir=output_dir)
+    scope = data["scope"]
+    typer.echo(f"Report: {scope['n_images']} photos, {scope['n_labeled']} labeled, {len(data.get('cards', []))} cards, sections: {', '.join(k for k in ('concept_model', 'contrast', 'atlas', 'counterfactual', 'models', 'reliability') if k in data)}")
+    typer.echo(f"Wrote {path} ({path.stat().st_size // 1024} KB). Open it in a browser; print to PDF from there.")
+
+
 @app.command("semantic-map")
 def semantic_map(
     model: str = typer.Option("clip_vit_b32", help="Embedding model key from configs/embeddings/default.yaml"),

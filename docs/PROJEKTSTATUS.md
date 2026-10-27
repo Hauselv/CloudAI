@@ -91,6 +91,9 @@ Wichtige Designentscheidungen, die bereits gut gelöst sind:
 - `concept.py`: Konzept-Flaschenhals (Lasso auf benannten Konzepten, Bootstrap-Stabilität, Beiträge pro Bild,
   Vokabular-Vergleich); Ergebnis des Runs liegt als `concepts.parquet`, `contributions.parquet`, `vocabulary.parquet` im Run-Ordner.
 
+### `reports/year_report.py`
+- Datensammlung über alle Artefakte und Jinja2-Rendering des HTML-Berichts mit eingebetteten Bildern.
+
 ### `eval/cloud_atlas.py`
 - Wolkentyp-Votum (CLIP + Judges) mit Zuverlässigkeitsstufen, Atlas-Tabelle, Typ × Licht, Meteorologie-Texte.
 
@@ -559,6 +562,17 @@ Tag 7,8, Cumulonimbus am Tag 6,1. Das passt zur Konzept-Lesart „fein, geschich
 Strukturwolken (Cirrus, Altocumulus, Linsen) liegen über den massigen Haufen- und Gewitterwolken. Die Zahlen sind
 klein und das Typ-Votum ist unscharf (nur 255 von 939 Bildern „sicher“); der Atlas ist Hypothesengenerator und
 Lesehilfe, kein Beweis.
+
+### Bericht „Wolken des Jahres“ (27.10.2026, T6)
+
+`reports/year_report.py`, CLI `year-report`, Seite „Bericht“. Ein eigenständiges HTML (ca. 0,8 MB bei 12 Karten, Bilder
+als eingebettete JPEGs mit 720 px) aus allem, was das Projekt weiß: Kennzahlen und Notenverteilung, die besten Fotos mit
+Erklärkarten (Wolkentyp-Votum mit Zuverlässigkeit, CLIP-Lichtphase, auffällige CLIP-Konzepte in σ, Konzeptmodell-
+Beiträge, Judge-Urteile), das Konzeptmodell in einem Satz mit Koeffizientenbalken, die 10-gegen-8-Tabelle, der
+Wolkenatlas, die kontrafaktischen Band-Sweeps, die Modell-Rangliste und die Test-Retest-Verlässlichkeit. Fehlende Quellen
+lassen ihren Abschnitt aus. Filter: Rater, Anzahl Karten, Aufnahmejahr (über `capture_date`), nur Originale. PDF über
+den Druckdialog des Browsers (Druck-CSS ist enthalten). Ausgabe unter `data/artifacts/reports/` (git-ignoriert, enthält
+private Bilder).
 
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
