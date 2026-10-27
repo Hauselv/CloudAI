@@ -193,7 +193,10 @@ UMAP der Embeddings mit Thumbnails, eingefärbt nach Rating, Rater, Wolkentyp, T
 Galerie gruppiert nach (zuverlässigem) Wolkentyp mit mittlerem Rating, bestem Beispiel und Kurztext zur
 Meteorologie des Typs (Entstehung, Höhe, Wetterbedeutung). Verbindet Ästhetik und Wissenschaft sichtbar.
 
-### T5 · Rater-Analytik
+### T5 · Rater-Analytik — erledigt 27.10.2026
+`eval/rater_analytics.py`, Seite „Rater-Analytik“. Befund in `PROJEKTSTATUS.md`: keine Drift, aber ein Anker-Effekt von
+≈ 1 Punkt (nach 9+ milder als nach ≤ 4, r ≈ 0,28). Freundes-Vergleich und Mensch-vs-Mensch-Streitbilder erscheinen
+automatisch, sobald weitere menschliche Rater Labels liefern (S4).
 Drift über Zeit (wird man im Laufe einer Session strenger?), Reihenfolge-Effekte (Anker durch das
 vorherige Bild), Unterschiede zwischen Freunden, „Streitbilder“ mit höchster Uneinigkeit.
 

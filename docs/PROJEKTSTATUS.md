@@ -91,6 +91,9 @@ Wichtige Designentscheidungen, die bereits gut gelöst sind:
 - `concept.py`: Konzept-Flaschenhals (Lasso auf benannten Konzepten, Bootstrap-Stabilität, Beiträge pro Bild,
   Vokabular-Vergleich); Ergebnis des Runs liegt als `concepts.parquet`, `contributions.parquet`, `vocabulary.parquet` im Run-Ordner.
 
+### `eval/rater_analytics.py`
+- Sitzungen, Residuen gegen Referenz, Drift, Anker-Effekt, Skalennutzung, Streitbilder, Rater-Matrix.
+
 ### `eval/semantic_map.py`
 - UMAP/PCA-Projektion der Embeddings, Kartentabelle mit allen Signalen, k-Means-Regionen mit Lücken-Score,
   Thumbnail-Data-URIs für die Karte.
@@ -516,6 +519,25 @@ Nachtrag: `semantic-map` schreibt zusätzlich `data/processed/embeddings/map_que
 „Kartenlücke“ (ungelabelte Originale, Regionen nach Lückenwert, je vier Bilder pro Region im Rundlauf, innerhalb der
 Region die vielversprechendsten zuerst). Die Rate-Seite bietet sie als Label order an und zeigt pro Bild „Warum jetzt:
 Kartenlücke R1 …“. Nach neuen Labels `semantic-map` erneut ausführen, damit die Reihenfolge den Labelstand kennt.
+
+### Rater-Analytik (27.10.2026, T5)
+
+`eval/rater_analytics.py`, Seite „Rater-Analytik“. Sitzungen aus Zeitstempeln (Pause > 30 min), Verhaltensfragen auf
+Residuen (eigene Note minus pro Bild kalibrierte Referenz: Judge-Mittel oder Out-of-fold-Modell), Drift innerhalb und
+zwischen Sitzungen, Anker-Effekt des Vorgängerbilds (Paare gleicher Split-Gruppe oder Aufnahmesitzung ausschließbar),
+Skalennutzung, Streitbilder (Mensch vs. Judges, später Mensch vs. Mensch), Rater-Übereinstimmungsmatrix.
+
+Befund für `friend_a` (321 Bewertungen, zwei Sitzungen am 26.4.2026 mit 35 und 60 Minuten, Median 8 s je Bild):
+- **Keine Drift**: Spearman(Position, Residuum) = −0,02; Residuenänderung je 50 Bilder ≈ 0; die beiden Sitzungen
+  unterscheiden sich im mittleren Residuum um 0,4. Die ersten 20 Bilder einer Sitzung liegen 0,6–0,7 Punkte über dem
+  Rest (Aufwärm-Effekt oder Zufall bei n = 40).
+- **Deutlicher Anker-Effekt (Assimilation)**: Residuum vs. Vorgänger-Residuum r = +0,28 (Judge-Referenz) bzw. +0,27
+  (Modell-Referenz), p < 0,001, 275 Paare nach Ausschluss von 43 Paaren gleicher Split-Gruppe. Nach einem Bild mit
+  9+ fällt das nächste im Mittel **≈ 1 Punkt** milder aus als nach einem Bild mit ≤ 4 (+1,06 bzw. +0,92). Ein Teil
+  kann inhaltliche Ähnlichkeit aufeinanderfolgender Bilder sein (gleicher Abend), aber die Modellreferenz kennt
+  Michels Geschmack und reduziert den Effekt kaum. Konsequenz: Label-Reihenfolge „Random“/„Diverse groups“, Duelle für
+  feine Unterschiede, und bei der Rauschschätzung ±0,5 Punkte Anker-Anteil einrechnen.
+- **Skala**: 41 % bzw. 55 % halbe Noten in den beiden Sitzungen, Modus 8,5 (39×), 10 nur 9×, volle Spanne 0–10 genutzt.
 
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
