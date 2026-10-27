@@ -161,6 +161,10 @@ bessere Himmelssegmentierung (SegFormer/CLIPSeg).
 
 ## T – Tertiär: Kür und kreative Erweiterungen
 
+### T0 · Modelltreue Heatmaps — erledigt 27.10.2026
+Occlusion- und Token-Grad-CAM-Karten für CLIP-Embedding-Runs (`explain/clip_saliency.py`); das ResNet-Grad-CAM des
+Deep-Runs ist als Diagnostik eingestuft (zeigt ImageNet-Objekte, nicht Himmelsstruktur).
+
 ### T1 · Kontrafaktischer Explorer („Was macht aus der 8 eine 10?“)
 Bild kontrolliert verändern (Kontrast ±, Sättigung ±, Wärme ±, Beschnitt, Himmelanteil) und die
 Modellvorhersage live beobachten. Zeigt Sensitivitäten pro Bild und ist die direkteste Antwort auf

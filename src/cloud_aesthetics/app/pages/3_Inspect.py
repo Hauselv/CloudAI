@@ -17,7 +17,7 @@ from cloud_aesthetics.app.ui import render_image_grid
 from cloud_aesthetics.data.derivatives import crop_context, render_crop_context
 from cloud_aesthetics.features.context import load_context
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
-from cloud_aesthetics.explain.heatmaps import feature_diagnostic_map, heatmap_to_rgb, overlay_heatmap_on_image
+from cloud_aesthetics.explain.heatmaps import feature_diagnostic_map, heatmap_to_rgb, overlay_heatmap_on_image, overlay_signed_heatmap, signed_heatmap_to_rgb
 from cloud_aesthetics.explain.interpretation import generate_local_llm_interpretation
 from cloud_aesthetics.preprocessing.image_ops import read_rgb_image
 from cloud_aesthetics.settings import resolve_path
@@ -41,6 +41,12 @@ def _image_kind(relative_path: object) -> str:
 
 
 def _heatmap_label(source: str) -> str:
+    if source.startswith("occlusion:"):
+        return "Occlusion (CLIP) - rot stützt den Score, blau senkt ihn"
+    if source.startswith("occlusion_support:"):
+        return "Occlusion support (CLIP) - Regionen, deren Verdecken den Score senkt"
+    if source.startswith("gradcam:") and source.endswith(".last_block"):
+        return "Grad-CAM auf CLIP-Patch-Tokens (7x7, nur lineares Modell)"
     labels = {
         "input_gradient": "Input gradient - edge-sensitive",
         "edge_fallback": "Edge fallback - diagnostic only",
@@ -319,18 +325,26 @@ with tab_heatmap:
     heatmap_choice = None
     if heatmap_variants:
         choices = list(heatmap_variants.keys())
-        default_index = choices.index("gradcam:backbone.layer4") if "gradcam:backbone.layer4" in choices else 0
+        preferred = [choice for choice in choices if choice.startswith("occlusion:")] + [choice for choice in choices if choice == "gradcam:backbone.layer4"]
+        default_index = choices.index(preferred[0]) if preferred else 0
         heatmap_choice = st.selectbox("Heatmap source", choices, index=default_index, format_func=_heatmap_label)
     heatmap_path = heatmap_variants.get(heatmap_choice) if heatmap_choice else explanation.get("heatmap_path")
+    saliency_info = explanation.get("saliency") or {}
+    if saliency_info:
+        st.caption(
+            f"Occlusion-Raster {saliency_info.get('grid')}×{saliency_info.get('grid')} auf dem Mittelquadrat (so sieht CLIP das Bild). "
+            f"Größter Score-Verlust beim Verdecken: {float(saliency_info.get('max_support', 0.0)):.2f} Punkte, größter Gewinn: {float(saliency_info.get('max_detraction', 0.0)):.2f}."
+        )
     if heatmap_path and Path(heatmap_path).exists():
         heatmap = np.load(heatmap_path)
         if heatmap.shape[:2] != image.shape[:2]:
             heatmap = cv2.resize(heatmap, (image.shape[1], image.shape[0]))
-        overlay = overlay_heatmap_on_image(image, heatmap, alpha=overlay_alpha)
+        signed_map = str(heatmap_choice or "").startswith("occlusion:")
+        overlay = overlay_signed_heatmap(image, heatmap, alpha=overlay_alpha + 0.3) if signed_map else overlay_heatmap_on_image(image, heatmap, alpha=overlay_alpha)
         col_original, col_overlay = st.columns(2)
         col_original.image(str(resolve_path(image_row["relative_path"])), caption="Original", use_container_width=True)
         if show_heatmap_only:
-            col_overlay.image(heatmap_to_rgb(heatmap), caption="Heatmap only", use_container_width=True)
+            col_overlay.image(signed_heatmap_to_rgb(heatmap) if signed_map else heatmap_to_rgb(heatmap), caption="Heatmap only", use_container_width=True)
         else:
             col_overlay.image(overlay, caption=f"{_heatmap_label(str(heatmap_choice or explanation.get('heatmap_source', '')))}", use_container_width=True)
     elif explanation.get("overlay_path") and Path(explanation["overlay_path"]).exists():

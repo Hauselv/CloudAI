@@ -471,6 +471,69 @@ def analyze_batch_impl(
     }
 
 
+_SALIENCY_BACKENDS: dict[str, object] = {}
+
+
+def _clip_saliency_maps(summary: dict[str, object], model, input_columns: list[str], image: np.ndarray) -> dict[str, object] | None:
+    """Occlusion support map (and token Grad-CAM for linear models) when a run uses exactly one CLIP embedding."""
+    model_keys = [str(key) for key in summary.get("embedding_models", [])]
+    if len(model_keys) != 1 or summary.get("include_features") or summary.get("include_zero_shot"):
+        return None
+    key = model_keys[0]
+    prefix = f"emb_{key}_"
+    if not input_columns or not all(str(column).startswith(prefix) for column in input_columns):
+        return None
+    try:
+        from cloud_aesthetics.embeddings.store import model_specs
+        from cloud_aesthetics.embeddings.backends import create_backend
+        from cloud_aesthetics.explain.clip_saliency import linear_direction, normalize_signed, occlusion_support_map, token_gradcam_map
+    except ImportError:
+        return None
+    specs = model_specs()
+    if key not in specs or specs[key].backend != "open_clip":
+        return None
+    backend = _SALIENCY_BACKENDS.get(key)
+    if backend is None:
+        backend = create_backend(specs[key])
+        _SALIENCY_BACKENDS[key] = backend
+
+    def predict(embeddings: np.ndarray) -> np.ndarray:
+        return np.asarray(model.predict(pd.DataFrame(embeddings, columns=input_columns)), dtype=float)
+
+    grid = 8
+    try:
+        support, score_full = occlusion_support_map(backend, predict, image, grid=grid)
+    except Exception:  # noqa: BLE001 - saliency is optional
+        return None
+    # Hiding any region with a flat fill tends to lower the score a little everywhere; the
+    # informative signal is which regions matter more or less than the typical cell, so the
+    # displayed map is centred on the median cell effect inside the crop.
+    from cloud_aesthetics.explain.clip_saliency import center_crop_box
+
+    box = center_crop_box(image.shape[0], image.shape[1])
+    inside = support[box.y0 : box.y0 + box.side, box.x0 : box.x0 + box.side]
+    typical = float(np.median(inside)) if inside.size else 0.0
+    centered = support.copy()
+    centered[box.y0 : box.y0 + box.side, box.x0 : box.x0 + box.side] -= typical
+    result: dict[str, object] = {
+        "model_key": key,
+        "support": centered,
+        "support_signed": normalize_signed(centered),
+        "score_full": score_full,
+        "typical_effect": typical,
+        "grid": grid,
+        "gradcam": None,
+    }
+    direction = linear_direction(model, input_columns)
+    if direction is not None:
+        try:
+            cam, _ = token_gradcam_map(backend, direction, image)
+            result["gradcam"] = cam
+        except Exception:  # noqa: BLE001
+            result["gradcam"] = None
+    return result
+
+
 def _zero_shot_context(image_id: str, output_dir: str | Path = "data/processed/embeddings", top_k: int = 6) -> dict[str, object]:
     """Compact CLIP zero-shot summary for one image, or an empty dict when not computed yet."""
     from cloud_aesthetics.embeddings.zero_shot_store import zero_shot_row
@@ -528,6 +591,7 @@ def explain_impl(
     feature_contributions = pd.DataFrame(columns=["feature", "delta_prediction", "value"])
     heatmap_variants: dict[str, str] = {}
     embedding_neighbors = pd.DataFrame()
+    saliency_summary: dict[str, object] = {}
     if summary["kind"] == "baseline":
         model_name, model_info = _select_best_baseline_model(summary)
         model = load_pickled_model(model_info["model_path"])
@@ -639,6 +703,30 @@ def explain_impl(
             feature_row = features.loc[features["image_id"].astype(str) == str(image_id)].iloc[0]
         heatmap = fallback_heatmap_from_edges(image_row["relative_path"])
         heatmap_source = "edge_fallback"
+        saliency = _clip_saliency_maps(summary, model, input_row.columns.tolist(), image)
+        if saliency:
+            support = saliency["support"]
+            heatmap = np.clip(support, 0.0, None)
+            heatmap = heatmap / heatmap.max() if heatmap.max() > 0 else heatmap
+            heatmap_source = f"occlusion_support:{saliency['model_key']}"
+            explanations_dir = run_dir / "explanations"
+            explanations_dir.mkdir(parents=True, exist_ok=True)
+            signed_path = explanations_dir / f"{image_id}_occlusion_{saliency['model_key']}.npy"
+            np.save(signed_path, saliency["support_signed"].astype(np.float32))
+            heatmap_variants[f"occlusion:{saliency['model_key']}"] = str(signed_path)
+            if saliency.get("gradcam") is not None:
+                cam_path = explanations_dir / f"{image_id}_gradcam_{saliency['model_key']}_last_block.npy"
+                np.save(cam_path, saliency["gradcam"].astype(np.float32))
+                heatmap_variants[f"gradcam:{saliency['model_key']}.last_block"] = str(cam_path)
+            saliency_summary = {
+                "method": "occlusion",
+                "grid": saliency["grid"],
+                "score_full": saliency["score_full"],
+                "max_support": float(np.max(support)),
+                "max_detraction": float(-np.min(support)),
+                "typical_effect": float(saliency.get("typical_effect", 0.0)),
+                "note": "Support = Score-Verlust beim Verdecken der Region relativ zur typischen Zelle (Mittelquadrat des Bildes, wie CLIP es sieht).",
+            }
     else:
         heatmap = fallback_heatmap_from_edges(image_row["relative_path"])
         heatmap_source = "edge_fallback"
@@ -716,6 +804,7 @@ def explain_impl(
         "nearest_neighbors": nearest_neighbors(features, image_id).to_dict("records") if not features.empty else [],
         "embedding_neighbors": embedding_neighbors.to_dict("records") if not embedding_neighbors.empty else [],
         "zero_shot": zero_shot_context,
+        "saliency": saliency_summary,
         "ground_truth": ground_truth,
         "scientific_caveat": (
             "Heatmaps and feature attributions reflect model-associated evidence, not literal causal proof of aesthetic preference."

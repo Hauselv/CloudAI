@@ -21,6 +21,25 @@ def overlay_heatmap_on_image(image: np.ndarray, heatmap: np.ndarray, alpha: floa
     return np.uint8((1 - alpha) * image + alpha * colored)
 
 
+def overlay_signed_heatmap(image: np.ndarray, signed: np.ndarray, alpha: float = 0.5) -> np.ndarray:
+    """Diverging overlay: red where the map is positive (supports the score), blue where negative.
+
+    Opacity follows the magnitude, so neutral regions stay as they are.
+    """
+    values = np.clip(np.asarray(signed, dtype=np.float32), -1.0, 1.0)
+    magnitude = np.abs(values)[..., None]
+    red = np.array([230, 60, 40], dtype=np.float32)
+    blue = np.array([50, 110, 230], dtype=np.float32)
+    color = np.where(values[..., None] >= 0, red, blue)
+    weight = alpha * magnitude
+    return np.uint8(np.clip((1 - weight) * image.astype(np.float32) + weight * color, 0, 255))
+
+
+def signed_heatmap_to_rgb(signed: np.ndarray) -> np.ndarray:
+    base = np.full((*np.asarray(signed).shape, 3), 245, dtype=np.uint8)
+    return overlay_signed_heatmap(base, signed, alpha=1.0)
+
+
 def heatmap_to_rgb(heatmap: np.ndarray) -> np.ndarray:
     heatmap_u8 = np.uint8(255 * np.clip(heatmap, 0.0, 1.0))
     colored = cv2.applyColorMap(heatmap_u8, cv2.COLORMAP_JET)

@@ -401,6 +401,26 @@ oberen Ende; sobald genug Duelle vorliegen, sollten die Embedding-Modelle auch d
   geschätzte Rausch-Obergrenze für Spearman. Stand: 8 Paare aus April, Ø |Differenz| 0,9, 75 % innerhalb ±1,
   Drift +0,3, geschätzte Obergrenze ρ ≈ 0,92 – bei n=8 noch nicht belastbar (wird ab ~30 Paaren stabil).
 
+### Heatmaps: Grad-CAM-Bewertung und CLIP-Saliency (27.10.2026)
+
+**Bewertung des bestehenden Grad-CAM** (Deep-Run ResNet18, eingefrorenes Backbone, April): technisch korrekt,
+inhaltlich kaum brauchbar. Layer 4 hebt ImageNet-Objekte hervor (bei einer 10 den Baum, bei einer 3 die dunkle
+Baummasse), Layer 3 zeigt verstreute Blobs, der Input-Gradient ist Rauschen; nur 30–37 % der Kartenmasse liegen
+in den obersten 20 % der Pixel. Dazu ist das Modell selbst schwach (eine 3,0 wird als 6,4 vorhergesagt). Für die
+Frage „woher kommt der Score“ taugt es nicht.
+
+**Neu: Saliency für das beste Modell** (`explain/clip_saliency.py`, in `explain` und Inspect integriert):
+- *Occlusion*: 8×8-Raster über dem Mittelquadrat, das CLIP sieht; jede Zelle wird verdeckt, neu eingebettet und
+  neu bewertet. Angezeigt wird der Score-Verlust relativ zur typischen Zelle als divergierende Karte (rot stützt,
+  blau senkt). Modellagnostisch und treu zum tatsächlichen Regressor; etwa 2 s pro Bild.
+- *Token-Grad-CAM*: Gradient des Ridge-Scores nach den Patch-Tokens des vorletzten Transformer-Blocks
+  (der letzte Block hat an den Patch-Tokens keinen Gradienten, weil CLIP nur das CLS-Token poolt).
+- Befund auf vier Originalen: Bei der 10 liegt die Stützung auf dem leuchtenden Wolkenband, bei der 9 auf der
+  Sonne am Horizont, bei der 8,5 auf den warm beleuchteten Wolkenschichten. Bei der 3,0 stützt überraschend die
+  dunkle Baummasse den (zu hohen) Score; das ist ein echter Hinweis auf ein Modellproblem, nicht ein Artefakt.
+  Verdecken irgendeiner Zelle senkt den Score fast immer etwas (typischer Effekt 0,5–0,9 Punkte), darum die
+  Zentrierung.
+
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
 Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.

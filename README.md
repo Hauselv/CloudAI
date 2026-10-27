@@ -189,9 +189,18 @@ D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli extract-context
 - Crops inherit the context of their source original. The table lives in `data/processed/context/capture_context.parquet` and feeds the `10 vs 8` page (families "Sonnenstand / Zeit", "Wetter") and the Inspect page.
 - Color palette features (k-means in CIELAB: warm/blue/neutral share, hue concentration, palette contrast, chroma, lightness, colorfulness) are part of `features_v1` since this version; run `extract-features` to refresh older tables.
 
-## Grad-CAM Analysis
+## Heatmaps: Where Does The Score Come From?
 
-True Grad-CAM requires a Deep-CNN run:
+For embedding runs on a single CLIP model (`embedding_clip.yaml`, `embedding_clip_originals.yaml`) every explanation now carries two model-faithful maps, computed on the fly (about 2 s per image on CPU):
+
+- `occlusion:clip_vit_b32`: an 8x8 grid of the center square CLIP sees is masked cell by cell, the image is re-embedded and re-scored. The signed map shows the score loss relative to the typical cell: red regions support the rating, blue regions pull it down. The `Inspect` page renders it as a diverging overlay and reports the largest support and detraction in score points.
+- `gradcam:clip_vit_b32.last_block`: Grad-CAM over the ViT patch tokens (7x7) for linear heads (Ridge), hooked one block before the end because CLIP pools only the CLS token after the last block.
+
+The ResNet Grad-CAM of the frozen deep run is still available but shows ImageNet-style object attention (trees, dark masses) rather than sky structure; treat it as a diagnostic, not as evidence.
+
+## Grad-CAM Analysis (Deep-CNN runs)
+
+True ResNet Grad-CAM requires a Deep-CNN run:
 
 ```powershell
 D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli train --config D:\CloudAI\cloud-aesthetics\configs\models\deep_cnn_gradcam.yaml
