@@ -1205,6 +1205,34 @@ def counterfactual_sweep(
     typer.echo(json.dumps(paths, indent=2))
 
 
+@app.command("semantic-map")
+def semantic_map(
+    model: str = typer.Option("clip_vit_b32", help="Embedding model key from configs/embeddings/default.yaml"),
+    method: str = typer.Option("umap", help="umap | pca"),
+    n_neighbors: int = typer.Option(15, help="UMAP neighbourhood size"),
+    min_dist: float = typer.Option(0.1, help="UMAP min_dist"),
+    regions: int = typer.Option(12, help="Number of k-means regions for the gap table"),
+    force: bool = typer.Option(False, help="Recompute even if a projection is cached"),
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+) -> None:
+    """Project the cached embeddings to 2-D and list the visual regions with the fewest labels."""
+    from cloud_aesthetics.embeddings.zero_shot_store import load_zero_shot
+    from cloud_aesthetics.eval.semantic_map import ProjectionParams, build_map_table, build_projection, load_judge_tables, map_regions, map_summary
+
+    params = ProjectionParams(model_key=model, method=method, n_neighbors=n_neighbors, min_dist=min_dist)
+    projection = build_projection(params, force=force)
+    dataset_cfg = _load_dataset_config(dataset_config)
+    manifest = _filter_active_manifest(ensure_kind_columns(read_table(dataset_cfg["manifest_path"])))
+    labels = read_table(dataset_cfg["aggregated_labels_path"])
+    predictions = read_table("data/processed/predictions/latest.parquet")
+    table = build_map_table(projection, manifest, labels=labels, zero_shot=load_zero_shot(), judge_tables=load_judge_tables(), predictions=predictions)
+    table, region_table = map_regions(table, n_regions=regions)
+    summary = map_summary(table, region_table)
+    typer.echo(f"Projection {params.stem}: {summary['n_images']} images, {summary['n_labeled']} labeled, {summary['regions_without_labels']} of {summary['n_regions']} regions without any label.")
+    columns = ["region", "n", "n_labeled", "n_originals", "mean_score", "n_top", "judge_mean", "model_mean", "top_cloud_type", "top_light", "gap_score"]
+    typer.echo(region_table[columns].round(2).to_string(index=False))
+
+
 @app.command("contrast")
 def contrast(
     band_a: str = typer.Option("9.5-10", help="Score band A as low-high, e.g. 9.5-10"),

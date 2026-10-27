@@ -91,6 +91,10 @@ Wichtige Designentscheidungen, die bereits gut gelöst sind:
 - `concept.py`: Konzept-Flaschenhals (Lasso auf benannten Konzepten, Bootstrap-Stabilität, Beiträge pro Bild,
   Vokabular-Vergleich); Ergebnis des Runs liegt als `concepts.parquet`, `contributions.parquet`, `vocabulary.parquet` im Run-Ordner.
 
+### `eval/semantic_map.py`
+- UMAP/PCA-Projektion der Embeddings, Kartentabelle mit allen Signalen, k-Means-Regionen mit Lücken-Score,
+  Thumbnail-Data-URIs für die Karte.
+
 ### `explain/`
 - `feature_importance.py`: Permutation Importance; lokale Beiträge per „Median-Baseline, ein Feature
   austauschen“ (Ein-Feature-Sensitivität, keine SHAP-Werte, obwohl shap installiert ist).
@@ -489,6 +493,24 @@ Sättigung bei den 10ern zeigt; vermutlich fängt der Prompt eher flaue, kontras
 Das passt zu „klar, strukturiert, hell“ als Arbeitshypothese und widerspricht erneut dem Gesamtmodell, das
 Sättigung belohnt. Ein Modell mit 0,41 Rangkorrelation ist aber kein Beweis; die Residuen-Galerie (unterschätzte
 Originale) ist die Liste der Bilder, für die noch ein Wort fehlt – dort lohnen neue CLIP-Prompts.
+
+### Semantische Karte (27.10.2026, T3)
+
+`eval/semantic_map.py`, CLI `semantic-map`, Seite „Karte“. UMAP (Cosinus, Fallback PCA) der gecachten Embeddings
+(CLIP ViT-B/32 und DINOv2-S, Projektionen gecacht unter `data/processed/embeddings/projection_*.parquet`), pro Punkt
+alle bekannten Signale (eigener Score, Modell-Vorhersage, Judge-Mittel, CLIP-Typ/-Licht, Bildart, gelabelt ja/nein).
+Einfärbung frei wählbar, optional Vorschaubilder direkt auf der Karte (Layout-Images, bis 300 Stück), Lasso-/Box-Auswahl
+→ Bildkacheln und CSV-Export. **Regionen**: k-Means-Zellen auf der Karte mit Label-Abdeckung, Ø Score, Anzahl ≥ 9,
+Ø Judge/Modell, häufigstem CLIP-Typ, typischen Bildern und ungelabelten Originalen als Label-Kandidaten;
+`gap_score = (ungelabelt) × (0,5 + Schätzung/10)` sortiert die Lücken nach Nutzen.
+
+Befund auf CLIP (12 Regionen, 939 Bilder, 312 Labels): Keine Region ist völlig ohne Label, aber die Labels sind sehr
+ungleich verteilt. **Region 5 ist das Zehner-Nest**: 69 Bilder, 54 davon Originale, 51 gelabelt, Ø 8,1, 22 der Bilder
+≥ 9 (CLIP-Typ Cumulonimbus, Tageslicht). Die größte Lücke ist **Region 1** (114 Bilder, nur 30 gelabelt, 42 Originale,
+Ø 7,6 und 8 Bilder ≥ 9 unter den gelabelten): dort liegen vermutlich weitere hohe Noten, also der beste Ort für die
+nächsten Labels. Regionen 0, 7 und 8 (Altostratus/Nimbostratus, Ø 2–4,5) sind die „graue Suppe“ und fast nur Crops;
+dort sind weitere Labels wenig informativ. Die 10er verteilen sich über 10 von 12 Regionen, es gibt also nicht *den*
+einen Bildtyp für eine 10, aber eine klare Verdichtung.
 
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 

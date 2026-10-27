@@ -46,6 +46,7 @@ This avoids PowerShell execution-policy issues because it does not require `Acti
 - `python -m cloud_aesthetics.cli judge-triage`
 - `python -m cloud_aesthetics.cli contrast [--band-a 9.5-10] [--band-b 7.5-8.5] [--crop-class original]`
 - `python -m cloud_aesthetics.cli extract-context [--no-weather] [--refresh]`
+- `python -m cloud_aesthetics.cli semantic-map [--model clip_vit_b32|dinov2_small] [--method umap|pca] [--regions 12]`
 - `python -m cloud_aesthetics.cli counterfactual-sweep [--band 7.5-8.5] [--crop-class original] [--limit 60]`
 - `python -m cloud_aesthetics.cli train --config configs/models/embedding_clip.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/concept_bottleneck_originals.yaml` (readable concept model)
@@ -79,6 +80,7 @@ Pages:
 - `Rater Comparison`: human raters versus model raters (LLM judges), agreement per group and largest disagreements.
 - `Triage`: judge-based labeling queue, uncertain images and exclusion proposals to accept or ignore.
 - `Was wäre wenn`: counterfactual explorer. Edit a photo with sliders (contrast, saturation, exposure, warmth, zoom, blur), see the CLIP model's score react live, read sensitivity curves per operator and the single edit with the largest gain. `counterfactual-sweep --band 7.5-8.5` averages the same curves over a human score band and the page shows the result.
+- `Karte`: semantic map. UMAP of the cached embeddings, coloured by your score, model prediction, judge mean, cloud type or labeled/unlabeled; optional thumbnails on the map, lasso selection with tiles and CSV export, and k-means regions ranked by label gap with candidate originals to label next.
 - `Konzeptmodell`: concept bottleneck model. A Lasso on named concepts (CLIP concepts, light, judge flags, palette, scene fraction) with bootstrap stability, a vocabulary comparison (which family of words explains the rating out-of-fold), per-image waterfall of contributions and a residual gallery of images the concepts cannot explain.
 - `10 vs 8`: compare two human score bands across hand-crafted features, CLIP zero-shot attributes and judge attributes (effect sizes, FDR-corrected q-values, top-end trends, example tiles). CLI equivalent: `contrast --band-a 9.5-10 --band-b 7.5-8.5 --crop-class original`.
 
