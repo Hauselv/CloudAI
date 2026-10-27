@@ -1156,6 +1156,49 @@ def extract_context(
     )
 
 
+@app.command("counterfactual-sweep")
+def counterfactual_sweep(
+    run: str | None = typer.Option(None, help="Embedding run on one CLIP model (default: newest embed_clip run)"),
+    band: str = typer.Option("7.5-8.5", help="Human score band low-high"),
+    crop_class: str = typer.Option("original", help="original | large_crop | small_crop | all"),
+    limit: int = typer.Option(60, help="Maximum images"),
+    points: int = typer.Option(5, help="Values per operator"),
+    dataset_config: str = typer.Option("configs/dataset/default.yaml"),
+    output_dir: str = typer.Option("data/artifacts/counterfactual"),
+) -> None:
+    """Average the model's sensitivity to image edits over all images of a human score band."""
+    from cloud_aesthetics.explain.counterfactual import band_sweep, load_scorer, save_band_sweep
+
+    dataset_cfg = _load_dataset_config(dataset_config)
+    manifest = _filter_active_manifest(read_table(dataset_cfg["manifest_path"]))
+    labels = read_table(dataset_cfg["aggregated_labels_path"])
+    _require_non_empty(labels, "aggregated labels", "Run `aggregate-labels` first.")
+    low, high = (float(value) for value in band.split("-"))
+    labels = labels.copy()
+    labels["image_id"] = labels["image_id"].astype(str)
+    table = manifest.assign(image_id=manifest["image_id"].astype(str)).merge(labels[["image_id", "mean_score"]], on="image_id", how="inner")
+    table = table[(table["mean_score"] >= low) & (table["mean_score"] <= high)]
+    if crop_class != "all" and "crop_class" in table.columns:
+        table = table[table["crop_class"].astype(str) == crop_class]
+    table = table.head(limit)
+    _require_non_empty(table, "band images", "No labeled images in that band / crop class.")
+    if run is None:
+        candidates = sorted(path.name for path in PATHS.artifacts_root.iterdir() if path.is_dir() and path.name.startswith("embed_clip_v1_"))
+        if not candidates:
+            raise typer.BadParameter("No embed_clip run found; train configs/models/embedding_clip.yaml first.")
+        run = candidates[-1]
+    scorer, _, model_name = load_scorer(run)
+    images = [(str(row["image_id"]), read_rgb_image(row["relative_path"])) for _, row in table.iterrows()]
+    typer.echo(f"Sweeping {len(images)} images ({crop_class}, band {band}) with {run}/{model_name} ...")
+    result = band_sweep(scorer, images, points=points)
+    stem = f"{crop_class}_{band}".replace(".", "p")
+    paths = save_band_sweep(result, output_dir, stem)
+    best = pd.DataFrame(result.notes["best_per_edit"]).sort_values("mean_best_delta", ascending=False)
+    typer.echo("Mean best gain per edit (what the model would change):")
+    typer.echo(best.round(3).to_string(index=False))
+    typer.echo(json.dumps(paths, indent=2))
+
+
 @app.command("contrast")
 def contrast(
     band_a: str = typer.Option("9.5-10", help="Score band A as low-high, e.g. 9.5-10"),

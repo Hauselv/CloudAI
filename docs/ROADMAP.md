@@ -165,7 +165,10 @@ bessere Himmelssegmentierung (SegFormer/CLIPSeg).
 Occlusion- und Token-Grad-CAM-Karten für CLIP-Embedding-Runs (`explain/clip_saliency.py`); das ResNet-Grad-CAM des
 Deep-Runs ist als Diagnostik eingestuft (zeigt ImageNet-Objekte, nicht Himmelsstruktur).
 
-### T1 · Kontrafaktischer Explorer („Was macht aus der 8 eine 10?“)
+### T1 · Kontrafaktischer Explorer („Was macht aus der 8 eine 10?“) — erledigt 27.10.2026
+`explain/counterfactual.py`, Seite „Was wäre wenn“, CLI `counterfactual-sweep`. Befund siehe `PROJEKTSTATUS.md`:
+Das CLIP-Modell würde Sättigung und Kontrast erhöhen, was der Beobachtung aus der 10-vs-8-Analyse widerspricht,
+dass Michels 10er *weniger* gesättigt sind als die 8er – ein konkreter Hinweis, wo Modell und Mensch auseinanderliegen.
 Bild kontrolliert verändern (Kontrast ±, Sättigung ±, Wärme ±, Beschnitt, Himmelanteil) und die
 Modellvorhersage live beobachten. Zeigt Sensitivitäten pro Bild und ist die direkteste Antwort auf
 die Leitfrage – vorausgesetzt, das Modell ist gut genug (nach P3).

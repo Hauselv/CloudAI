@@ -421,6 +421,36 @@ Frage „woher kommt der Score“ taugt es nicht.
   Verdecken irgendeiner Zelle senkt den Score fast immer etwas (typischer Effekt 0,5–0,9 Punkte), darum die
   Zentrierung.
 
+### Kontrafaktischer Explorer (27.10.2026, T1)
+
+`explain/counterfactual.py`, Seite „Was wäre wenn“, CLI `counterfactual-sweep`. Sechs Operatoren (Kontrast,
+Sättigung, Belichtung, Wärme, Zoom, Unschärfe) verändern ein Foto, CLIP bettet es neu ein, der Ridge-Regressor
+bewertet es. Pro Bild: Live-Score, Sensitivitätskurven, bester Einzel-Eingriff. Pro Score-Band: gemittelte Kurven.
+
+Gemittelt über die Originale (51 Achter 7,5–8,5 und 34 Zehner 9,5–10), Δ Modell-Score gegenüber dem Original:
+
+| Eingriff | 8er | 10er | Lesart |
+|---|---|---|---|
+| Unschärfe 3 px / 6 px | −1,8 / −2,7 | −2,2 / −3,4 | Schärfe ist das stärkste Modellsignal (wieder der Crop-Confound) |
+| Zoom 1,5× / 2× | −0,9 / −2,0 | −1,1 / −1,9 | Ausschnitt verkleinern kostet, Szenenkontext zählt |
+| Belichtung −1 / +1 EV | −1,0 / −1,4 | −1,1 / −2,0 | Original liegt nahe am Optimum, beide Richtungen schaden |
+| Wärme −1 / +1 | −0,6 / −0,5 | −0,8 / −0,7 | dito |
+| Kontrast 0,5× / 1,6× | −1,5 / +0,3 | −1,7 / +0,1 | weniger Kontrast schadet, mehr hilft minimal |
+| Sättigung 0× / 2× | −0,3 / +0,35 | −1,0 / +0,3 | Entsättigen schadet, bei 10ern dreimal so stark |
+
+Zwei Befunde, die zählen:
+1. **Das Modell würde Sättigung und Kontrast erhöhen** (bester Einzel-Eingriff bei den 8ern: Sättigung 1,44× für
+   +0,49, Kontrast 1,4× für +0,41). Die 10-vs-8-Analyse auf deinen Labels zeigt das Gegenteil: Deine 10er sind
+   *weniger* gesättigt als die 8er. Hier liegen Modell und Mensch messbar auseinander – das CLIP-Modell hat aus
+   dem Gesamtdatensatz (viele Crops, Web-Bilder) „bunt = gut“ gelernt, dein Geschmack am oberen Ende ist das nicht.
+2. **Unschärfe und Zoom dominieren** die Modellreaktion. Auch das ist der Crop-Confound in anderer Form: Das Modell
+   hat gelernt, dass detailarme, ausschnitthafte Bilder schlechte Noten bekommen.
+
+Konsequenz: Die Eingriffe, die das Modell empfiehlt, sind Aussagen über das Modell, nicht über Michels Geschmack.
+Sobald Labels am oberen Ende und Duelle vorliegen (und ein Modell auf `bt_score` oder nur Originalen trainiert
+ist), lohnt derselbe Sweep erneut; die Differenz der Kurven zwischen den Modellen zeigt dann, was die neuen Labels
+dem Modell beigebracht haben.
+
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
 Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.
