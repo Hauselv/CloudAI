@@ -35,6 +35,12 @@ vorhersagen und vor allem **erklären**, welche Bildeigenschaften das Rating tre
 - Das Uni-Gateway limitiert auf ca. 100 Anfragen pro Fenster; `GatewayJudge` wartet bis zum angegebenen Reset.
   Für ~300 Bilder mit zwei Modellen rund eine Stunde einplanen. Judge-Cache (`data/processed/judge/`) ist git-ignoriert.
 
+## Karte und Konzeptmodell
+- `semantic-map` cached UMAP-Projektionen unter `data/processed/embeddings/projection_*.parquet` und schreibt die
+  Label-Reihenfolge „Kartenlücke“ (`map_queue.parquet`); nach neuen Labels erneut ausführen.
+- Konzeptmodelle (`configs/models/concept_bottleneck*.yaml`) sind Lasso-Läufe mit `kind: concept`; Artefakte
+  `concepts.parquet`, `contributions.parquet`, `vocabulary.parquet` liegen im Run-Ordner.
+
 ## Bekannte Stolpersteine
 - `data/processed/aggregated_labels.parquet` kann leer sein, obwohl Rohlabels existieren → `aggregate-labels` ausführen.
 - Nach neuem Labeln immer: `aggregate-labels` → `extract-features` → `train`, sonst passen Splits und Runs nicht zusammen.

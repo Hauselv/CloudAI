@@ -8,7 +8,7 @@ import pytest
 
 pytest.importorskip("sklearn")
 
-from cloud_aesthetics.eval.semantic_map import ProjectionParams, build_map_table, build_projection, compute_projection, load_projection, map_regions, map_summary
+from cloud_aesthetics.eval.semantic_map import ProjectionParams, build_map_table, build_projection, compute_projection, gap_label_queue, load_map_queue, load_projection, map_regions, map_summary, save_map_queue
 
 
 def _embeddings(n_per: int = 20, seed: int = 0) -> pd.DataFrame:
@@ -62,3 +62,23 @@ def test_map_table_and_regions_find_label_gaps(tmp_path: Path):
     assert len(tens) == 1 and tens.iloc[0]["mean_score"] == 9.5
     summary = map_summary(table, regions)
     assert summary["regions_without_labels"] == 1 and summary["regions_with_tens"] == 1
+
+
+def test_gap_queue_round_robins_regions_and_skips_labeled(tmp_path: Path):
+    frame = _embeddings()
+    params = ProjectionParams(model_key="fake", method="pca")
+    projection = build_projection(params, output_dir=tmp_path, embeddings=frame)
+    ids = projection["image_id"].tolist()
+    manifest = pd.DataFrame({"image_id": ids, "relative_path": [f"{i}.jpg" for i in ids], "kind": ["crop" if i.endswith("_19") else "original" for i in ids], "crop_class": "original", "dataset_name": "toy"})
+    labels = pd.DataFrame({"image_id": [i for i in ids if i.startswith("b0")], "mean_score": 9.0})
+    predictions = pd.DataFrame({"image_id": ids, "pred_mean": [float(i.split("_")[1]) / 2 for i in ids]})
+    table = build_map_table(projection, manifest, labels=labels, predictions=predictions)
+    table, regions = map_regions(table, n_regions=3, seed=1)
+    queue = gap_label_queue(table, regions, per_region=2)
+    assert not queue["image_id"].str.startswith("b0").any() and not queue["image_id"].str.endswith("_19").any()
+    assert len(queue) == 38 and list(queue["map_rank"]) == list(range(38))
+    assert queue.head(4)["region"].nunique() == 2  # two per region, then the next region
+    assert queue.iloc[0]["image_id"].endswith("_18")  # highest estimate first within a region
+    assert "Kartenlücke R" in queue.iloc[0]["map_reason"]
+    path = save_map_queue(queue, tmp_path / "queue.parquet")
+    assert len(load_map_queue(path)) == 38

@@ -512,6 +512,11 @@ nächsten Labels. Regionen 0, 7 und 8 (Altostratus/Nimbostratus, Ø 2–4,5) sin
 dort sind weitere Labels wenig informativ. Die 10er verteilen sich über 10 von 12 Regionen, es gibt also nicht *den*
 einen Bildtyp für eine 10, aber eine klare Verdichtung.
 
+Nachtrag: `semantic-map` schreibt zusätzlich `data/processed/embeddings/map_queue.parquet`, eine Label-Reihenfolge
+„Kartenlücke“ (ungelabelte Originale, Regionen nach Lückenwert, je vier Bilder pro Region im Rundlauf, innerhalb der
+Region die vielversprechendsten zuerst). Die Rate-Seite bietet sie als Label order an und zeigt pro Bild „Warum jetzt:
+Kartenlücke R1 …“. Nach neuen Labels `semantic-map` erneut ausführen, damit die Reihenfolge den Labelstand kennt.
+
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
 Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.

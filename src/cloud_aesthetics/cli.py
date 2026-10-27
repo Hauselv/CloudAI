@@ -1217,7 +1217,7 @@ def semantic_map(
 ) -> None:
     """Project the cached embeddings to 2-D and list the visual regions with the fewest labels."""
     from cloud_aesthetics.embeddings.zero_shot_store import load_zero_shot
-    from cloud_aesthetics.eval.semantic_map import ProjectionParams, build_map_table, build_projection, load_judge_tables, map_regions, map_summary
+    from cloud_aesthetics.eval.semantic_map import ProjectionParams, build_map_table, build_projection, gap_label_queue, load_judge_tables, map_regions, map_summary, save_map_queue
 
     params = ProjectionParams(model_key=model, method=method, n_neighbors=n_neighbors, min_dist=min_dist)
     projection = build_projection(params, force=force)
@@ -1231,6 +1231,9 @@ def semantic_map(
     typer.echo(f"Projection {params.stem}: {summary['n_images']} images, {summary['n_labeled']} labeled, {summary['regions_without_labels']} of {summary['n_regions']} regions without any label.")
     columns = ["region", "n", "n_labeled", "n_originals", "mean_score", "n_top", "judge_mean", "model_mean", "top_cloud_type", "top_light", "gap_score"]
     typer.echo(region_table[columns].round(2).to_string(index=False))
+    queue = gap_label_queue(table, region_table)
+    path = save_map_queue(queue)
+    typer.echo(f"Wrote label order 'Kartenlücke' with {len(queue)} unlabeled originals to {path}")
 
 
 @app.command("contrast")

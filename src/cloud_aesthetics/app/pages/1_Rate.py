@@ -170,8 +170,22 @@ def _judge_order(frame) -> list[str]:
     return ids.iloc[ids.map(ranks).fillna(float("inf")).argsort(kind="stable").to_numpy()].tolist()
 
 
+def _map_order(frame) -> list[str]:
+    """Order from the semantic map: unlabeled originals from the regions with the fewest labels first."""
+    from cloud_aesthetics.eval.semantic_map import load_map_queue
+
+    queue = load_map_queue()
+    if queue.empty:
+        return _judge_order(frame)
+    ranks = queue.set_index("image_id")["map_rank"]
+    ids = frame["image_id"].astype(str)
+    return ids.iloc[ids.map(ranks).fillna(float("inf")).argsort(kind="stable").to_numpy()].tolist()
+
+
 def _build_ordered_manifest(frame, mode: str, seed: int):
-    if mode == "Random":
+    if mode == "Kartenlücke":
+        ordered_ids = _map_order(frame)
+    elif mode == "Random":
         ordered_ids = _random_order(frame, seed)
     elif mode == "Diverse groups":
         ordered_ids = _diverse_group_order(frame, seed)
@@ -205,8 +219,8 @@ with tab_scalar:
     order_col1, order_col2, order_col3 = st.columns([1.4, 1, 1])
     order_mode = order_col1.selectbox(
         "Label order",
-        ["Diverse groups", "Random", "Judge-Vorschlag", "Dataset order"],
-        help="Judge-Vorschlag: Reihenfolge aus der Triage-Seite (ungelabelte Originale zuerst, hohe Judge-Scores zuerst).",
+        ["Diverse groups", "Random", "Judge-Vorschlag", "Kartenlücke", "Dataset order"],
+        help="Judge-Vorschlag: Reihenfolge aus der Triage-Seite (ungelabelte Originale zuerst, hohe Judge-Scores zuerst). Kartenlücke: ungelabelte Originale aus den Regionen der semantischen Karte mit den wenigsten Labels (`semantic-map` erzeugt die Reihenfolge).",
     )
     order_seed = int(order_col2.number_input("Seed", min_value=0, max_value=999999, value=int(st.session_state.get("label_order_seed", 42))))
     st.session_state.label_order_seed = order_seed
@@ -294,6 +308,13 @@ with tab_scalar:
     is_retest = bool(triage_row is not None and bool(triage_row.get("retest", False)) and image_id not in {item["image_id"] for item in st.session_state.rate_history})
     if triage_row is not None and str(triage_row.get("queue_reason", "")):
         st.info(("Wiederholung: Bitte neu bewerten, deine frühere Note bleibt verborgen." if is_retest else "Warum jetzt: " + str(triage_row["queue_reason"])), icon="🎯")
+    if order_mode == "Kartenlücke":
+        from cloud_aesthetics.eval.semantic_map import load_map_queue
+
+        map_hits = load_map_queue()
+        map_hits = map_hits[map_hits["image_id"] == image_id]
+        if not map_hits.empty:
+            st.info("Warum jetzt: " + str(map_hits.iloc[0]["map_reason"]), icon="🗺️")
 
     # Previous ratings for this image (own first), model raters only on request; hidden for blind retests
     previous = ratings[ratings["image_id"].astype(str) == image_id].copy() if not ratings.empty else pd.DataFrame()

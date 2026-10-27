@@ -185,7 +185,7 @@ ein Black-Box-Modell, aber vollständig lesbar: „+1,2 für Gegenlicht, +0,8 f�
 ### T3 · Semantische Karte — erledigt 27.10.2026
 `eval/semantic_map.py`, CLI `semantic-map`, Seite „Karte“ (UMAP/PCA, Einfärbung, Thumbnails, Lasso-Auswahl, Regionen mit
 Lücken-Score und Label-Kandidaten). Befund in `PROJEKTSTATUS.md`: Region 5 ist das Zehner-Nest (22 von 69 Bildern ≥ 9),
-Region 1 die größte Lücke (114 Bilder, 30 Labels, Ø 7,6). Offen: Lücken-Kandidaten direkt als Label-Reihenfolge in Rate.
+Region 1 die größte Lücke (114 Bilder, 30 Labels, Ø 7,6). Die Lücken-Kandidaten stehen als Label order „Kartenlücke“ in Rate.
 UMAP der Embeddings mit Thumbnails, eingefärbt nach Rating, Rater, Wolkentyp, Tageszeit. Cluster von
 10ern werden sichtbar; Lücken zeigen, welche Bildtypen noch gelabelt werden sollten.
 

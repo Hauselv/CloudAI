@@ -25,6 +25,7 @@ from cloud_aesthetics.embeddings.store import embedding_matrix, load_embeddings
 from cloud_aesthetics.settings import resolve_path
 
 PROJECTION_DIR = "data/processed/embeddings"
+MAP_QUEUE_PATH = "data/processed/embeddings/map_queue.parquet"
 
 
 @dataclass(frozen=True)
@@ -230,3 +231,56 @@ def map_summary(table: pd.DataFrame, regions: pd.DataFrame) -> dict[str, object]
         "regions_with_tens": int((regions["n_top"] > 0).sum()) if not regions.empty else 0,
         "top_images_region_spread": int(top["region"].nunique()) if not top.empty and "region" in top.columns else 0,
     }
+
+
+def gap_label_queue(table: pd.DataFrame, regions: pd.DataFrame, *, per_region: int = 4) -> pd.DataFrame:
+    """Label order that fills the map's gaps: unlabeled originals, regions by gap score, round-robin.
+
+    Within a region the most promising images (human estimate, else model, else judge) come
+    first; ``per_region`` images are taken from each region before moving to the next, so a
+    labeling session covers several visual neighbourhoods instead of one.
+    """
+    if table.empty or regions.empty or "region" not in table.columns:
+        return pd.DataFrame(columns=["image_id", "region", "map_rank", "map_reason"])
+    open_images = table[~table["labeled"]]
+    if "kind" in open_images.columns:
+        open_images = open_images[open_images["kind"].astype(str) == "original"]
+    buckets: list[tuple[dict[str, object], list[str]]] = []
+    for row in regions.itertuples():
+        part = open_images[open_images["region"] == row.region].copy()
+        if part.empty:
+            continue
+        part["_estimate"] = part["estimate"].astype(float).fillna(-1.0)
+        buckets.append((row._asdict(), part.sort_values("_estimate", ascending=False)["image_id"].astype(str).tolist()))
+    ordered: list[dict[str, object]] = []
+    while buckets:
+        next_round = []
+        for info, ids in buckets:
+            take, rest = ids[:per_region], ids[per_region:]
+            mean_text = f", Ø {info['mean_score']:.1f}" if info["mean_score"] == info["mean_score"] else ""
+            reason = f"Kartenlücke R{int(info['region'])}: {int(info['n'])} Bilder, {int(info['n_labeled'])} gelabelt{mean_text}, meist {info['top_cloud_type'] or 'unbekannt'}"
+            ordered.extend({"image_id": image_id, "region": int(info["region"]), "map_reason": reason} for image_id in take)
+            if rest:
+                next_round.append((info, rest))
+        buckets = next_round
+    frame = pd.DataFrame(ordered)
+    if frame.empty:
+        return pd.DataFrame(columns=["image_id", "region", "map_rank", "map_reason"])
+    frame["map_rank"] = np.arange(len(frame))
+    return frame[["image_id", "region", "map_rank", "map_reason"]]
+
+
+def save_map_queue(frame: pd.DataFrame, path_like: str | Path = MAP_QUEUE_PATH) -> Path:
+    path = resolve_path(path_like)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    frame.to_parquet(path, index=False)
+    return path
+
+
+def load_map_queue(path_like: str | Path = MAP_QUEUE_PATH) -> pd.DataFrame:
+    path = resolve_path(path_like)
+    if not path.exists():
+        return pd.DataFrame(columns=["image_id", "region", "map_rank", "map_reason"])
+    frame = pd.read_parquet(path)
+    frame["image_id"] = frame["image_id"].astype(str)
+    return frame
