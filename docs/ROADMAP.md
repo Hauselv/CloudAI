@@ -189,7 +189,10 @@ Region 1 die größte Lücke (114 Bilder, 30 Labels, Ø 7,6). Die Lücken-Kandid
 UMAP der Embeddings mit Thumbnails, eingefärbt nach Rating, Rater, Wolkentyp, Tageszeit. Cluster von
 10ern werden sichtbar; Lücken zeigen, welche Bildtypen noch gelabelt werden sollten.
 
-### T4 · Wolkenatlas
+### T4 · Wolkenatlas — erledigt 27.10.2026
+`eval/cloud_atlas.py`, Seite „Wolkenatlas“: Typ-Votum aus CLIP und Judges mit Zuverlässigkeit, Meteorologie-Texte für 15
+Typen, Noten je Typ und Typ × Licht. Befund in `PROJEKTSTATUS.md`: Cirrus und Altocumulus liegen bei den Originalen über
+den Haufenwolken. Offen: Typ-Votum als Feature in Konzeptmodell und 10-vs-8 nutzen.
 Galerie gruppiert nach (zuverlässigem) Wolkentyp mit mittlerem Rating, bestem Beispiel und Kurztext zur
 Meteorologie des Typs (Entstehung, Höhe, Wetterbedeutung). Verbindet Ästhetik und Wissenschaft sichtbar.
 

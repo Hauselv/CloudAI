@@ -91,6 +91,9 @@ Wichtige Designentscheidungen, die bereits gut gelöst sind:
 - `concept.py`: Konzept-Flaschenhals (Lasso auf benannten Konzepten, Bootstrap-Stabilität, Beiträge pro Bild,
   Vokabular-Vergleich); Ergebnis des Runs liegt als `concepts.parquet`, `contributions.parquet`, `vocabulary.parquet` im Run-Ordner.
 
+### `eval/cloud_atlas.py`
+- Wolkentyp-Votum (CLIP + Judges) mit Zuverlässigkeitsstufen, Atlas-Tabelle, Typ × Licht, Meteorologie-Texte.
+
 ### `eval/rater_analytics.py`
 - Sitzungen, Residuen gegen Referenz, Drift, Anker-Effekt, Skalennutzung, Streitbilder, Rater-Matrix.
 
@@ -538,6 +541,22 @@ Befund für `friend_a` (321 Bewertungen, zwei Sitzungen am 26.4.2026 mit 35 und 
   Michels Geschmack und reduziert den Effekt kaum. Konsequenz: Label-Reihenfolge „Random“/„Diverse groups“, Duelle für
   feine Unterschiede, und bei der Rauschschätzung ±0,5 Punkte Anker-Anteil einrechnen.
 - **Skala**: 41 % bzw. 55 % halbe Noten in den beiden Sitzungen, Modus 8,5 (39×), 10 nur 9×, volle Spanne 0–10 genutzt.
+
+### Wolkenatlas (27.10.2026, T4)
+
+`eval/cloud_atlas.py`, Seite „Wolkenatlas“. Wolkentyp pro Bild als Mehrheitsvotum aus CLIP-Zero-Shot und beiden Judges
+(Primärtyp 1 Stimme, Nebentyp ½), Zuverlässigkeit „sicher“ (alle drei Primärtypen einig, 255 Bilder), „wahrscheinlich“
+(666) und „unsicher“ (18). Die Quellen sind sich nur mäßig einig (CLIP vs. Judge 0,35–0,39, Judge vs. Judge 0,63, alle
+drei 0,27), deshalb das Votum. Pro Typ: Bestand, Labelabdeckung, Ø Note, Anteil ≥ 9, häufigstes Licht, beste Beispiele
+und ein kurzer meteorologischer Text (Stockwerk, Höhe, Entstehung, Wetterbedeutung, Aussehen) für 15 Typen inklusive
+Lenticularis, Mammatus, Kondensstreifen, Nebel und wolkenlos. Dazu ein Typ × Licht-Raster der mittleren Note.
+
+Befund (Originale, mindestens „wahrscheinlich“): Die höchsten Mittelwerte haben Mammatus (9,0; n = 2), Lenticularis
+(8,6; n = 6, 4 × ≥ 9), **Cirrus (8,3; n = 17, 8 × ≥ 9)** und **Altocumulus (8,2; n = 20, 8 × ≥ 9)**; Stratocumulus 7,6
+(n = 28, aber 13 × ≥ 9, breit gestreut), Cumulus 7,6 (n = 49, nur 10 × ≥ 9), Cumulonimbus 7,4, wolkenlos 5,2,
+Altostratus 4,8. Typ × Licht: Altocumulus in der Dämmerung 9,2, Cirrus am Tag 8,8, Cumulus am Tag 7,6. Das passt zur
+Konzept-Lesart „fein, geschichtet, hell“: hohe und mittelhohe Strukturwolken (Cirrus, Altocumulus, Linsen) liegen über
+den massigen Haufenwolken. Die Zahlen sind klein; der Atlas ist ein Hypothesengenerator und eine Lesehilfe, kein Beweis.
 
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
