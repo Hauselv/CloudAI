@@ -63,10 +63,12 @@ def consensus_cloud_types(zero_shot: pd.DataFrame | None, judge_tables: dict[str
     Returns image_id, cloud_type, votes, n_sources, n_primary_agree, reliability
     ('sicher' = every primary source agrees, 'wahrscheinlich' = at least two primaries
     agree or the winner is a primary that another source lists, 'unsicher' = the rest).
+    Ties go to the type with more primary votes, then to CLIP's choice, then to atlas order.
     """
     votes: dict[str, dict[str, float]] = {}
     primaries: dict[str, list[str]] = {}
     sources: dict[str, int] = {}
+    clip_choice: dict[str, str] = {}
 
     def add(image_id: str, cloud_type: str, weight: float, primary: bool) -> None:
         if not cloud_type or cloud_type == "unknown":
@@ -80,6 +82,7 @@ def consensus_cloud_types(zero_shot: pd.DataFrame | None, judge_tables: dict[str
         for row in zero_shot[["image_id", "clip_cloud_type"]].itertuples(index=False):
             image_id = str(row.image_id)
             sources[image_id] = sources.get(image_id, 0) + 1
+            clip_choice[image_id] = str(row.clip_cloud_type)
             add(image_id, str(row.clip_cloud_type), 1.0, True)
     for table in (judge_tables or {}).values():
         if table is None or table.empty:
@@ -92,8 +95,12 @@ def consensus_cloud_types(zero_shot: pd.DataFrame | None, judge_tables: dict[str
                 add(image_id, cloud_type, 1.0 if index == 0 else 0.5, index == 0)
     rows = []
     for image_id, counts in votes.items():
-        winner, score = max(counts.items(), key=lambda item: (item[1], -(TYPE_ORDER.index(item[0]) if item[0] in TYPE_ORDER else 99)))
         prim = primaries.get(image_id, [])
+        # Ties: more primary votes, then CLIP's own choice (the one source with a probability), then atlas order.
+        winner, score = max(
+            counts.items(),
+            key=lambda item: (item[1], prim.count(item[0]), item[0] == clip_choice.get(image_id), -(TYPE_ORDER.index(item[0]) if item[0] in TYPE_ORDER else 99)),
+        )
         agree = sum(1 for item in prim if item == winner)
         n_sources = sources.get(image_id, len(prim))
         if n_sources >= 2 and agree == n_sources:

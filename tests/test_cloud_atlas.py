@@ -18,7 +18,7 @@ def test_consensus_votes_and_reliability_tiers():
     consensus = consensus_cloud_types(zero_shot, judges).set_index("image_id")
     assert consensus.loc["a", "cloud_type"] == "cumulus" and consensus.loc["a", "reliability"] == "sicher"
     assert consensus.loc["b", "cloud_type"] == "cirrus" and consensus.loc["b", "reliability"] == "wahrscheinlich"  # 2 primaries + 0.5
-    assert consensus.loc["c", "reliability"] == "unsicher" and consensus.loc["c", "cloud_type"] == "altostratus"  # three different primaries, tie broken by atlas order
+    assert consensus.loc["c", "reliability"] == "unsicher" and consensus.loc["c", "cloud_type"] == "stratus"  # three different primaries, tie goes to CLIP's choice
     assert consensus.loc["d", "cloud_type"] == "cumulus"  # CLIP primary + judge secondary = 1.5 beats others at 1.0
     assert consensus.loc["d", "reliability"] == "wahrscheinlich"
     report = reliability_report(consensus.reset_index())
@@ -34,12 +34,12 @@ def test_atlas_summary_and_light_grid():
     table = atlas_table(consensus, manifest, labels, zero_shot, predictions)
     assert len(table) == 4 and table.loc[table["image_id"] == "a", "type_name"].iloc[0] == CLOUD_TYPES["cumulus"].name
     summary = atlas_summary(table, min_reliability="wahrscheinlich", examples=2).set_index("cloud_type")
-    assert "altostratus" not in summary.index  # c is unsicher
+    assert "stratus" not in summary.index  # c is unsicher
     assert summary.loc["cumulus", "n"] == 2 and summary.loc["cumulus", "mean_score"] == 8.75 and summary.loc["cumulus", "n_top"] == 1
     assert summary.loc["cumulus", "example_ids"] == ["a", "d"]
     assert summary.loc["cirrus", "top_light"] == "golden_hour"
     loose = atlas_summary(table, min_reliability="unsicher")
-    assert "altostratus" in set(loose["cloud_type"])
+    assert "stratus" in set(loose["cloud_type"])
     grid = type_by_light(table, min_n=1)
     assert grid.loc[CLOUD_TYPES["cumulus"].name, "daylight"] == 9.5 and np.isnan(grid.loc[CLOUD_TYPES["cirrus"].name, "daylight"])
     assert all(key in CLOUD_TYPES for key in TYPE_ORDER)

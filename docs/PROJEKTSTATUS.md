@@ -551,12 +551,14 @@ drei 0,27), deshalb das Votum. Pro Typ: Bestand, Labelabdeckung, Ø Note, Anteil
 und ein kurzer meteorologischer Text (Stockwerk, Höhe, Entstehung, Wetterbedeutung, Aussehen) für 15 Typen inklusive
 Lenticularis, Mammatus, Kondensstreifen, Nebel und wolkenlos. Dazu ein Typ × Licht-Raster der mittleren Note.
 
-Befund (Originale, mindestens „wahrscheinlich“): Die höchsten Mittelwerte haben Mammatus (9,0; n = 2), Lenticularis
-(8,6; n = 6, 4 × ≥ 9), **Cirrus (8,3; n = 17, 8 × ≥ 9)** und **Altocumulus (8,2; n = 20, 8 × ≥ 9)**; Stratocumulus 7,6
-(n = 28, aber 13 × ≥ 9, breit gestreut), Cumulus 7,6 (n = 49, nur 10 × ≥ 9), Cumulonimbus 7,4, wolkenlos 5,2,
-Altostratus 4,8. Typ × Licht: Altocumulus in der Dämmerung 9,2, Cirrus am Tag 8,8, Cumulus am Tag 7,6. Das passt zur
-Konzept-Lesart „fein, geschichtet, hell“: hohe und mittelhohe Strukturwolken (Cirrus, Altocumulus, Linsen) liegen über
-den massigen Haufenwolken. Die Zahlen sind klein; der Atlas ist ein Hypothesengenerator und eine Lesehilfe, kein Beweis.
+Befund (Originale, mindestens „wahrscheinlich“; bei Stimmengleichstand zählt der CLIP-Typ): Die höchsten Mittelwerte
+haben Mammatus (9,0; n = 2), Lenticularis (8,4; n = 5, 3 × ≥ 9), **Cirrus (8,4; n = 19, 10 × ≥ 9)** und
+**Altocumulus (8,2; n = 24, 11 × ≥ 9)**; Cumulus 7,7 (n = 44, 12 × ≥ 9), Cumulonimbus 7,3, Stratocumulus 7,2 (n = 32),
+Altostratus 4,8, wolkenlos 3,0 (n = 1). Typ × Licht: Altocumulus in der Dämmerung 9,2, Cirrus am Tag 8,8, Cumulus am
+Tag 7,8, Cumulonimbus am Tag 6,1. Das passt zur Konzept-Lesart „fein, geschichtet, hell“: hohe und mittelhohe
+Strukturwolken (Cirrus, Altocumulus, Linsen) liegen über den massigen Haufen- und Gewitterwolken. Die Zahlen sind
+klein und das Typ-Votum ist unscharf (nur 255 von 939 Bildern „sicher“); der Atlas ist Hypothesengenerator und
+Lesehilfe, kein Beweis.
 
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
