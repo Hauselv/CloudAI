@@ -14,7 +14,7 @@ SRC_ROOT = Path(__file__).resolve().parents[4] / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cloud_aesthetics.app.common import active_manifest, dataset_config, list_runs
+from cloud_aesthetics.app.common import current_rater, active_manifest, dataset_config, list_runs
 from cloud_aesthetics.app.ui import render_image_grid
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
 from cloud_aesthetics.eval.rater_analytics import analyze_rater, disputed_images, model_reference, rater_agreement_matrix
@@ -42,7 +42,9 @@ humans = [r for r in all_raters if kinds.get(r, "human") == "human"]
 judges = [r for r in all_raters if kinds.get(r) == "llm"]
 
 with st.sidebar:
-    rater_id = st.selectbox("Rater", humans or all_raters)
+    rater_options = humans or all_raters
+    preferred = current_rater()
+    rater_id = st.selectbox("Rater", rater_options, index=rater_options.index(preferred) if preferred in rater_options else 0)
     reference_choice = st.selectbox("Referenz pro Bild", ["Judges (LLM-Mittel)", "Modell (out-of-fold)", "keine (eigener Mittelwert)"], help="Wovon die eigene Note abgezogen wird, um den Bildinhalt herauszurechnen. Judges sind unabhängig von deiner Stimmung, das Modell kennt deinen Geschmack.")
     gap_minutes = st.slider("Neue Sitzung ab Pause (Minuten)", 5, 120, 30, 5)
     max_gap = st.slider("Anker: max. Abstand zum Vorgänger (Sekunden)", 30, 1800, 600, 30)

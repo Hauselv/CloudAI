@@ -213,7 +213,10 @@ Export eines Batch-Reports als HTML/PDF („Wolken des Jahres“), inklusive Erk
 ROCm unter WSL für die RX 6700 XT ist experimentell; DirectML wäre die Windows-Alternative. Erst nötig,
 wenn echtes Fine-Tuning ansteht (S2). Bis dahin trägt der Embedding-Ansatz auf CPU.
 
-### T8 · UI-Konsolidierung
+### T8 · UI-Konsolidierung — erledigt 27.10.2026
+`st.navigation` mit drei Arbeitsbereichen (Daten & Labeln · Trainieren & Vergleichen · Verstehen), gemeinsame Sidebar
+mit Rater und Pipeline-Ampel, gecachte Tabellen-Reads; URL-Pfade unverändert. Offen: ein globaler Datensatz-/Bildart-
+Filter, sobald mehr Datensätze dazukommen.
 Streamlit reicht für lokal. Wenn die Seitenzahl weiter wächst: Seiten zu drei Arbeitsbereichen
 bündeln (Daten & Labeln · Trainieren & Vergleichen · Verstehen), gemeinsame Sidebar mit Rater,
 Datensatzfilter und Pipeline-Status; Caching (`st.cache_data`) für Manifest und Labels.

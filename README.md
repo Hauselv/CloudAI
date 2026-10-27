@@ -69,7 +69,9 @@ D:\CloudAI\.venv\Scripts\python.exe -m streamlit run D:\CloudAI\cloud-aesthetics
 
 Pages:
 
-- `Home`: pipeline status panel (raw images, manifest, ratings, labels, splits, features, latest run) with stale markers and one-click refresh, plus rating distribution by image kind.
+The sidebar groups the pages into three work areas: **Daten & Labeln** (Start & Status, Import, Bewerten, Triage, Ausschlüsse, Quellgruppen, Galerie), **Trainieren & Vergleichen** (Train & Leaderboard, Runs vergleichen, Batch Report, Rater-Vergleich, Rater-Analytik) and **Verstehen** (Inspect, 10 vs 8, Was wäre wenn, Konzeptmodell, Karte, Wolkenatlas, Bericht). The rater chosen in the shared sidebar is the default on every page that needs one; a pipeline health hint sits below it.
+
+- `Start & Status` (`/`): pipeline status panel (raw images, manifest, ratings, labels, splits, features, latest run) with stale markers and one-click refresh, plus rating distribution by image kind and test-retest reliability.
 - `Import`: import private folders, generate crops, and optionally start batch analysis after import.
 - `Rate`: label images with score buttons and number keys (0–9, `+` for 10, `.` for ±½, Enter saves, Backspace undoes), optional quick mode (digit saves immediately), previous ratings shown per image, judge scores hidden by default, image-kind filter, label orders including the judge queue, source photo shown for crops. The second tab runs duels among your top-rated images (hotkeys A/L/T/N) and shows a Bradley-Terry ranking next to the absolute scores.
 - `Gallery`: browse active originals/crops as tiles with labeled/open filters.

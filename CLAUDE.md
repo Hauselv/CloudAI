@@ -13,6 +13,8 @@ vorhersagen und vor allem **erklären**, welche Bildeigenschaften das Rating tre
 
 ## Konventionen
 - Logik gehört in `*_impl`-Funktionen in `cli.py` oder in die Fachmodule; Streamlit-Seiten rufen diese nur auf.
+- `app/Home.py` registriert alle Seiten per `st.navigation` (drei Arbeitsbereiche, feste `url_path`s); neue Seiten dort
+  eintragen, der Ordner `pages/` wird nicht mehr automatisch gelesen. Rater kommt aus der gemeinsamen Sidebar (`current_rater()`).
 - Rohlabels (`data/raw/metadata/ratings/*.csv`) sind append-only und die einzige Wahrheit; nie umschreiben.
 - Jeder Labelgeber ist ein eigener `rater_id`. LLM-/Modell-Labels bekommen eigene rater_ids und werden
   nie unmarkiert mit menschlichen Labels gemischt.

@@ -13,7 +13,7 @@ SRC_ROOT = Path(__file__).resolve().parents[4] / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cloud_aesthetics.app.common import active_manifest, app_config, dataset_config
+from cloud_aesthetics.app.common import current_rater, active_manifest, app_config, dataset_config
 from cloud_aesthetics.data.derivatives import crop_context, load_derivatives, render_crop_context
 from cloud_aesthetics.data.exclusions import active_excluded_ids, set_exclusion
 from cloud_aesthetics.data.pairwise import bradley_terry_scores, select_duel_pair
@@ -204,7 +204,7 @@ def _format_score(value: float) -> str:
     return f"{value:g}"
 
 
-rater_id = st.text_input("Rater ID", value=str(cfg.get("default_rater_id", "friend_a")))
+rater_id = st.text_input("Rater ID", value=current_rater(cfg))
 rating_session_id = st.text_input("Rating Session ID", value=datetime.utcnow().strftime("%Y%m%d_session"))
 ratings = _all_ratings()
 rated_ids = _current_rated_ids(ratings, rater_id)

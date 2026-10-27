@@ -11,7 +11,7 @@ SRC_ROOT = Path(__file__).resolve().parents[4] / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cloud_aesthetics.app.common import app_config, dataset_config
+from cloud_aesthetics.app.common import current_rater, app_config, dataset_config
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
 from cloud_aesthetics.judge.store import rater_kinds
 from cloud_aesthetics.reports.year_report import REPORT_DIR, build_year_report_impl, save_report
@@ -30,7 +30,7 @@ cfg = app_config()
 ratings = load_raw_scalar_ratings(dataset_cfg["ratings_dir"])
 kinds = rater_kinds(dataset_cfg.get("raters_path", "data/raw/metadata/raters.csv"))
 humans = sorted(r for r in ratings["rater_id"].astype(str).unique() if kinds.get(r, "human") == "human") if not ratings.empty else []
-default_rater = str(cfg.get("default_rater_id", "friend_a"))
+default_rater = current_rater(cfg)
 
 col_a, col_b, col_c, col_d = st.columns([1.2, 1, 1, 1])
 rater_id = col_a.selectbox("Rater", humans or [default_rater], index=(humans.index(default_rater) if default_rater in humans else 0))

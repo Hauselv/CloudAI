@@ -265,7 +265,8 @@ def pipeline_status(
     )
 
     embeddings_dir = resolve_path(dataset_cfg.get("embeddings_dir", "data/processed/embeddings"))
-    embedding_files = sorted(embeddings_dir.glob("*.parquet")) if embeddings_dir.exists() else []
+    # Only embedding caches count as models; projections (semantic map) and the map label queue live beside them.
+    embedding_files = sorted(path for path in embeddings_dir.glob("*.parquet") if not path.name.startswith("projection_") and path.name != "map_queue.parquet") if embeddings_dir.exists() else []
     embedding_models = [path.stem for path in embedding_files if path.name != "clip_zero_shot.parquet"]
     embedding_notes = []
     embedding_rows = 0

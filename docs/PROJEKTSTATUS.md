@@ -574,6 +574,17 @@ lassen ihren Abschnitt aus. Filter: Rater, Anzahl Karten, Aufnahmejahr (über `c
 den Druckdialog des Browsers (Druck-CSS ist enthalten). Ausgabe unter `data/artifacts/reports/` (git-ignoriert, enthält
 private Bilder).
 
+### UI-Konsolidierung (27.10.2026, T8)
+
+`app/Home.py` ist jetzt nur noch der Einstieg: `st.navigation` bündelt die 19 Seiten in drei Arbeitsbereiche
+**Daten & Labeln** (Start & Status, Import, Bewerten, Triage, Ausschlüsse, Quellgruppen, Galerie), **Trainieren &
+Vergleichen** (Train & Leaderboard, Runs vergleichen, Batch Report, Rater-Vergleich, Rater-Analytik) und **Verstehen**
+(Inspect, 10 vs 8, Was wäre wenn, Konzeptmodell, Karte, Wolkenatlas, Bericht). Die URL-Pfade sind unverändert
+(`/Rate`, `/Karte`, …), die alte Home-Seite heißt „Start & Status“ (`pages/00_Start.py`). Gemeinsame Sidebar auf jeder
+Seite: Rater-Auswahl (`st.session_state["rater_id"]`, von Bewerten, Inspect, Galerie, Quellgruppen, Rater-Analytik,
+Bericht und Start als Vorgabe übernommen) und ein Pipeline-Ampelhinweis (120 s gecacht). `safe_read_table` cached
+Tabellen nach Pfad, Änderungszeit und Größe, damit Manifest und Labels nicht auf jeder Seite neu gelesen werden.
+
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
 Textprompt-Ensembles im CLIP-Raum ersetzen den regelbasierten Klassifikator als primäre Schätzung.

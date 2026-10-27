@@ -10,7 +10,7 @@ SRC_ROOT = Path(__file__).resolve().parents[4] / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cloud_aesthetics.app.common import active_manifest, app_config, dataset_config
+from cloud_aesthetics.app.common import current_rater, active_manifest, app_config, dataset_config
 from cloud_aesthetics.app.ui import render_image_grid, tile_columns
 from cloud_aesthetics.data.manifest import image_kind_from_path
 from cloud_aesthetics.data.ratings import load_raw_scalar_ratings
@@ -27,7 +27,7 @@ if manifest.empty:
     st.stop()
 
 ratings = load_raw_scalar_ratings(dataset_cfg["ratings_dir"])
-rater_id = st.text_input("Rater ID", value=str(cfg.get("default_rater_id", "friend_a")))
+rater_id = st.text_input("Rater ID", value=current_rater(cfg))
 rated_ids = set()
 if not ratings.empty:
     rated_ids = set(ratings.loc[ratings["rater_id"] == rater_id, "image_id"].dropna().astype(str))
