@@ -48,6 +48,7 @@ This avoids PowerShell execution-policy issues because it does not require `Acti
 - `python -m cloud_aesthetics.cli extract-context [--no-weather] [--refresh]`
 - `python -m cloud_aesthetics.cli counterfactual-sweep [--band 7.5-8.5] [--crop-class original] [--limit 60]`
 - `python -m cloud_aesthetics.cli train --config configs/models/embedding_clip.yaml`
+- `python -m cloud_aesthetics.cli train --config configs/models/concept_bottleneck_originals.yaml` (readable concept model)
 - `python -m cloud_aesthetics.cli train --config configs/models/baseline.yaml`
 - `python -m cloud_aesthetics.cli train --config configs/models/deep_cnn_gradcam.yaml`
 - `powershell -ExecutionPolicy Bypass -File D:\CloudAI\cloud-aesthetics\scripts\train_wsl_rocm.ps1`
@@ -78,6 +79,7 @@ Pages:
 - `Rater Comparison`: human raters versus model raters (LLM judges), agreement per group and largest disagreements.
 - `Triage`: judge-based labeling queue, uncertain images and exclusion proposals to accept or ignore.
 - `Was wäre wenn`: counterfactual explorer. Edit a photo with sliders (contrast, saturation, exposure, warmth, zoom, blur), see the CLIP model's score react live, read sensitivity curves per operator and the single edit with the largest gain. `counterfactual-sweep --band 7.5-8.5` averages the same curves over a human score band and the page shows the result.
+- `Konzeptmodell`: concept bottleneck model. A Lasso on named concepts (CLIP concepts, light, judge flags, palette, scene fraction) with bootstrap stability, a vocabulary comparison (which family of words explains the rating out-of-fold), per-image waterfall of contributions and a residual gallery of images the concepts cannot explain.
 - `10 vs 8`: compare two human score bands across hand-crafted features, CLIP zero-shot attributes and judge attributes (effect sizes, FDR-corrected q-values, top-end trends, example tiles). CLI equivalent: `contrast --band-a 9.5-10 --band-b 7.5-8.5 --crop-class original`.
 
 ## Private Image Import And Cropping

@@ -88,6 +88,8 @@ Wichtige Designentscheidungen, die bereits gut gelöst sind:
   Checkpoints, Geräteauswahl (CUDA/ROCm/DirectML/CPU).
 - `hybrid.py`: Features + PCA-„Embeddings“ der Features (kein echtes Bild-Embedding) → HistGB.
 - `ranking.py`: Pairwise-LogReg.
+- `concept.py`: Konzept-Flaschenhals (Lasso auf benannten Konzepten, Bootstrap-Stabilität, Beiträge pro Bild,
+  Vokabular-Vergleich); Ergebnis des Runs liegt als `concepts.parquet`, `contributions.parquet`, `vocabulary.parquet` im Run-Ordner.
 
 ### `explain/`
 - `feature_importance.py`: Permutation Importance; lokale Beiträge per „Median-Baseline, ein Feature
@@ -450,6 +452,43 @@ Konsequenz: Die Eingriffe, die das Modell empfiehlt, sind Aussagen über das Mod
 Sobald Labels am oberen Ende und Duelle vorliegen (und ein Modell auf `bt_score` oder nur Originalen trainiert
 ist), lohnt derselbe Sweep erneut; die Differenz der Kurven zwischen den Modellen zeigt dann, was die neuen Labels
 dem Modell beigebracht haben.
+
+### Konzept-Flaschenhals-Modell (27.10.2026, T2)
+
+`models/concept.py`, Configs `concept_bottleneck.yaml` (alle Bilder) und `concept_bottleneck_originals.yaml` (nur
+Originale), Seite „Konzeptmodell“, Block „Konzeptmodell“ im Inspect. Ein Lasso auf *benannten* Konzepten (CLIP-Konzepte,
+CLIP-Licht, Judge-Flags/-Licht, Farbpalette, Szenenanteil) statt auf 512 anonymen Embedding-Dimensionen; gleiche
+gruppierte 5-fach-CV wie alle Tabellenmodelle, dazu Koeffizienten je Standardabweichung, 200 Bootstrap-Refits
+(Vorzeichenstabilität, 90-%-Intervall), additive Beiträge pro Bild (`contributions.parquet`), Residuen-Galerie und
+ein **Vokabular-Vergleich** (dasselbe Modell mit verschiedenen Konzeptfamilien, out-of-fold).
+
+| Vokabular | ρ OOF alle (n=265) | ρ OOF Originale (n=116) | behalten |
+|---|---|---|---|
+| nur 16 CLIP-Konzepte | **0,68** | **0,39** | 10 |
+| CLIP-Konzepte + Licht | 0,66 | 0,35 | 9 |
+| alles (54 Konzepte) | 0,67 | 0,29 | 19 |
+| alles + Judge-Score | 0,68 | 0,35 | 37 |
+| nur Szene (crop_scale, Himmel-/Wolkenanteil) | 0,57 | 0,22 | 3 |
+| nur Farbpalette | 0,55 | 0,12 | 8 |
+| nur Judge-Attribute | 0,49 | 0,28 | 19 |
+
+Lesart: 16 Wörter erklären fast so viel wie das 512-dimensionale CLIP-Ridge (OOF 0,68 vs. 0,72 gesamt; 0,41 vs. 0,47
+innerhalb der Originale, wenn nur auf Originalen trainiert wird). Palette und Judge-Attribute bringen out-of-fold
+nichts zusätzlich; bei nur 116 Originalen überfittet das breite Vokabular sogar (ρ 0,11), deshalb nutzt die
+Originale-Config ausschließlich die CLIP-Konzepte.
+
+Das Originale-Modell in einem Satz (Score-Punkte je Standardabweichung, Vorzeichen in ≥ 95 % der Bootstraps stabil,
+sofern nicht anders vermerkt): **−0,82 weicher Dunst, −0,72 Flugzeugfenster, −0,58 aufgetürmte Struktur,
++0,52 spektakulärer Himmel**, dann −0,39 Pastell-Sonnenuntergang (84 %), −0,34 dramatischer Sturmhimmel (74 %),
++0,29 Schichtung/Tiefe (83 %), +0,27 hoher Kontrast (88 %). Verworfen: Strahlenbüschel, feine Textur, Lenticularis,
+Landschaft dominiert.
+
+Was das für die Leitfrage heißt: Innerhalb der Originale senken *Dunst* und *aufgetürmte Masse* die Note am
+stärksten, nicht fehlende Farbe. „Pastell“ als CLIP-Konzept ist negativ, obwohl die 10-vs-8-Analyse geringere
+Sättigung bei den 10ern zeigt; vermutlich fängt der Prompt eher flaue, kontrastarme Himmel ein als klare, helle.
+Das passt zu „klar, strukturiert, hell“ als Arbeitshypothese und widerspricht erneut dem Gesamtmodell, das
+Sättigung belohnt. Ein Modell mit 0,41 Rangkorrelation ist aber kein Beweis; die Residuen-Galerie (unterschätzte
+Originale) ist die Liste der Bilder, für die noch ein Wort fehlt – dort lohnen neue CLIP-Prompts.
 
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 

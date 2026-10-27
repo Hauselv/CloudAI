@@ -1,0 +1,30 @@
+run_name: concept_bottleneck_v1
+kind: concept
+seed: 42
+manifest_path: data/processed/image_manifest.parquet
+labels_path: data/processed/aggregated_labels.parquet
+features_path: data/processed/features/features_v1.parquet
+output_dir: data/artifacts
+target_column: mean_score
+cross_validate: true
+# Named concept families that may enter the model (see models/concept.py FAMILY_PREFIXES).
+concept_families:
+  - clip_concept
+  - clip_light
+  - judge_flag
+  - judge_light
+  - palette
+  - scene
+regressors:
+  - lasso
+inner_cv: 5
+bootstrap_samples: 200
+# Alternative vocabularies, evaluated out-of-fold with the same model, to see which words explain the rating.
+variants:
+  nur_clip_konzepte: [clip_concept]
+  clip_konzepte_und_licht: [clip_concept, clip_light]
+  nur_judge: [judge_flag, judge_light, judge_type]
+  nur_palette: [palette]
+  nur_szene: [scene]
+  alles_ohne_judge_score: [clip_concept, clip_light, judge_flag, judge_light, palette, scene]
+  alles_mit_judge_score: [clip_concept, clip_light, judge_flag, judge_light, judge_score, palette, scene]

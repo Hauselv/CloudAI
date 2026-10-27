@@ -367,6 +367,23 @@ with tab_signals:
         concepts = pd.DataFrame(explanation["top_concepts"])
         st.write("Concept signals")
         st.dataframe(concepts, use_container_width=True, hide_index=True)
+    concept_runs = [run for run in list_runs() if run.startswith("concept_")]
+    if concept_runs:
+        from cloud_aesthetics.models.concept import explain_image, load_concept_run
+
+        concept_run = st.selectbox("Konzeptmodell (lesbare Beiträge)", concept_runs, key="inspect_concept_run")
+        concept_data = load_concept_run(concept_run)
+        detail = explain_image(concept_data["contributions"], str(image_id), limit=10)
+        if detail.empty:
+            st.caption("Kein Konzeptbeitrag für dieses Bild (nicht in der Konzepttabelle oder alle Beiträge 0).")
+        else:
+            contribution_row = concept_data["contributions"]
+            contribution_row = contribution_row[contribution_row["image_id"].astype(str) == str(image_id)].iloc[0]
+            st.write(f"Konzeptmodell: {float(contribution_row['prediction']):.2f} = Mittelwert {float(contribution_row['intercept']):.2f} + Beiträge")
+            show = detail[["label", "contribution"]].copy()
+            show["contribution"] = show["contribution"].map(lambda value: f"{value:+.2f}")
+            show.columns = ["Konzept", "Beitrag"]
+            st.dataframe(show, use_container_width=True, hide_index=True)
     if explanation.get("scientific_cloud_type", {}).get("cloud_type_scores"):
         st.write("Cloud-type scores")
         st.dataframe(pd.DataFrame(explanation["scientific_cloud_type"]["cloud_type_scores"]), use_container_width=True, hide_index=True)

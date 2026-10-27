@@ -173,7 +173,11 @@ Bild kontrolliert verändern (Kontrast ±, Sättigung ±, Wärme ±, Beschnitt, 
 Modellvorhersage live beobachten. Zeigt Sensitivitäten pro Bild und ist die direkteste Antwort auf
 die Leitfrage – vorausgesetzt, das Modell ist gut genug (nach P3).
 
-### T2 · Konzept-Flaschenhals-Modell
+### T2 · Konzept-Flaschenhals-Modell — erledigt 27.10.2026
+`models/concept.py`, Seite „Konzeptmodell“, Configs `concept_bottleneck*.yaml`. Befund in `PROJEKTSTATUS.md`: 16 CLIP-Konzepte
+erklären out-of-fold fast so viel wie das volle CLIP-Embedding (0,68 vs. 0,72; Originale 0,41 vs. 0,47); innerhalb der
+Originale lautet das Modell „−0,82 weicher Dunst, −0,72 Flugzeugfenster, −0,58 aufgetürmte Struktur, +0,52 spektakulärer
+Himmel“. Offen: neue Konzept-Prompts aus der Residuen-Galerie ableiten, Modell auf `bt_score`, sobald genug Duelle da sind.
 Rating = lineare Funktion aus ~15 benannten Konzepten (aus CLIP oder LLM-Attributen). Weniger genau als
 ein Black-Box-Modell, aber vollständig lesbar: „+1,2 für Gegenlicht, +0,8 für Mehrschichtigkeit,
 −0,6 für Landschaftsanteil“.

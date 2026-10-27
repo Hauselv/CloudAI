@@ -251,6 +251,12 @@ def train_impl(model_config_path: str | Path, dataset_config_path: str | Path = 
         table = table[table["image_id"].isin(set(manifest["image_id"].astype(str)))]
         _require_non_empty(table, "embedding table", "Run `extract-embeddings` first.")
         return train_embedding_suite(table, labels, splits, config)
+    if kind == "concept":
+        from cloud_aesthetics.models.concept import load_concept_table, train_concept_suite
+
+        table = load_concept_table(manifest, features_path=config.get("features_path", "data/processed/features/features_v1.parquet"))
+        _require_non_empty(table, "concept table", "Run `zero-shot`, `judge-images` and `extract-features` first.")
+        return train_concept_suite(table, labels, splits, config)
     if kind == "hybrid":
         features = load_features(config["features_path"])
         _require_non_empty(features, "feature table", "Run `extract-features --config configs/features/v1.yaml` first.")

@@ -151,7 +151,10 @@ if runs:
             if test_metrics:
                 st.write("Held-out test metrics")
                 st.json(test_metrics)
-        elif summary.get("kind") in {"baseline", "embedding"}:
+        elif summary.get("kind") in {"baseline", "embedding", "concept"}:
+            if summary.get("kind") == "concept":
+                info = summary.get("concept_model", {})
+                st.caption(f"Konzeptmodell: {info.get('n_active', 0)} von {info.get('n_concepts', 0)} Konzepten behalten; Koeffizienten und Beiträge auf der Seite Konzeptmodell.")
             if summary.get("kind") == "embedding":
                 st.caption(
                     "Embedding run: "
