@@ -294,6 +294,16 @@ The `Batch Report` page shows:
 
 This helps triage a new batch before labeling everything.
 
+## Friend Links (labeling in the browser, no install)
+
+```powershell
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli friends-add --name "Anna"
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli friends-serve --port 8765
+D:\CloudAI\.venv\Scripts\python.exe -m cloud_aesthetics.cli friends-tunnel --port 8765
+```
+
+`friends-add` creates a token and a human rater id (`friend_anna`), `friends-serve` runs the FastAPI labeling server on localhost, `friends-tunnel` opens a Cloudflare quick tunnel (needs `winget install Cloudflare.cloudflared`) and prints the public URL; the friend's link is `<public url>/f/<token>`. Ratings and duels are appended to the friend's own rater file immediately, so Rater Comparison and Rater-Analytik pick them up without any import. The `Freunde` page manages links and shows progress. Everything without a valid token answers 404; images are served by manifest id only; the server never deletes anything. Requires `pip install -e .[friends]`.
+
 ## Friend Standalone Labeling Package
 
 Export a no-install browser package for friends:

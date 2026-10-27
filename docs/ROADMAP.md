@@ -151,7 +151,9 @@ bessere Himmelssegmentierung (SegFormer/CLIPSeg).
 - Farbpaletten-Features: k-Means in Lab → 5 dominante Farben, Palettenkontrast, Warm-Kalt-Verhältnis,
   Farbharmonie-Maße (komplementär/analog). Für Sonnenuntergänge vermutlich aussagekräftiger als Hue-Bins.
 
-### S4 · Datenbeschaffung (Aufwand S)
+### S4 · Datenbeschaffung (Aufwand S) — Freunde-Links erledigt 27.10.2026
+Freunde labeln jetzt über persönliche Links (`friends/`, Seite „Freunde“, Cloudflare Quick Tunnel); Ausbaustufe mit
+Konto, Domain und Cloudflare Access, später Docker auf dem NAS. Offen: neue Wolkenbilder importieren.
 - `G:\Wolken` enthält nur 90 Fotos, alle bereits importiert. Die „vielen weiteren Wolkenbilder“ müssen
   noch gefunden/importiert werden (Handy, Backup-Ordner, Freunde). Import-Workflow existiert.
 - Freundes-Labels einsammeln (APK/Web-Paket existieren) → mehrere Rater → Agreement-Analyse,

@@ -37,6 +37,7 @@ navigation = st.navigation(
             _page("7_Exclusions.py", "Ausschlüsse", "🚫", "Exclusions"),
             _page("8_Source_Groups.py", "Quellgruppen", "🗂️", "Source_Groups"),
             _page("5_Gallery.py", "Galerie", "🖼️", "Gallery"),
+            _page("18_Freunde.py", "Freunde", "🧑‍🤝‍🧑", "Freunde"),
         ],
         "Trainieren & Vergleichen": [
             _page("2_Train.py", "Train & Leaderboard", "🏋️", "Train"),

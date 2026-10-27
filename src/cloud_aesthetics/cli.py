@@ -1205,6 +1205,75 @@ def counterfactual_sweep(
     typer.echo(json.dumps(paths, indent=2))
 
 
+@app.command("friends-add")
+def friends_add(name: str = typer.Option(..., help="Display name of the friend"), base_url: str = typer.Option("http://localhost:8765", help="Where the friend server is reachable (tunnel URL once it runs)")) -> None:
+    """Create a personal labeling link for a friend (token + human rater id)."""
+    from cloud_aesthetics.friends.registry import add_friend, friend_link
+
+    row = add_friend(name)
+    typer.echo(f"{row['display_name']} -> rater {row['rater_id']}")
+    typer.echo(f"Link: {friend_link(base_url, str(row['token']))}")
+
+
+@app.command("friends-list")
+def friends_list(base_url: str = typer.Option("http://localhost:8765"), dataset_config: str = typer.Option("configs/dataset/default.yaml")) -> None:
+    """List friends, their links and how many images each has rated."""
+    from cloud_aesthetics.friends.registry import friend_link, load_friends
+
+    friends = load_friends()
+    if friends.empty:
+        typer.echo("No friends yet. Use friends-add --name <Name>.")
+        return
+    ratings = load_raw_scalar_ratings(_load_dataset_config(dataset_config)["ratings_dir"])
+    counts = ratings.groupby("rater_id")["image_id"].nunique() if not ratings.empty else pd.Series(dtype=int)
+    for row in friends.itertuples():
+        state = "active" if row.active else "revoked"
+        typer.echo(f"{row.display_name:<20} {row.rater_id:<28} {state:<8} rated {int(counts.get(row.rater_id, 0)):>4}  {friend_link(base_url, row.token)}")
+
+
+@app.command("friends-revoke")
+def friends_revoke(token_or_rater: str = typer.Argument(..., help="Token or rater id"), reactivate: bool = typer.Option(False, help="Re-enable instead of revoking")) -> None:
+    """Revoke (or re-enable) a friend's link. Their ratings stay."""
+    from cloud_aesthetics.friends.registry import reactivate_friend, revoke_friend
+
+    ok = reactivate_friend(token_or_rater) if reactivate else revoke_friend(token_or_rater)
+    typer.echo("Done." if ok else "No such friend.")
+
+
+@app.command("friends-serve")
+def friends_serve(host: str = typer.Option("127.0.0.1", help="Bind address; keep localhost and put a tunnel in front"), port: int = typer.Option(8765), image_edge: int = typer.Option(1280, help="Longest edge of served images")) -> None:
+    """Run the friend labeling server (FastAPI/uvicorn)."""
+    from cloud_aesthetics.friends.server import FriendServerConfig, serve
+
+    serve(FriendServerConfig(image_edge=image_edge), host=host, port=port)
+
+
+@app.command("friends-tunnel")
+def friends_tunnel(port: int = typer.Option(8765), cloudflared: str = typer.Option("cloudflared", help="Path to the cloudflared binary")) -> None:
+    """Open a Cloudflare quick tunnel to the friend server and print the public URL."""
+    import re
+    import shutil
+    import subprocess
+
+    candidates = [shutil.which(cloudflared), cloudflared, str(PATHS.project_root.parent / "tools" / "cloudflared.exe"), str(PATHS.project_root / "tools" / "cloudflared.exe")]
+    binary = next((c for c in candidates if c and Path(c).exists()), None)
+    if binary is None:
+        typer.echo("cloudflared not found. Put the official binary at D:/CloudAI/tools/cloudflared.exe (https://github.com/cloudflare/cloudflared/releases) or pass --cloudflared.")
+        raise typer.Exit(code=1)
+    typer.echo(f"Starting quick tunnel to http://localhost:{port} (Ctrl+C stops it; the URL changes on every start).")
+    process = subprocess.Popen([binary, "tunnel", "--url", f"http://localhost:{port}", "--no-autoupdate"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding="utf-8", errors="replace")
+    try:
+        assert process.stdout is not None
+        for line in process.stdout:
+            match = re.search(r"https://[a-z0-9-]+\.trycloudflare\.com", line)
+            if match:
+                typer.echo(f"PUBLIC URL: {match.group(0)}  -> friend links: {match.group(0)}/f/<token>")
+            elif "ERR" in line or "error" in line.lower():
+                typer.echo(line.rstrip())
+    except KeyboardInterrupt:
+        process.terminate()
+
+
 @app.command("year-report")
 def year_report(
     rater: str = typer.Option(None, help="Rater whose scores the report uses (default from the app config)"),

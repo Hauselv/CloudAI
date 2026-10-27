@@ -43,6 +43,10 @@ vorhersagen und vor allem **erklären**, welche Bildeigenschaften das Rating tre
 - Konzeptmodelle (`configs/models/concept_bottleneck*.yaml`) sind Lasso-Läufe mit `kind: concept`; Artefakte
   `concepts.parquet`, `contributions.parquet`, `vocabulary.parquet` liegen im Run-Ordner.
 
+## Freunde-Server
+- `friends-serve` (FastAPI, localhost:8765) + `friends-tunnel` (Cloudflare Quick Tunnel). Tokens in `data/raw/metadata/friends.csv`,
+  nie ausgeben oder committen. Server nie an 0.0.0.0 binden; Zugriffsschutz ist der Token (später Cloudflare Access).
+
 ## Bekannte Stolpersteine
 - `data/processed/aggregated_labels.parquet` kann leer sein, obwohl Rohlabels existieren → `aggregate-labels` ausführen.
 - Nach neuem Labeln immer: `aggregate-labels` → `extract-features` → `train`, sonst passen Splits und Runs nicht zusammen.

@@ -40,3 +40,4 @@ data/processed/judge/*
 data/artifacts/contrast/*
 data/processed/context/*
 data/processed/predictions/*
+data/processed/friend_cache/*

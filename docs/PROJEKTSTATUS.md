@@ -91,6 +91,9 @@ Wichtige Designentscheidungen, die bereits gut gelöst sind:
 - `concept.py`: Konzept-Flaschenhals (Lasso auf benannten Konzepten, Bootstrap-Stabilität, Beiträge pro Bild,
   Vokabular-Vergleich); Ergebnis des Runs liegt als `concepts.parquet`, `contributions.parquet`, `vocabulary.parquet` im Run-Ordner.
 
+### `friends/`
+- `registry.py` (Tokens ↔ Rater), `queue.py` (Reihenfolge pro Freund), `server.py` (FastAPI), `ui.py` (Handy-Seite).
+
 ### `reports/year_report.py`
 - Datensammlung über alle Artefakte und Jinja2-Rendering des HTML-Berichts mit eingebetteten Bildern.
 
@@ -584,6 +587,22 @@ Vergleichen** (Train & Leaderboard, Runs vergleichen, Batch Report, Rater-Vergle
 Seite: Rater-Auswahl (`st.session_state["rater_id"]`, von Bewerten, Inspect, Galerie, Quellgruppen, Rater-Analytik,
 Bericht und Start als Vorgabe übernommen) und ein Pipeline-Ampelhinweis (120 s gecacht). `safe_read_table` cached
 Tabellen nach Pfad, Änderungszeit und Größe, damit Manifest und Labels nicht auf jeder Seite neu gelesen werden.
+
+### Freunde-Links: Labeln ohne Installation (27.10.2026)
+
+`friends/` (Registry, Warteschlange, FastAPI-Server, Handy-Seite), CLI `friends-add` / `friends-list` / `friends-revoke` /
+`friends-serve` / `friends-tunnel`, Seite „Freunde“. Jeder Freund bekommt einen Link `…/f/<token>`; der Token ist die
+Rater-ID (`friend_<name>`, in `raters.csv` als human registriert, Registry `data/raw/metadata/friends.csv`, git-ignoriert).
+Bewertungen und Duelle landen sofort über die bestehenden Append-Funktionen in den Rater-Dateien, Undo per Tombstone.
+Reihenfolge pro Freund: erst die Bilder, die `friend_a` schon bewertet hat (Vergleichsset für Übereinstimmung), dann
+Karten-Lücken und Triage-Reihenfolge, dann der Rest; Originale und große Ausschnitte, kleine Ausschnitte nicht; jeder
+Freund mit eigenem Zufalls-Seed. Bilder werden auf 1280 px verkleinert und gecacht (`data/processed/friend_cache/`).
+
+Sicherheit: Server bindet nur an localhost, alles ohne gültigen aktiven Token ist 404, Bilder nur über Manifest-IDs
+(keine Pfade aus der URL), einzige Schreibzugriffe sind Append-Zeilen und Tombstones des eigenen Raters, Rate-Limit pro
+Token, keine Doku-/Admin-Endpunkte, Security-Header. Zugang von außen über Cloudflare Quick Tunnel (`friends-tunnel`,
+keine Portfreigabe, wechselnde Adresse). Ausbaustufe mit Cloudflare-Konto und Domain: fester Hostname plus Cloudflare
+Access (E-Mail-Einmalcode) vor dem Tunnel; langfristig als Docker-Container auf dem NAS.
 
 ### CLIP-Zero-Shot (Wolkentyp, Licht, Konzepte)
 
